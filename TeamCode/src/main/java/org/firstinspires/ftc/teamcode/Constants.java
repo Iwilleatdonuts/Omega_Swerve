@@ -12,7 +12,7 @@ public class Constants {
         public static final class Mod0 {
 
             public static final String driveMotor = "drive0";
-            public static final String angleServo = "angle 0";
+            public static final String angleServo = "angle0";
             public static final String feedback = "angleFeedback0";
 
         }
