@@ -4,10 +4,10 @@ public class Constants {
 
     public static final class DriveTrainConstants {
 
-        public static final double kP = 0;
-        public static final double kI = 0;
-        public static final double kD = 0;
-        public static final double kF = 0;
+        public static final double angleKP = 0.025;
+        public static final double angleKI = 0.01;
+        public static final double angleKD = 0;
+        public static final double angleKF = 0.0005;
 
         public static final class Mod0 {
 

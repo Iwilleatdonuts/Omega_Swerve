@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 
 public class SwerveModule extends SubsystemBase {
 
-    private final Telemetry telemetry;
+    private Telemetry telem;
 
     private final DcMotorEx drive;
     private final CRServo angle;
@@ -22,26 +22,28 @@ public class SwerveModule extends SubsystemBase {
 
     private final PIDFController controller;
 
-    private double continuousModulePosition;
-    private double lastAngle;
 
-    public SwerveModule(HardwareMap hardwareMap, Telemetry telemetry) {
+    private double moduleSetpoint;
 
-        this.telemetry = telemetry;
+    public SwerveModule(HardwareMap hardwareMap, Telemetry telem) {
+
+        this.telem = telem;
 
         drive = hardwareMap.get(DcMotorEx.class, Constants.DriveTrainConstants.Mod0.driveMotor);
-        angle = hardwareMap.get(CRServo.class, Constants.DriveTrainConstants.Mod0.angleServo);;
+        angle = hardwareMap.get(CRServo.class, Constants.DriveTrainConstants.Mod0.angleServo);
 
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        controller = new PIDFController(Constants.DriveTrainConstants.kP, Constants.DriveTrainConstants.kI, Constants.DriveTrainConstants.kD, Constants.DriveTrainConstants.kF);
+        controller = new PIDFController(Constants.DriveTrainConstants.angleKP, Constants.DriveTrainConstants.angleKI, Constants.DriveTrainConstants.angleKD, Constants.DriveTrainConstants.angleKF);
+
 
         moduleHeading = hardwareMap.get(AnalogInput.class, Constants.DriveTrainConstants.Mod0.feedback);
 
-        continuousModulePosition = getRawAngle();
+        moduleSetpoint = getDegrees();
 
     }
 
@@ -66,34 +68,39 @@ public class SwerveModule extends SubsystemBase {
         return (getRawAngle()/ moduleHeading.getMaxVoltage())*360;
     }
 
-    public double getContinuousModulePosition() {
+    public double getWrappedError(double setpoint, double measurement) {
+        double error = setpoint - measurement;
+        error = ((error + 180) % 360 + 360) % 360 - 180;
+        return error;
+    }
 
-        double maxVoltage = moduleHeading.getMaxVoltage();
-        double currentAngle = getRawAngle();
+    public void setModuleSetpoint(double setpoint) {
+        moduleSetpoint = setpoint;
+    }
 
-        double positionCheck = currentAngle - lastAngle;
+    public void setModulePosition() {
+        double error = getWrappedError(moduleSetpoint, getDegrees());
 
-        if(positionCheck > maxVoltage/2) {
-            positionCheck -= maxVoltage;
-        }
+        double placeholder = moduleSetpoint - error;
 
-        if(positionCheck < -maxVoltage/2) {
-            positionCheck += maxVoltage;
-        }
+        telem.addData("idjsafjasdjfhsdah",error);
 
-        lastAngle = currentAngle;
-        continuousModulePosition += positionCheck;
+        setTurnSpeed(-controller.calculate(placeholder, moduleSetpoint));
+    }
 
-        return continuousModulePosition;
+    public double getModuleSetpoint() {
+        return moduleSetpoint;
     }
 
     public void update(){
 
-        telemetry.addLine("Module 0");
-        telemetry.addData("Angle: ", getRawAngle());
-        telemetry.addData("Degrees: ", getDegrees());
-        telemetry.addData("Continuous Angle: ", getContinuousModulePosition());
-        telemetry.addData("Max Angle: ", moduleHeading.getMaxVoltage());
+        setModulePosition();
+
+        telem.addLine("Module 0");
+        telem.addData("Angle: ", getRawAngle());
+        telem.addData("Degrees: ", getDegrees());
+        telem.addData("Setpoint: ", getModuleSetpoint());
+        telem.addData("Max Angle: ", moduleHeading.getMaxVoltage());
 
     }
 
