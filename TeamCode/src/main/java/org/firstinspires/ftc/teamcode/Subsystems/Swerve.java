@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Constants.DriveTrainConstants;
 
 public class Swerve extends SubsystemBase {
@@ -28,10 +29,10 @@ public class Swerve extends SubsystemBase {
     private final AnalogInput moduleHeading3;
 
     public Swerve(HardwareMap hardwareMap) {
-        motor0 = hardwareMap.get(DcMotorEx.class, DriveTrainConstants.frontLeftMotor);
-        motor1 = hardwareMap.get(DcMotorEx.class, DriveTrainConstants.frontRightMotor);
-        motor2 = hardwareMap.get(DcMotorEx.class, DriveTrainConstants.backLeftMotor);
-        motor3 = hardwareMap.get(DcMotorEx.class, DriveTrainConstants.backRightMotor);
+        motor0 = hardwareMap.get(DcMotorEx.class, DriveTrainConstants.Mod0.driveMotor);
+        motor1 = hardwareMap.get(DcMotorEx.class, DriveTrainConstants.Mod1.driveMotor);
+        motor2 = hardwareMap.get(DcMotorEx.class, DriveTrainConstants.Mod2.driveMotor);
+        motor3 = hardwareMap.get(DcMotorEx.class, DriveTrainConstants.Mod3.driveMotor);
 
         motor0.setDirection(DcMotorSimple.Direction.FORWARD);
         motor1.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -45,20 +46,20 @@ public class Swerve extends SubsystemBase {
 
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        servo0 = hardwareMap.get(CRServo.class, "angle0");
-        servo1 = hardwareMap.get(CRServo.class, "angle1");
-        servo2 = hardwareMap.get(CRServo.class, "angle2");
-        servo3 = hardwareMap.get(CRServo.class, "angle3");
+        servo0 = hardwareMap.get(CRServo.class, DriveTrainConstants.Mod0.angleServo);
+        servo1 = hardwareMap.get(CRServo.class, DriveTrainConstants.Mod1.angleServo);
+        servo2 = hardwareMap.get(CRServo.class, DriveTrainConstants.Mod2.angleServo);
+        servo3 = hardwareMap.get(CRServo.class, DriveTrainConstants.Mod3.angleServo);
 
         motor0.setDirection(DcMotorSimple.Direction.FORWARD);
         motor1.setDirection(DcMotorSimple.Direction.FORWARD);
         motor2.setDirection(DcMotorSimple.Direction.FORWARD);
         motor3.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        moduleHeading0 = hardwareMap.get(AnalogInput.class, "angleFeedback0");
-        moduleHeading1 = hardwareMap.get(AnalogInput.class, "angleFeedback1");
-        moduleHeading2 = hardwareMap.get(AnalogInput.class, "angleFeedback2");
-        moduleHeading3 = hardwareMap.get(AnalogInput.class, "angleFeedback3");
+        moduleHeading0 = hardwareMap.get(AnalogInput.class, DriveTrainConstants.Mod0.feedback);
+        moduleHeading1 = hardwareMap.get(AnalogInput.class, DriveTrainConstants.Mod1.feedback);
+        moduleHeading2 = hardwareMap.get(AnalogInput.class, DriveTrainConstants.Mod2.feedback);
+        moduleHeading3 = hardwareMap.get(AnalogInput.class, DriveTrainConstants.Mod3.feedback);
     }
 
     public void setPower(int module, double power){
