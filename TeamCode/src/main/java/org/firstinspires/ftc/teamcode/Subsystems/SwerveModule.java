@@ -11,10 +11,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class SwerveModule extends SubsystemBase {
 
-    private Telemetry telem;
+    private Telemetry telemetry;
+
+    private final int modNumber;
 
     private final DcMotorEx drive;
     private final CRServo angle;
@@ -22,15 +25,15 @@ public class SwerveModule extends SubsystemBase {
 
     private final PIDFController controller;
 
-
+    private final double moduleOffset;
     private double moduleSetpoint;
 
-    public SwerveModule(HardwareMap hardwareMap, Telemetry telem) {
+    public SwerveModule(HardwareMap hardwareMap, Telemetry telemetry, SwerveModuleConstants moduleConstants) {
 
-        this.telem = telem;
+        this.telemetry = telemetry;
 
-        drive = hardwareMap.get(DcMotorEx.class, Constants.DriveTrainConstants.Mod0.driveMotor);
-        angle = hardwareMap.get(CRServo.class, Constants.DriveTrainConstants.Mod0.angleServo);
+        drive = hardwareMap.get(DcMotorEx.class, moduleConstants.driveMotor);
+        angle = hardwareMap.get(CRServo.class, moduleConstants.angleServo);
 
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -41,9 +44,12 @@ public class SwerveModule extends SubsystemBase {
         controller = new PIDFController(Constants.DriveTrainConstants.angleKP, Constants.DriveTrainConstants.angleKI, Constants.DriveTrainConstants.angleKD, Constants.DriveTrainConstants.angleKF);
 
 
-        moduleHeading = hardwareMap.get(AnalogInput.class, Constants.DriveTrainConstants.Mod0.feedback);
+        moduleHeading = hardwareMap.get(AnalogInput.class, moduleConstants.feedback);
+        moduleOffset = moduleConstants.moduleOffset;
 
-        moduleSetpoint = getDegrees();
+        moduleSetpoint = getDegrees(true);
+
+        modNumber = moduleConstants.modNumber;
 
     }
 
@@ -64,8 +70,18 @@ public class SwerveModule extends SubsystemBase {
         return moduleHeading.getVoltage();
     }
 
-    public double getDegrees() {
-        return (getRawAngle()/ moduleHeading.getMaxVoltage())*360;
+    //withOffset set to true will return real angle, else will return raw angle
+    public double getDegrees(boolean withOffset) {
+
+        double rawAngle = (getRawAngle()/ moduleHeading.getMaxVoltage())*360;
+
+        double realAngle = rawAngle - moduleOffset;
+
+        if(realAngle < 0){
+            realAngle +=360;
+        }
+
+        return withOffset ? realAngle : rawAngle;
     }
 
     public double getWrappedError(double setpoint, double measurement) {
@@ -78,29 +94,29 @@ public class SwerveModule extends SubsystemBase {
         moduleSetpoint = setpoint;
     }
 
+    public double getModuleSetpoint() {
+        return moduleSetpoint;
+    }
+
     public void setModulePosition() {
-        double error = getWrappedError(moduleSetpoint, getDegrees());
+        double error = getWrappedError(moduleSetpoint, getDegrees(true));
 
         double placeholder = moduleSetpoint - error;
 
-        telem.addData("idjsafjasdjfhsdah",error);
+        telemetry.addData("idjsafjasdjfhsdah",error);
 
         setTurnSpeed(-controller.calculate(placeholder, moduleSetpoint));
-    }
-
-    public double getModuleSetpoint() {
-        return moduleSetpoint;
     }
 
     public void update(){
 
         setModulePosition();
 
-        telem.addLine("Module 0");
-        telem.addData("Angle: ", getRawAngle());
-        telem.addData("Degrees: ", getDegrees());
-        telem.addData("Setpoint: ", getModuleSetpoint());
-        telem.addData("Max Angle: ", moduleHeading.getMaxVoltage());
+        telemetry.addLine("Module " + modNumber);
+        telemetry.addData("Raw Angle: ", getRawAngle());
+        telemetry.addData("Degrees: ", getDegrees(true));
+        telemetry.addData("Setpoint: ", getModuleSetpoint());
+        telemetry.addData("Max Angle: ", moduleHeading.getMaxVoltage());
 
     }
 
