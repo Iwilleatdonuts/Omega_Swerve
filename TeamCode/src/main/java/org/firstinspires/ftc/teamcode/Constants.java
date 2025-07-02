@@ -6,6 +6,8 @@ public class Constants {
 
     public static final class DriveTrainConstants {
 
+        public static final String sparkfun = "otos";
+
         public static final double angleKP = 0.025;
         public static final double angleKI = 0.01;
         public static final double angleKD = 0;
