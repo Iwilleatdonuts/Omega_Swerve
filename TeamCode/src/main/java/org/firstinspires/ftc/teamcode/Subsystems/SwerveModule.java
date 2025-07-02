@@ -15,18 +15,17 @@ import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class SwerveModule extends SubsystemBase {
 
-    private Telemetry telemetry;
-
     private final int modNumber;
-
     private final DcMotorEx drive;
     private final CRServo angle;
     private final AnalogInput moduleHeading;
-
     private final PIDFController controller;
-
     private final double moduleOffset;
+    private final Telemetry telemetry;
     private double moduleSetpoint;
+
+    //Idk if this is how ur supposed to make a swervy drive but I'm gonna put a boolean to tell the module when it is backwards and so the drivy motor should be backwards
+    private boolean isModuleBackwards;
 
     public SwerveModule(HardwareMap hardwareMap, Telemetry telemetry, SwerveModuleConstants moduleConstants) {
 
@@ -73,12 +72,12 @@ public class SwerveModule extends SubsystemBase {
     //withOffset set to true will return real angle, else will return raw angle
     public double getDegrees(boolean withOffset) {
 
-        double rawAngle = (getRawAngle()/ moduleHeading.getMaxVoltage())*360;
+        double rawAngle = (getRawAngle() / moduleHeading.getMaxVoltage()) * 360;
 
         double realAngle = rawAngle - moduleOffset;
 
-        if(realAngle < 0){
-            realAngle +=360;
+        if (realAngle < 0) {
+            realAngle += 360;
         }
 
         return withOffset ? realAngle : rawAngle;
@@ -90,12 +89,12 @@ public class SwerveModule extends SubsystemBase {
         return error;
     }
 
-    public void setModuleSetpoint(double setpoint) {
-        moduleSetpoint = setpoint;
-    }
-
     public double getModuleSetpoint() {
         return moduleSetpoint;
+    }
+
+    public void setModuleSetpoint(double setpoint) {
+        moduleSetpoint = setpoint;
     }
 
     public void setModulePosition() {
@@ -103,12 +102,12 @@ public class SwerveModule extends SubsystemBase {
 
         double placeholder = moduleSetpoint - error;
 
-        telemetry.addData("idjsafjasdjfhsdah",error);
+        telemetry.addData("idjsafjasdjfhsdah", error);
 
         setTurnSpeed(-controller.calculate(placeholder, moduleSetpoint));
     }
 
-    public void update(){
+    public void update() {
 
         setModulePosition();
 
