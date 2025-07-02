@@ -83,7 +83,7 @@ public class OTOSSensor extends SubsystemBase {
     }
 
     public SparkFunOTOS.Pose2D getPose() {
-        return otos.getPositionStdDev();
+        return otos.getPosition();
     }
 
     public SparkFunOTOS.Pose2D getVelocity() {
