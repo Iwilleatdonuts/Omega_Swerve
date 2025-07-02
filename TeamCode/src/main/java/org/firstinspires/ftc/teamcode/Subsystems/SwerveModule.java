@@ -24,7 +24,9 @@ public class SwerveModule extends SubsystemBase {
     private final Telemetry telemetry;
     private double moduleSetpoint;
 
-    //Idk if this is how ur supposed to make a swervy drive but I'm gonna put a boolean to tell the module when it is backwards and so the drivy motor should be backwards
+    //Idk if this is how ur supposed to make a swervy drive but I'm gonna
+    // put a boolean to tell the module when it is backwards and so the
+    // drivy motor should be backwards because im rly smart definetely yes yes i can speel
     private boolean isModuleBackwards;
 
     public SwerveModule(HardwareMap hardwareMap, Telemetry telemetry, SwerveModuleConstants moduleConstants) {
@@ -54,7 +56,13 @@ public class SwerveModule extends SubsystemBase {
 
     public void setDrivePower(double power) {
 
-        drive.setPower(power);
+        double newPower = power;
+
+        if(isModuleBackwards) {
+            newPower = -newPower;
+        }
+
+        drive.setPower(newPower);
 
     }
 
@@ -94,15 +102,26 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public void setModuleSetpoint(double setpoint) {
-        moduleSetpoint = setpoint;
+
+        double newSetpoint = setpoint;
+
+        if(Math.abs(getDegrees(true) - setpoint) > 90){
+            newSetpoint -= 180;
+            if (newSetpoint < 0) {
+                newSetpoint += 360;
+            }
+            isModuleBackwards = true;
+        } else {
+            isModuleBackwards = false;
+        }
+
+        moduleSetpoint = newSetpoint;
     }
 
     public void setModulePosition() {
         double error = getWrappedError(moduleSetpoint, getDegrees(true));
 
         double placeholder = moduleSetpoint - error;
-
-        telemetry.addData("idjsafjasdjfhsdah", error);
 
         setTurnSpeed(-controller.calculate(placeholder, moduleSetpoint));
     }
