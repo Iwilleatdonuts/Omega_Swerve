@@ -90,6 +90,14 @@ public class OTOSSensor extends SubsystemBase {
         return otos.getVelocity();
     }
 
+    public SparkFunOTOS.Pose2D getPoseSTD() {
+        return otos.getPositionStdDev();
+    }
+
+    public SparkFunOTOS.Pose2D getVelocitySTD() {
+        return otos.getVelocityStdDev();
+    }
+
     public void update(){
         telemetry.addLine("OTOS");
         telemetry.addData("X Position: ", getPose().x);
