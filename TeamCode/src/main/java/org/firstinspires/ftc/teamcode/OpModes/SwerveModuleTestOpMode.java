@@ -104,6 +104,12 @@ public class SwerveModuleTestOpMode extends LinearOpMode {
 //                }
 //            }
 
+            if(m_DriverOp.isDown(GamepadKeys.Button.A)) {
+                s_Mod0.setTurnSpeed(0.5);
+            } else {
+                s_Mod0.setTurnSpeed(0);
+            }
+
             s_Mod0.update();
             s_Mod1.update();
             s_Mod2.update();
