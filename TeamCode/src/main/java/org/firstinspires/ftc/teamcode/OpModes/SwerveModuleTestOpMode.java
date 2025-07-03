@@ -40,6 +40,9 @@ public class SwerveModuleTestOpMode extends LinearOpMode {
             m_OperatorOp.readButtons();
 
             s_Mod0.setDrivePower(m_DriverOp.getLeftY());
+            s_Mod1.setDrivePower(m_DriverOp.getLeftY());
+            s_Mod2.setDrivePower(m_DriverOp.getLeftY());
+            s_Mod3.setDrivePower(m_DriverOp.getLeftY());
 
             if(m_DriverOp.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
                 if(m_DriverOp.isDown(GamepadKeys.Button.A)){
