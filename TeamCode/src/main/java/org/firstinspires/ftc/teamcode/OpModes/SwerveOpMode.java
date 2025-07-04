@@ -40,7 +40,7 @@ public class SwerveOpMode extends LinearOpMode {
             m_OperatorOp.readButtons();
 
 
-            double drivePower = Math.sqrt(Math.pow(m_DriverOp.getLeftX(), 2) + Math.pow(m_DriverOp.getLeftY(), 2));
+            double drivePower = Math.sqrt(Math.pow(m_DriverOp.getLeftX(), 2) + Math.pow(m_DriverOp.getLeftY(), 2)) * 0.1;
 
             s_Mod0.setDrivePower(drivePower);
             s_Mod1.setDrivePower(drivePower);
