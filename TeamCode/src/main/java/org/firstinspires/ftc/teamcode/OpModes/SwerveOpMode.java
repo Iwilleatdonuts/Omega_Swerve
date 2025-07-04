@@ -44,12 +44,17 @@ public class SwerveOpMode extends LinearOpMode {
 //            s_Mod2.setDrivePower(m_DriverOp.getLeftY());
 //            s_Mod3.setDrivePower(m_DriverOp.getLeftY());
 
+            s_Mod0.setModuleSetpoint(getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
+            s_Mod1.setModuleSetpoint(getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
+            s_Mod2.setModuleSetpoint(getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
+            s_Mod3.setModuleSetpoint(getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
+
             s_Mod0.update();
             s_Mod1.update();
             s_Mod2.update();
             s_Mod3.update();
             s_Sparky.update();
-            telemetry.addData("Joystick Angle: \t", getAngleFromJoystick(m_DriverOp.getLeftX(), m_DriverOp.getLeftY()));
+            telemetry.addData("Joystick Angle: \t", getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
             telemetry.update();
 
         }
