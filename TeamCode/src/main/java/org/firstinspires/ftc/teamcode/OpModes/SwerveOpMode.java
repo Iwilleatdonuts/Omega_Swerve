@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
 
-@TeleOp(name = "Swerve Module Test")
+@TeleOp(name = "Swerve OP Mode")
 public class SwerveOpMode extends LinearOpMode {
 
     @Override
@@ -39,10 +39,10 @@ public class SwerveOpMode extends LinearOpMode {
             m_DriverOp.readButtons();
             m_OperatorOp.readButtons();
 
-            s_Mod0.setDrivePower(m_DriverOp.getLeftY());
-            s_Mod1.setDrivePower(m_DriverOp.getLeftY());
-            s_Mod2.setDrivePower(m_DriverOp.getLeftY());
-            s_Mod3.setDrivePower(m_DriverOp.getLeftY());
+//            s_Mod0.setDrivePower(m_DriverOp.getLeftY());
+//            s_Mod1.setDrivePower(m_DriverOp.getLeftY());
+//            s_Mod2.setDrivePower(m_DriverOp.getLeftY());
+//            s_Mod3.setDrivePower(m_DriverOp.getLeftY());
 
             s_Mod0.update();
             s_Mod1.update();
