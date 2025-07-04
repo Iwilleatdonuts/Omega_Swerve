@@ -42,7 +42,7 @@ public class SwerveModule extends SubsystemBase {
 
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        controller = new PIDFController(Constants.DriveTrainConstants.angleKP, Constants.DriveTrainConstants.angleKI, Constants.DriveTrainConstants.angleKD, Constants.DriveTrainConstants.angleKF);
+        controller = new PIDFController(moduleConstants.kP, moduleConstants.kI, moduleConstants.kD, moduleConstants.kF);
 
 
         moduleHeading = hardwareMap.get(AnalogInput.class, moduleConstants.feedback);
