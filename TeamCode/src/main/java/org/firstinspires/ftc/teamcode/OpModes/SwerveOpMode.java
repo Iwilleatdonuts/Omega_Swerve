@@ -66,7 +66,7 @@ public class SwerveOpMode extends LinearOpMode {
     }
 
     public double getAngleFromJoystick(double x, double y){
-        double angle = Math.toDegrees(Math.atan2(y, x));
+        double angle = Math.toDegrees(Math.atan2(y, -x));
         if (angle < 0) {
             angle += 360;
         }
