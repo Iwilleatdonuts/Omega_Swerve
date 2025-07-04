@@ -39,15 +39,20 @@ public class SwerveOpMode extends LinearOpMode {
             m_DriverOp.readButtons();
             m_OperatorOp.readButtons();
 
-//            s_Mod0.setDrivePower(m_DriverOp.getLeftY());
-//            s_Mod1.setDrivePower(m_DriverOp.getLeftY());
-//            s_Mod2.setDrivePower(m_DriverOp.getLeftY());
-//            s_Mod3.setDrivePower(m_DriverOp.getLeftY());
 
-            s_Mod0.setModuleSetpoint(getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
-            s_Mod1.setModuleSetpoint(getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
-            s_Mod2.setModuleSetpoint(getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
-            s_Mod3.setModuleSetpoint(getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
+            double drivePower = Math.sqrt(Math.pow(m_DriverOp.getLeftX(), 2) + Math.pow(m_DriverOp.getLeftY(), 2));
+
+            s_Mod0.setDrivePower(drivePower);
+            s_Mod1.setDrivePower(drivePower);
+            s_Mod2.setDrivePower(drivePower);
+            s_Mod3.setDrivePower(drivePower);
+
+            double angle = getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX());
+
+            s_Mod0.setModuleSetpoint(angle);
+            s_Mod1.setModuleSetpoint(angle);
+            s_Mod2.setModuleSetpoint(angle);
+            s_Mod3.setModuleSetpoint(angle);
 
             s_Mod0.update();
             s_Mod1.update();
