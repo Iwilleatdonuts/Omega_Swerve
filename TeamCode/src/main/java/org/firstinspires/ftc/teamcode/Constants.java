@@ -21,11 +21,11 @@ public class Constants {
             public static final double moduleOffset = 286.47;
 
             public static final double angleKP = 0.025;
-            public static final double angleKI = 0.01;
+            public static final double angleKI = 0.02;
             public static final double angleKD = 0;
             public static final double angleKF = 0.0005;
 
-            public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(3, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
+            public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(0, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
 
         }
 
@@ -36,12 +36,12 @@ public class Constants {
             public static final String feedback = "angleFeedback1";
             public static final double moduleOffset =137.4545 ;
 
-            public static final double angleKP = 0.025;
-            public static final double angleKI = 0.01;
+            public static final double angleKP = 0.02;
+            public static final double angleKI = 0.015;
             public static final double angleKD = 0;
             public static final double angleKF = 0.0005;
 
-            public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(3, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
+            public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(1, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
 
         }
 
@@ -53,11 +53,11 @@ public class Constants {
             public static final double moduleOffset = 173.89;
 
             public static final double angleKP = 0.025;
-            public static final double angleKI = 0.01;
+            public static final double angleKI = 0.015;
             public static final double angleKD = 0;
             public static final double angleKF = 0.0005;
 
-            public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(3, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
+            public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(2, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
 
         }
 
@@ -69,7 +69,7 @@ public class Constants {
             public static final double moduleOffset = 104.4;
 
             public static final double angleKP = 0.025;
-            public static final double angleKI = 0.01;
+            public static final double angleKI = 0.02;
             public static final double angleKD = 0;
             public static final double angleKF = 0.0005;
 
