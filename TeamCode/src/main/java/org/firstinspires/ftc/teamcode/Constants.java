@@ -18,7 +18,7 @@ public class Constants {
             public static final String driveMotor = "drive0";
             public static final String angleServo = "angle0";
             public static final String feedback = "angleFeedback0";
-            public static final double moduleOffset = 0;
+            public static final double moduleOffset = 286.47;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(0, driveMotor, angleServo, feedback, moduleOffset);
 
@@ -29,7 +29,7 @@ public class Constants {
             public static final String driveMotor = "drive1";
             public static final String angleServo = "angle1";
             public static final String feedback = "angleFeedback1";
-            public static final double moduleOffset = 0;
+            public static final double moduleOffset =137.4545 ;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(1, driveMotor, angleServo, feedback, moduleOffset);
 
@@ -40,7 +40,7 @@ public class Constants {
             public static final String driveMotor = "drive2";
             public static final String angleServo = "angle2";
             public static final String feedback = "angleFeedback2";
-            public static final double moduleOffset = 0;
+            public static final double moduleOffset = 173.89;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(2, driveMotor, angleServo, feedback, moduleOffset);
 
@@ -51,7 +51,7 @@ public class Constants {
             public static final String driveMotor = "drive3";
             public static final String angleServo = "angle3";
             public static final String feedback = "angleFeedback3";
-            public static final double moduleOffset = 0;
+            public static final double moduleOffset = 104.4;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(3, driveMotor, angleServo, feedback, moduleOffset);
 

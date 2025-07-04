@@ -44,71 +44,77 @@ public class SwerveModuleTestOpMode extends LinearOpMode {
             s_Mod2.setDrivePower(m_DriverOp.getLeftY());
             s_Mod3.setDrivePower(m_DriverOp.getLeftY());
 
-//            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
-//                if(m_DriverOp.isDown(GamepadKeys.Button.A)){
-//                    s_Mod0.setModuleSetpoint(0);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.B)){
-//                    s_Mod1.setModuleSetpoint(0);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.X)){
-//                    s_Mod2.setModuleSetpoint(0);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.Y)){
-//                    s_Mod3.setModuleSetpoint(0);
-//                }
-//            }
-//
-//            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)){
-//                if(m_DriverOp.isDown(GamepadKeys.Button.A)){
-//                    s_Mod0.setModuleSetpoint(90);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.B)){
-//                    s_Mod1.setModuleSetpoint(90);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.X)){
-//                    s_Mod2.setModuleSetpoint(90);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.Y)){
-//                    s_Mod3.setModuleSetpoint(90);
-//                }
-//            }
-//
-//            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
-//                if(m_DriverOp.isDown(GamepadKeys.Button.A)){
-//                    s_Mod0.setModuleSetpoint(180);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.B)){
-//                    s_Mod1.setModuleSetpoint(180);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.X)){
-//                    s_Mod2.setModuleSetpoint(180);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.Y)){
-//                    s_Mod3.setModuleSetpoint(180);
-//                }
-//            }
-//
-//            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
-//                if(m_DriverOp.isDown(GamepadKeys.Button.A)){
-//                    s_Mod0.setModuleSetpoint(270);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.B)){
-//                    s_Mod1.setModuleSetpoint(270);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.X)){
-//                    s_Mod2.setModuleSetpoint(270);
-//                }
-//                if(m_DriverOp.isDown(GamepadKeys.Button.Y)){
-//                    s_Mod3.setModuleSetpoint(270);
-//                }
-//            }
-
-            if(m_DriverOp.isDown(GamepadKeys.Button.A)) {
-                s_Mod0.setTurnSpeed(0.5);
-            } else {
-                s_Mod0.setTurnSpeed(0);
+            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
+                if(m_DriverOp.isDown(GamepadKeys.Button.A)){
+                    s_Mod0.setModuleSetpoint(0);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.B)){
+                    s_Mod1.setModuleSetpoint(0);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.X)){
+                    s_Mod2.setModuleSetpoint(0);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.Y)){
+                    s_Mod3.setModuleSetpoint(0);
+                }
             }
+
+            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)){
+                if(m_DriverOp.isDown(GamepadKeys.Button.A)){
+                    s_Mod0.setModuleSetpoint(90);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.B)){
+                    s_Mod1.setModuleSetpoint(90);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.X)){
+                    s_Mod2.setModuleSetpoint(90);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.Y)){
+                    s_Mod3.setModuleSetpoint(90);
+                }
+            }
+
+            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
+                if(m_DriverOp.isDown(GamepadKeys.Button.A)){
+                    s_Mod0.setModuleSetpoint(180);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.B)){
+                    s_Mod1.setModuleSetpoint(180);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.X)){
+                    s_Mod2.setModuleSetpoint(180);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.Y)){
+                    s_Mod3.setModuleSetpoint(180);
+                }
+            }
+
+            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
+                if(m_DriverOp.isDown(GamepadKeys.Button.A)){
+                    s_Mod0.setModuleSetpoint(270);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.B)){
+                    s_Mod1.setModuleSetpoint(270);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.X)){
+                    s_Mod2.setModuleSetpoint(270);
+                }
+                if(m_DriverOp.isDown(GamepadKeys.Button.Y)){
+                    s_Mod3.setModuleSetpoint(270);
+                }
+            }
+
+//            if(m_DriverOp.isDown(GamepadKeys.Button.A)) {
+//                s_Mod0.setTurnSpeed(0.5);
+//                s_Mod1.setTurnSpeed(0.5);
+//                s_Mod2.setTurnSpeed(0.5);
+//                s_Mod3.setTurnSpeed(0.5);
+//            } else {
+//                s_Mod0.setTurnSpeed(0);
+//            s_Mod1.setTurnSpeed(0);
+//            s_Mod2.setTurnSpeed(0);
+//            s_Mod3.setTurnSpeed(0);
+//            }
 
             s_Mod0.update();
             s_Mod1.update();
