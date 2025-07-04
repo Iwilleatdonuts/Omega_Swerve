@@ -100,12 +100,13 @@ public class OTOSSensor extends SubsystemBase {
 
     public void update(){
         telemetry.addLine("OTOS");
-        telemetry.addData("X Position: ", getPose().x);
-        telemetry.addData("Y Position: ", getPose().y);
-        telemetry.addData("Rotation: ", getPose().h);
-        telemetry.addData("X Velocity: ", getVelocity().x);
-        telemetry.addData("Y Velocity: ", getVelocity().y);
-        telemetry.addData("R Velocity: ", getVelocity().h);
+        telemetry.addData("X Position: \t", getPose().x);
+        telemetry.addData("Y Position: \t", getPose().y);
+        telemetry.addData("Rotation: \t", getPose().h);
+        telemetry.addData("X Velocity: \t", getVelocity().x);
+        telemetry.addData("Y Velocity: \t", getVelocity().y);
+        telemetry.addData("R Velocity: \t", getVelocity().h);
+        telemetry.addLine();
     }
 
 }
