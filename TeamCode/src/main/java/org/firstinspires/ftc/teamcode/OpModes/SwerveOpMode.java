@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
 
-@TeleOp(name = "Swerve OP Mode")
+@TeleOp(name = "Swerve")
 public class SwerveOpMode extends LinearOpMode {
 
     @Override
@@ -40,7 +40,7 @@ public class SwerveOpMode extends LinearOpMode {
             m_OperatorOp.readButtons();
 
 
-            double drivePower = Math.sqrt(Math.pow(m_DriverOp.getLeftX(), 2) + Math.pow(m_DriverOp.getLeftY(), 2)) * 0.1;
+            double drivePower = Math.sqrt(Math.pow(m_DriverOp.getLeftX(), 2) + Math.pow(m_DriverOp.getLeftY(), 2)) * 0.3;
 
             s_Mod0.setDrivePower(drivePower);
             s_Mod1.setDrivePower(drivePower);
@@ -54,12 +54,24 @@ public class SwerveOpMode extends LinearOpMode {
             s_Mod2.setModuleSetpoint(angle);
             s_Mod3.setModuleSetpoint(angle);
 
+            if(drivePower > 0.1){
+                s_Mod0.setModulePosition();
+                s_Mod1.setModulePosition();
+                s_Mod2.setModulePosition();
+                s_Mod3.setModulePosition();
+            } else {
+                s_Mod0.setTurnSpeed(0);
+                s_Mod1.setTurnSpeed(0);
+                s_Mod2.setTurnSpeed(0);
+                s_Mod3.setTurnSpeed(0);
+            }
+
             s_Mod0.update();
             s_Mod1.update();
             s_Mod2.update();
             s_Mod3.update();
             s_Sparky.update();
-            telemetry.addData("Joystick Angle: \t", getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
+            telemetry.addData("Joystick Angle \t", getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
             telemetry.update();
 
         }

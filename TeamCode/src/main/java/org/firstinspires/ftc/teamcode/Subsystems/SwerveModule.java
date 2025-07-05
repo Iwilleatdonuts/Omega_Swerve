@@ -128,13 +128,9 @@ public class SwerveModule extends SubsystemBase {
 
     public void update() {
 
-        setModulePosition();
-
         telemetry.addLine("Module " + modNumber);
-//        telemetry.addData("Raw Angle: ", getRawAngle());
-        telemetry.addData("Degrees: \t", getDegrees(true));
-        telemetry.addData("Setpoint: \t", getModuleSetpoint());
-//        telemetry.addData("Max Angle: ", moduleHeading.getMaxVoltage());
+        telemetry.addData("Degrees \t", getDegrees(true));
+        telemetry.addData("Setpoint \t", getModuleSetpoint());
         telemetry.addLine();
 
     }

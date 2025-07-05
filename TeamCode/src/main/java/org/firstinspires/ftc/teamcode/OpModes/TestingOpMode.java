@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
 
-@TeleOp(name = "Swerve Module")
-public class SwerveModuleTestOpMode extends LinearOpMode {
+@TeleOp(name = "Test Mode")
+public class TestingOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -28,6 +28,8 @@ public class SwerveModuleTestOpMode extends LinearOpMode {
 
         ElapsedTime runtime = new ElapsedTime();
 
+        boolean runTurnos = false;
+
         s_Sparky.configureOTOS();
 
         waitForStart();
@@ -39,10 +41,16 @@ public class SwerveModuleTestOpMode extends LinearOpMode {
             m_DriverOp.readButtons();
             m_OperatorOp.readButtons();
 
-            s_Mod0.setDrivePower(m_DriverOp.getLeftY());
-            s_Mod1.setDrivePower(m_DriverOp.getLeftY());
-            s_Mod2.setDrivePower(m_DriverOp.getLeftY());
-            s_Mod3.setDrivePower(m_DriverOp.getLeftY());
+            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.BACK)){
+                runTurnos = !runTurnos;
+            }
+
+            double drivePower = m_DriverOp.getLeftY();
+
+            s_Mod0.setDrivePower(drivePower);
+            s_Mod1.setDrivePower(drivePower);
+            s_Mod2.setDrivePower(drivePower);
+            s_Mod3.setDrivePower(drivePower);
 
             if(m_DriverOp.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
                 if(m_DriverOp.isDown(GamepadKeys.Button.A)){
@@ -104,25 +112,38 @@ public class SwerveModuleTestOpMode extends LinearOpMode {
                 }
             }
 
-//            if(m_DriverOp.isDown(GamepadKeys.Button.A)) {
-//                s_Mod0.setTurnSpeed(0.5);
-//                s_Mod1.setTurnSpeed(0.5);
-//                s_Mod2.setTurnSpeed(0.5);
-//                s_Mod3.setTurnSpeed(0.5);
-//            } else {
-//                s_Mod0.setTurnSpeed(0);
-//            s_Mod1.setTurnSpeed(0);
-//            s_Mod2.setTurnSpeed(0);
-//            s_Mod3.setTurnSpeed(0);
-//            }
+            if(runTurnos) {
+                s_Mod0.setModulePosition();
+                s_Mod1.setModulePosition();
+                s_Mod2.setModulePosition();
+                s_Mod3.setModulePosition();
+            }
 
             s_Mod0.update();
             s_Mod1.update();
             s_Mod2.update();
             s_Mod3.update();
             s_Sparky.update();
+            telemetry.addData("Joystick Angle \t", getAngleFromJoystick(m_DriverOp.getLeftX(), m_DriverOp.getLeftY()));
             telemetry.update();
 
         }
+    }
+
+    public double getAngleFromJoystick(double x, double y){
+
+        double angle = Math.toDegrees(Math.atan2(y, x));
+
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        angle -= 90;
+
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        return angle;
     }
 }
