@@ -117,6 +117,11 @@ public class TestingOpMode extends LinearOpMode {
                 s_Mod1.setModulePosition();
                 s_Mod2.setModulePosition();
                 s_Mod3.setModulePosition();
+            } else {
+                s_Mod0.setTurnSpeed(0);
+                s_Mod1.setTurnSpeed(0);
+                s_Mod2.setTurnSpeed(0);
+                s_Mod3.setTurnSpeed(0);
             }
 
             telemetry.addData("Turn Servos", runTurnos);
