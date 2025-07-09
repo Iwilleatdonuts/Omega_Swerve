@@ -21,7 +21,7 @@ public class OTOSSensor extends SubsystemBase {
 
         this.telemetry = telemetry;
 
-        otos = hardwareMap.get(SparkFunOTOS.class, Constants.DriveTrainConstants.sparkfun);
+        otos = hardwareMap.get(SparkFunOTOS.class, Constants.DriveTrainConstants.OTOS.sparkfun);
 
         isReady = false;
 
@@ -39,9 +39,7 @@ public class OTOSSensor extends SubsystemBase {
         // back and forth is - + y
         // counter clockwise is positive degrees
 
-        //Currently the offset is in mm, if the offset seems weird then try setting all units to meters instead of mm
-        //also if driving is backwards, change the h to 180
-        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, -48, 0);
+        SparkFunOTOS.Pose2D offset = Constants.DriveTrainConstants.OTOS.sensorOffset;
         otos.setOffset(offset);
 
         // Here we can set the linear and angular scalars, which can compensate for
@@ -86,6 +84,10 @@ public class OTOSSensor extends SubsystemBase {
         return otos.getPosition();
     }
 
+    public double getHeading() {
+        return getPose().h;
+    }
+
     public SparkFunOTOS.Pose2D getVelocity() {
         return otos.getVelocity();
     }
@@ -102,7 +104,7 @@ public class OTOSSensor extends SubsystemBase {
         telemetry.addLine("OTOS");
         telemetry.addData("X Position \t", getPose().x);
         telemetry.addData("Y Position \t", getPose().y);
-        telemetry.addData("Rotation \t", getPose().h);
+        telemetry.addData("Rotation \t", getHeading());
         telemetry.addData("X Velocity \t", getVelocity().x);
         telemetry.addData("Y Velocity \t", getVelocity().y);
         telemetry.addData("R Velocity \t", getVelocity().h);

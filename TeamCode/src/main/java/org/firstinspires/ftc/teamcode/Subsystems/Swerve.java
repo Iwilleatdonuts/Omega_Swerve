@@ -25,15 +25,23 @@ public class Swerve {
 
     }
 
-    public void drive(double xJoy, double yJoy, double rJoy){
+    public void drive(double x, double y, double r, boolean fieldRelative){
+
+
 
     }
 
     public double getAngleFromJoystick(double x, double y){
-        double angle = Math.toDegrees(Math.atan2(-y, x));
+
+        double angle = Math.toDegrees(Math.atan2(y, x));
+
         if (angle < 0) {
             angle += 360;
         }
+
+        angle = (angle + 270) % 360;
+
+
         return angle;
     }
 

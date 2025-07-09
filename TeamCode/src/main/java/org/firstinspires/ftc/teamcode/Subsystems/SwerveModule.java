@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class SwerveModule extends SubsystemBase {
@@ -39,6 +38,7 @@ public class SwerveModule extends SubsystemBase {
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        drive.setVelocityPIDFCoefficients(1, 0, 0, 0.00036);
 
         angle.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -62,7 +62,9 @@ public class SwerveModule extends SubsystemBase {
             newPower = -newPower;
         }
 
-        drive.setPower(newPower);
+//        drive.setPower(newPower);
+
+        drive.setVelocity(newPower*2800);
 
     }
 
@@ -105,11 +107,10 @@ public class SwerveModule extends SubsystemBase {
 
         double newSetpoint = setpoint;
 
-        if(Math.abs(getDegrees(true) - setpoint) > 90){
-            newSetpoint -= 180;
-            if (newSetpoint < 0) {
-                newSetpoint += 360;
-            }
+        double error = Math.abs(getWrappedError(newSetpoint, getDegrees(true)));
+
+        if(error > 90){
+            newSetpoint  = (newSetpoint + 180) % 360;
             isModuleBackwards = true;
         } else {
             isModuleBackwards = false;
@@ -131,6 +132,7 @@ public class SwerveModule extends SubsystemBase {
         telemetry.addLine("Module " + modNumber);
         telemetry.addData("Degrees \t", getDegrees(true));
         telemetry.addData("Setpoint \t", getModuleSetpoint());
+        telemetry.addData("Drive speed \t", drive.getVelocity());
         telemetry.addLine();
 
     }

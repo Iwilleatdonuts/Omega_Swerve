@@ -1,17 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class Constants {
 
     public static final class DriveTrainConstants {
 
-        public static final String sparkfun = "otos";
-
         public static final double angleKP = 0.025;
         public static final double angleKI = 0.01;
         public static final double angleKD = 0;
         public static final double angleKF = 0.0005;
+
+        //unit in MM
+        //Track width is side to side modules
+        //Wheelbase is front to back modules
+        public static final double trackWidth = 286.40000;
+        public static final double wheelbase = 286.40000;
 
         public static final class Mod0 {
 
@@ -74,6 +80,16 @@ public class Constants {
             public static final double angleKF = 0.0005;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(3, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
+
+        }
+
+        public static final class OTOS {
+
+            public static final String sparkfun = "otos";
+
+            //Currently the offset is in mm, if the offset seems weird then try setting all units to meters instead of mm
+            //also if driving is backwards, change the h to 180
+            public static final SparkFunOTOS.Pose2D sensorOffset = new SparkFunOTOS.Pose2D(0, -48, 0);
 
         }
     }

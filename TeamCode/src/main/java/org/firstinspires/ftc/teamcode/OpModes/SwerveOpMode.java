@@ -30,6 +30,8 @@ public class SwerveOpMode extends LinearOpMode {
 
         s_Sparky.configureOTOS();
 
+        double hyp = Math.hypot(Constants.DriveTrainConstants.trackWidth/2, Constants.DriveTrainConstants.wheelbase/2);
+
         waitForStart();
         runtime.reset();
 
@@ -39,49 +41,77 @@ public class SwerveOpMode extends LinearOpMode {
             m_DriverOp.readButtons();
             m_OperatorOp.readButtons();
 
+            double xJoy = m_DriverOp.getLeftX();
+            double yJoy = m_DriverOp.getLeftY();
 
-            double drivePower = Math.sqrt(Math.pow(m_DriverOp.getLeftX(), 2) + Math.pow(m_DriverOp.getLeftY(), 2)) * 0.3;
+            if (Math.abs(xJoy) < 0.1) xJoy = 0;
+            if (Math.abs(yJoy) < 0.1) yJoy = 0;
 
-            s_Mod0.setDrivePower(drivePower);
-            s_Mod1.setDrivePower(drivePower);
-            s_Mod2.setDrivePower(drivePower);
-            s_Mod3.setDrivePower(drivePower);
+            double robotHeading = Math.toRadians(s_Sparky.getHeading());
 
-            double angle = getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX());
+            double x = xJoy * Math.cos(robotHeading) + yJoy * Math.sin(robotHeading);
+            double y = -xJoy * Math.sin(robotHeading) + yJoy * Math.cos(robotHeading);
 
-            s_Mod0.setModuleSetpoint(angle);
-            s_Mod1.setModuleSetpoint(angle);
-            s_Mod2.setModuleSetpoint(angle);
-            s_Mod3.setModuleSetpoint(angle);
+            double r = -m_DriverOp.getRightX();
 
-            if(drivePower > 0.1){
-                s_Mod0.setModulePosition();
-                s_Mod1.setModulePosition();
-                s_Mod2.setModulePosition();
-                s_Mod3.setModulePosition();
-            } else {
-                s_Mod0.setTurnSpeed(0);
-                s_Mod1.setTurnSpeed(0);
-                s_Mod2.setTurnSpeed(0);
-                s_Mod3.setTurnSpeed(0);
+            if (Math.abs(r) < 0.1) r = 0;
+
+            double rotVec = r * (Constants.DriveTrainConstants.wheelbase/hyp);
+            double aVec = x - rotVec;
+            double bVec = x + rotVec;
+            double cVec = y - rotVec;
+            double dVec = y + rotVec;
+
+            double mod0Speed = Math.hypot(bVec, dVec);
+            double mod1Speed = Math.hypot(bVec, cVec);
+            double mod2Speed = Math.hypot(aVec, dVec);
+            double mod3Speed = Math.hypot(aVec, cVec);
+
+            double max = Math.max(Math.abs(mod0Speed), Math.abs(mod1Speed));
+            max = Math.max(max, Math.abs(mod2Speed));
+            max = Math.max(max, Math.abs(mod3Speed));
+
+            if (max > 1.0) {
+                mod0Speed  /= max;
+                mod1Speed /= max;
+                mod2Speed   /= max;
+                mod3Speed  /= max;
             }
+
+            double mod0Angle = Math.toDegrees(Math.atan2(-bVec, dVec));
+            double mod1Angle = Math.toDegrees(Math.atan2(-bVec, cVec));
+            double mod2Angle = Math.toDegrees(Math.atan2(-aVec, dVec));
+            double mod3Angle = Math.toDegrees(Math.atan2(-aVec, cVec));
+            mod0Angle = (mod0Angle + 360) % 360;
+            mod1Angle = (mod1Angle + 360) % 360;
+            mod2Angle = (mod2Angle + 360) % 360;
+            mod3Angle = (mod3Angle + 360) % 360;
+
+            s_Mod0.setDrivePower(mod0Speed);
+            s_Mod1.setDrivePower(mod1Speed);
+            s_Mod2.setDrivePower(mod2Speed);
+            s_Mod3.setDrivePower(mod3Speed);
+
+            s_Mod0.setModuleSetpoint(mod0Angle);
+            s_Mod1.setModuleSetpoint(mod1Angle);
+            s_Mod2.setModuleSetpoint(mod2Angle);
+            s_Mod3.setModuleSetpoint(mod3Angle);
+
+            s_Mod0.setModulePosition();
+            s_Mod1.setModulePosition();
+            s_Mod2.setModulePosition();
+            s_Mod3.setModulePosition();
 
             s_Mod0.update();
             s_Mod1.update();
             s_Mod2.update();
             s_Mod3.update();
             s_Sparky.update();
-            telemetry.addData("Joystick Angle \t", getAngleFromJoystick(m_DriverOp.getLeftY(), -m_DriverOp.getLeftX()));
+            //TODO make sure that the heading is 0-360, CCW position, 0 is forwards
+            telemetry.addData("Left Joystick Angle \t", Math.atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY()));
+            telemetry.addData("Right X \t", m_DriverOp.getRightX());
             telemetry.update();
 
         }
-    }
-
-    public double getAngleFromJoystick(double x, double y){
-        double angle = Math.toDegrees(Math.atan2(-y, x));
-        if (angle < 0) {
-            angle += 360;
-        }
-        return angle;
     }
 }
