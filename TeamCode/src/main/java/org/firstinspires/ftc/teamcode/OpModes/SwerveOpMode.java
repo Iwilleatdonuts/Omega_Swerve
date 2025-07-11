@@ -30,7 +30,7 @@ public class SwerveOpMode extends LinearOpMode {
 
         s_Sparky.configureOTOS();
 
-        double hyp = Math.hypot(Constants.DriveTrainConstants.trackWidth/2, Constants.DriveTrainConstants.wheelbase/2);
+        double hyp = Math.hypot(Constants.DriveTrainConstants.trackWidth / 2, Constants.DriveTrainConstants.wheelbase / 2);
 
         waitForStart();
         runtime.reset();
@@ -44,8 +44,12 @@ public class SwerveOpMode extends LinearOpMode {
             double xJoy = m_DriverOp.getLeftX();
             double yJoy = m_DriverOp.getLeftY();
 
-            if (Math.abs(xJoy) < 0.1) xJoy = 0;
-            if (Math.abs(yJoy) < 0.1) yJoy = 0;
+            if (Math.abs(xJoy) < 0.1) {
+                xJoy = 0;
+            }
+            if (Math.abs(yJoy) < 0.1) {
+                yJoy = 0;
+            }
 
             double robotHeading = Math.toRadians(s_Sparky.getHeading());
 
@@ -56,7 +60,7 @@ public class SwerveOpMode extends LinearOpMode {
 
             if (Math.abs(r) < 0.1) r = 0;
 
-            double rotVec = r * (Constants.DriveTrainConstants.wheelbase/hyp);
+            double rotVec = r * (Constants.DriveTrainConstants.wheelbase / hyp);
             double aVec = x - rotVec;
             double bVec = x + rotVec;
             double cVec = y - rotVec;
@@ -72,10 +76,10 @@ public class SwerveOpMode extends LinearOpMode {
             max = Math.max(max, Math.abs(mod3Speed));
 
             if (max > 1.0) {
-                mod0Speed  /= max;
+                mod0Speed /= max;
                 mod1Speed /= max;
-                mod2Speed   /= max;
-                mod3Speed  /= max;
+                mod2Speed /= max;
+                mod3Speed /= max;
             }
 
             double mod0Angle = Math.toDegrees(Math.atan2(-bVec, dVec));
