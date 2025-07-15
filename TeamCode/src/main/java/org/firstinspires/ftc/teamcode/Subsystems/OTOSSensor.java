@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -17,6 +19,8 @@ public class OTOSSensor extends SubsystemBase {
 
     private boolean isReady;
 
+    private final IMU imu;
+
     public OTOSSensor(HardwareMap hardwareMap, Telemetry telemetry){
 
         this.telemetry = telemetry;
@@ -24,6 +28,15 @@ public class OTOSSensor extends SubsystemBase {
         otos = hardwareMap.get(SparkFunOTOS.class, Constants.DriveTrainConstants.OTOS.sparkfun);
 
         isReady = false;
+
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+
+        // Now initialize the IMU with this mounting orientation
+        // This sample expects the IMU to be in a REV Hub and named "imu".
+        imu = hardwareMap.get(IMU.class, "imu");
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
 
     }
 
@@ -85,7 +98,15 @@ public class OTOSSensor extends SubsystemBase {
     }
 
     public double getHeading() {
-        return getPose().h;
+        double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+
+        rotation = (rotation+360)%360;
+
+        return rotation;
+    }
+
+    public void zeroGyro() {
+        imu.resetYaw();
     }
 
     public SparkFunOTOS.Pose2D getVelocity() {

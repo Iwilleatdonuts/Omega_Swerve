@@ -41,6 +41,10 @@ public class TestingOpMode extends LinearOpMode {
             m_DriverOp.readButtons();
             m_OperatorOp.readButtons();
 
+            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.START)){
+                s_Sparky.zeroGyro();
+            }
+
             if(m_DriverOp.wasJustPressed(GamepadKeys.Button.BACK)){
                 runTurnos = !runTurnos;
             }
@@ -130,7 +134,8 @@ public class TestingOpMode extends LinearOpMode {
             s_Mod2.update();
             s_Mod3.update();
             s_Sparky.update();
-            telemetry.addData("Joystick Angle \t", getAngleFromJoystick(m_DriverOp.getLeftX(), m_DriverOp.getLeftY()));
+            telemetry.addData("Left Joystick Angle \t", Math.atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY()));
+            telemetry.addData("Right X \t", m_DriverOp.getRightX());
             telemetry.update();
 
         }

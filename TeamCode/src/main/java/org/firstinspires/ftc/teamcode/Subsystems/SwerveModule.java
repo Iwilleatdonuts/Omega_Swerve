@@ -37,10 +37,10 @@ public class SwerveModule extends SubsystemBase {
 
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
-        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         drive.setVelocityPIDFCoefficients(1, 0, 0, 0.00036);
 
-        angle.setDirection(DcMotorSimple.Direction.REVERSE);
+        angle.setDirection(DcMotorSimple.Direction.FORWARD);
 
         controller = new PIDFController(moduleConstants.kP, moduleConstants.kI, moduleConstants.kD, moduleConstants.kF);
 
@@ -64,7 +64,7 @@ public class SwerveModule extends SubsystemBase {
 
 //        drive.setPower(newPower);
 
-        drive.setVelocity(newPower*2800);
+        drive.setPower(newPower);
 
     }
 
@@ -90,7 +90,11 @@ public class SwerveModule extends SubsystemBase {
             realAngle += 360;
         }
 
-        return withOffset ? realAngle : rawAngle;
+        double realRealAngle = 180 - realAngle;
+
+        realRealAngle = (realRealAngle + 360) % 360;
+
+        return withOffset ? realRealAngle : rawAngle;
     }
 
     public double getWrappedError(double setpoint, double measurement) {
@@ -124,13 +128,20 @@ public class SwerveModule extends SubsystemBase {
 
         double placeholder = moduleSetpoint - error;
 
-        setTurnSpeed(-controller.calculate(placeholder, moduleSetpoint));
+        setTurnSpeed(controller.calculate(placeholder, moduleSetpoint));
+    }
+
+    public boolean atRoughSepoint() {
+        double error = getWrappedError(getModuleSetpoint(), getDegrees(true));
+
+        return error < 10;
     }
 
     public void update() {
 
         telemetry.addLine("Module " + modNumber);
         telemetry.addData("Degrees \t", getDegrees(true));
+        telemetry.addData("Raw Angle \t", getDegrees(false));
         telemetry.addData("Setpoint \t", getModuleSetpoint());
         telemetry.addData("Drive speed \t", drive.getVelocity());
         telemetry.addLine();

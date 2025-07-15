@@ -91,20 +91,28 @@ public class SwerveOpMode extends LinearOpMode {
             mod2Angle = (mod2Angle + 360) % 360;
             mod3Angle = (mod3Angle + 360) % 360;
 
-            s_Mod0.setDrivePower(mod0Speed);
-            s_Mod1.setDrivePower(mod1Speed);
-            s_Mod2.setDrivePower(mod2Speed);
-            s_Mod3.setDrivePower(mod3Speed);
+            if(s_Mod0.atRoughSepoint() && s_Mod1.atRoughSepoint() && s_Mod2.atRoughSepoint() && s_Mod3.atRoughSepoint()){
+                s_Mod0.setDrivePower(mod0Speed);
+                s_Mod1.setDrivePower(mod1Speed);
+                s_Mod2.setDrivePower(mod2Speed);
+                s_Mod3.setDrivePower(mod3Speed);
+            }
 
-            s_Mod0.setModuleSetpoint(mod0Angle);
-            s_Mod1.setModuleSetpoint(mod1Angle);
-            s_Mod2.setModuleSetpoint(mod2Angle);
-            s_Mod3.setModuleSetpoint(mod3Angle);
+            if(Math.abs(m_DriverOp.getLeftY())>0.1 || Math.abs(m_DriverOp.getRightX())>0.1 || Math.abs(m_DriverOp.getLeftX())>0.1){
+                s_Mod0.setModuleSetpoint(mod0Angle);
+                s_Mod1.setModuleSetpoint(mod1Angle);
+                s_Mod2.setModuleSetpoint(mod2Angle);
+                s_Mod3.setModuleSetpoint(mod3Angle);
+            }
 
             s_Mod0.setModulePosition();
             s_Mod1.setModulePosition();
             s_Mod2.setModulePosition();
             s_Mod3.setModulePosition();
+
+            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.START)){
+                s_Sparky.zeroGyro();
+            }
 
             s_Mod0.update();
             s_Mod1.update();
@@ -112,7 +120,7 @@ public class SwerveOpMode extends LinearOpMode {
             s_Mod3.update();
             s_Sparky.update();
             //TODO make sure that the heading is 0-360, CCW position, 0 is forwards
-            telemetry.addData("Left Joystick Angle \t", Math.atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY()));
+            telemetry.addData("Left Joystick Angle \t", Math.toDegrees(Math.atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY())));
             telemetry.addData("Right X \t", m_DriverOp.getRightX());
             telemetry.update();
 

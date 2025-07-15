@@ -31,20 +31,6 @@ public class Swerve {
 
     }
 
-    public double getAngleFromJoystick(double x, double y){
-
-        double angle = Math.toDegrees(Math.atan2(y, x));
-
-        if (angle < 0) {
-            angle += 360;
-        }
-
-        angle = (angle + 270) % 360;
-
-
-        return angle;
-    }
-
     public void update(){
 
         telemetry.addLine("Swerve");
