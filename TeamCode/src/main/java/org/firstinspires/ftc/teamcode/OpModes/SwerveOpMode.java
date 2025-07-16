@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
 
-@TeleOp(name = "Swerve")
+@TeleOp(name = "Janky Swerve")
 public class SwerveOpMode extends LinearOpMode {
 
     @Override
@@ -58,9 +58,12 @@ public class SwerveOpMode extends LinearOpMode {
 
             double r = -m_DriverOp.getRightX();
 
-            if (Math.abs(r) < 0.1) r = 0;
+            if (Math.abs(r) < 0.1){
+                r = 0;
+            }
 
             double rotVec = r * (Constants.DriveTrainConstants.wheelbase / hyp);
+
             double aVec = x - rotVec;
             double bVec = x + rotVec;
             double cVec = y - rotVec;

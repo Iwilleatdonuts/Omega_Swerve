@@ -19,6 +19,10 @@ public class Constants {
         public static final double trackWidth = 286.40000;
         public static final double wheelbase = 286.40000;
 
+        public static final double moduleHypotenuse = Math.hypot(trackWidth/2, wheelbase/2);
+        public static final double widthRotation = trackWidth/moduleHypotenuse;
+        public static final double lengthRotation = wheelbase/moduleHypotenuse;
+
         public static final class Mod0 {
 
             public static final String driveMotor = "drive0";

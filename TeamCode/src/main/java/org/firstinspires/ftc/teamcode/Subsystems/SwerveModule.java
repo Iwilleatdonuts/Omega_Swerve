@@ -37,7 +37,7 @@ public class SwerveModule extends SubsystemBase {
 
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drive.setVelocityPIDFCoefficients(1, 0, 0, 0.00036);
 
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -61,10 +61,9 @@ public class SwerveModule extends SubsystemBase {
         if(isModuleBackwards) {
             newPower = -newPower;
         }
-
+//TODO figure out velocity stuff, change PID coefficients to run veloicty
+        drive.setVelocity(newPower*6000);
 //        drive.setPower(newPower);
-
-        drive.setPower(newPower);
 
     }
 
@@ -86,13 +85,9 @@ public class SwerveModule extends SubsystemBase {
 
         double realAngle = rawAngle - moduleOffset;
 
-        if (realAngle < 0) {
-            realAngle += 360;
-        }
+        realAngle = (realAngle + 360) % 360;
 
-        double realRealAngle = 180 - realAngle;
-
-        realRealAngle = (realRealAngle + 360) % 360;
+        double realRealAngle = (360 - realAngle) % 360;
 
         return withOffset ? realRealAngle : rawAngle;
     }
