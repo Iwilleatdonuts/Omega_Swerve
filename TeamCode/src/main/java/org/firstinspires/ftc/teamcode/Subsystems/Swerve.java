@@ -33,7 +33,7 @@ public class Swerve {
 
         double x = xVal;
         double y = yVal;
-        double r = -rVal;
+        double r = rVal;
 
         if (Math.abs(x) < 0.1) {
             x = 0;
@@ -47,7 +47,7 @@ public class Swerve {
 
         if(fieldRelative){
 
-            double robotHeading = otos.getHeading();
+            double robotHeading = Math.toRadians(otos.getHeading());
 
             x = x * Math.cos(robotHeading) + y * Math.sin(robotHeading);
             y = -x * Math.sin(robotHeading) + y * Math.cos(robotHeading);
