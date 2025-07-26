@@ -1,59 +1,51 @@
-package org.firstinspires.ftc.teamcode.Subsystems;
+package org.firstinspires.ftc.teamcode.Subsystems
 
-import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
+import com.arcrobotics.ftclib.command.SubsystemBase
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot.UsbFacingDirection
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS
+import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.IMU
+import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
+import org.firstinspires.ftc.teamcode.Constants
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Constants;
+class OTOSSensor(hardwareMap: HardwareMap, private val telemetry: Telemetry) : SubsystemBase() {
+    private val otos: SparkFunOTOS
 
-public class OTOSSensor extends SubsystemBase {
+    private var isReady = false
 
-    private final Telemetry telemetry;
+    private val imu: IMU
 
-    private final SparkFunOTOS otos;
+    init {
+        otos = hardwareMap.get<SparkFunOTOS>(
+            SparkFunOTOS::class.java,
+            Constants.DriveTrainConstants.OTOS.sparkfun
+        )
 
-    private boolean isReady;
-
-    private final IMU imu;
-
-    public OTOSSensor(HardwareMap hardwareMap, Telemetry telemetry){
-
-        this.telemetry = telemetry;
-
-        otos = hardwareMap.get(SparkFunOTOS.class, Constants.DriveTrainConstants.OTOS.sparkfun);
-
-        isReady = false;
-
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        val logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN
+        val usbDirection = UsbFacingDirection.BACKWARD
+        val orientationOnRobot = RevHubOrientationOnRobot(logoDirection, usbDirection)
 
         // Now initialize the IMU with this mounting orientation
         // This sample expects the IMU to be in a REV Hub and named "imu".
-        imu = hardwareMap.get(IMU.class, "imu");
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
-
+        imu = hardwareMap.get<IMU>(IMU::class.java, "imu")
+        imu.initialize(IMU.Parameters(orientationOnRobot))
     }
 
-    public void configureOTOS() {
+    fun configureOTOS() {
+        telemetry.addLine("OTOS is Ready: " + isReady)
+        telemetry.update()
 
-        telemetry.addLine("OTOS is Ready: " + isReady);
-        telemetry.update();
-
-        otos.setLinearUnit(DistanceUnit.MM);
-        otos.setAngularUnit(AngleUnit.DEGREES);
+        otos.setLinearUnit(DistanceUnit.MM)
+        otos.setAngularUnit(AngleUnit.DEGREES)
 
         // left and right is - + x
         // back and forth is - + y
         // counter clockwise is positive degrees
-
-        SparkFunOTOS.Pose2D offset = Constants.DriveTrainConstants.OTOS.sensorOffset;
-        otos.setOffset(offset);
+        val offset = Constants.DriveTrainConstants.OTOS.sensorOffset
+        otos.setOffset(offset)
 
         // Here we can set the linear and angular scalars, which can compensate for
         // scaling issues with the sensor measurements. Note that as of firmware
@@ -71,65 +63,62 @@ public class OTOSSensor extends SubsystemBase {
         // multiple speeds to get an average, then set the linear scalar to the
         // inverse of the error. For example, if you move the robot 100 inches and
         // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
-        otos.setLinearScalar(1.0);
-        otos.setAngularScalar(1.0);
+        otos.setLinearScalar(1.0)
+        otos.setAngularScalar(1.0)
 
-        otos.calibrateImu();
+        otos.calibrateImu()
 
-        otos.resetTracking();
+        otos.resetTracking()
 
-        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
-        otos.setPosition(currentPosition);
+        val currentPosition = SparkFunOTOS.Pose2D(0.0, 0.0, 0.0)
+        otos.setPosition(currentPosition)
 
-        SparkFunOTOS.Version hwVersion = new SparkFunOTOS.Version();
-        SparkFunOTOS.Version fwVersion = new SparkFunOTOS.Version();
-        otos.getVersionInfo(hwVersion, fwVersion);
+        val hwVersion = SparkFunOTOS.Version()
+        val fwVersion = SparkFunOTOS.Version()
+        otos.getVersionInfo(hwVersion, fwVersion)
 
-        isReady = true;
-        telemetry.addLine("OTOS is Ready: " + isReady);
-        telemetry.update();
-//        telemetry.addLine();
+        isReady = true
+        telemetry.addLine("OTOS is Ready: " + isReady)
+        telemetry.update()
+        //        telemetry.addLine();
 //        telemetry.addLine(String.format("OTOS Hardware Version: v%d.%d", hwVersion.major, hwVersion.minor));
 //        telemetry.addLine(String.format("OTOS Firmware Version: v%d.%d", fwVersion.major, fwVersion.minor));
     }
 
-    public SparkFunOTOS.Pose2D getPose() {
-        return otos.getPosition();
+    val pose: SparkFunOTOS.Pose2D?
+        get() = otos.getPosition()
+
+    val heading: Double
+        get() {
+            var rotation = imu.getRobotYawPitchRollAngles()
+                .getYaw(AngleUnit.DEGREES)
+
+            rotation = (rotation + 360) % 360
+
+            return rotation
+        }
+
+    fun zeroGyro() {
+        imu.resetYaw()
     }
 
-    public double getHeading() {
-        double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+    val velocity: SparkFunOTOS.Pose2D?
+        get() = otos.getVelocity()
 
-        rotation = (rotation+360)%360;
+    val poseSTD: SparkFunOTOS.Pose2D?
+        get() = otos.getPositionStdDev()
 
-        return rotation;
+    val velocitySTD: SparkFunOTOS.Pose2D?
+        get() = otos.getVelocityStdDev()
+
+    fun update() {
+        telemetry.addLine("OTOS")
+        telemetry.addData("X Position \t", this.pose!!.x)
+        telemetry.addData("Y Position \t", this.pose!!.y)
+        telemetry.addData("Rotation \t", this.heading)
+        telemetry.addData("X Velocity \t", this.velocity!!.x)
+        telemetry.addData("Y Velocity \t", this.velocity!!.y)
+        telemetry.addData("R Velocity \t", this.velocity!!.h)
+        telemetry.addLine()
     }
-
-    public void zeroGyro() {
-        imu.resetYaw();
-    }
-
-    public SparkFunOTOS.Pose2D getVelocity() {
-        return otos.getVelocity();
-    }
-
-    public SparkFunOTOS.Pose2D getPoseSTD() {
-        return otos.getPositionStdDev();
-    }
-
-    public SparkFunOTOS.Pose2D getVelocitySTD() {
-        return otos.getVelocityStdDev();
-    }
-
-    public void update(){
-        telemetry.addLine("OTOS");
-        telemetry.addData("X Position \t", getPose().x);
-        telemetry.addData("Y Position \t", getPose().y);
-        telemetry.addData("Rotation \t", getHeading());
-        telemetry.addData("X Velocity \t", getVelocity().x);
-        telemetry.addData("Y Velocity \t", getVelocity().y);
-        telemetry.addData("R Velocity \t", getVelocity().h);
-        telemetry.addLine();
-    }
-
 }

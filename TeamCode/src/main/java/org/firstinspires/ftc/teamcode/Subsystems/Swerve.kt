@@ -1,119 +1,115 @@
-package org.firstinspires.ftc.teamcode.Subsystems;
+package org.firstinspires.ftc.teamcode.Subsystems
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.teamcode.Constants
+import kotlin.math.abs
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.hypot
+import kotlin.math.max
+import kotlin.math.sin
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Constants;
+class Swerve(hardwareMap: HardwareMap, telemetry: Telemetry) {
+    private val telemetry: Telemetry?
 
-public class Swerve {
+    private val mod0: SwerveModule
+    private val mod1: SwerveModule
+    private val mod2: SwerveModule
+    private val mod3: SwerveModule
 
-    private final Telemetry telemetry;
+    private val otos: OTOSSensor
 
-    private final SwerveModule mod0;
-    private final SwerveModule mod1;
-    private final SwerveModule mod2;
-    private final SwerveModule mod3;
+    init {
+        this.telemetry = telemetry
 
-    private final OTOSSensor otos;
+        mod0 = SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod0.modConstants)
+        mod1 = SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod1.modConstants)
+        mod2 = SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod2.modConstants)
+        mod3 = SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod3.modConstants)
 
-    public Swerve(HardwareMap hardwareMap, Telemetry telemetry){
-
-        this.telemetry = telemetry;
-
-        mod0 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod0.modConstants);
-        mod1 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod1.modConstants);
-        mod2 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod2.modConstants);
-        mod3 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod3.modConstants);
-
-        otos = new OTOSSensor(hardwareMap, telemetry);
-
+        otos = OTOSSensor(hardwareMap, telemetry)
     }
 
-    public void drive(double xVal, double yVal, double rVal, boolean fieldRelative){
+    fun drive(xVal: Double, yVal: Double, rVal: Double, fieldRelative: Boolean) {
+        var x = xVal
+        var y = yVal
+        var r = rVal
 
-        double x = xVal;
-        double y = yVal;
-        double r = rVal;
-
-        if (Math.abs(x) < 0.1) {
-            x = 0;
+        if (abs(x) < 0.1) {
+            x = 0.0
         }
-        if (Math.abs(y) < 0.1) {
-            y = 0;
+        if (abs(y) < 0.1) {
+            y = 0.0
         }
-        if (Math.abs(r) < 0.1){
-            r = 0;
-        }
-
-        if(fieldRelative){
-
-            double robotHeading = Math.toRadians(otos.getHeading());
-
-            x = x * Math.cos(robotHeading) + y * Math.sin(robotHeading);
-            y = -x * Math.sin(robotHeading) + y * Math.cos(robotHeading);
-
+        if (abs(r) < 0.1) {
+            r = 0.0
         }
 
-        double widthVector = r * Constants.DriveTrainConstants.widthRotation;
-        double lengthVector = r * Constants.DriveTrainConstants.lengthRotation;
+        if (fieldRelative) {
+            val robotHeading = Math.toRadians(otos.heading)
 
-        double aVector = x - widthVector;
-        double bVector = x + widthVector;
-        double cVector = y - lengthVector;
-        double dVector = y + lengthVector;
+            x = x * cos(robotHeading) + y * sin(robotHeading)
+            y = -x * sin(robotHeading) + y * cos(robotHeading)
+        }
 
-        double mod0Speed = Math.hypot(bVector, dVector);
-        double mod1Speed = Math.hypot(bVector, cVector);
-        double mod2Speed = Math.hypot(aVector, dVector);
-        double mod3Speed = Math.hypot(aVector, cVector);
+        val widthVector = r * Constants.DriveTrainConstants.widthRotation
+        val lengthVector = r * Constants.DriveTrainConstants.lengthRotation
 
-        double max = Math.max(Math.abs(mod0Speed), Math.abs(mod1Speed));
-        max = Math.max(max, Math.abs(mod2Speed));
-        max = Math.max(max, Math.abs(mod3Speed));
+        val aVector = x - widthVector
+        val bVector = x + widthVector
+        val cVector = y - lengthVector
+        val dVector = y + lengthVector
+
+        var mod0Speed = hypot(bVector, dVector)
+        var mod1Speed = hypot(bVector, cVector)
+        var mod2Speed = hypot(aVector, dVector)
+        var mod3Speed = hypot(aVector, cVector)
+
+        var max = max(abs(mod0Speed), abs(mod1Speed))
+        max = max(max, abs(mod2Speed))
+        max = max(max, abs(mod3Speed))
 
         if (max > 1.0) {
-            mod0Speed /= max;
-            mod1Speed /= max;
-            mod2Speed /= max;
-            mod3Speed /= max;
+            mod0Speed /= max
+            mod1Speed /= max
+            mod2Speed /= max
+            mod3Speed /= max
         }
 
-        double mod0Angle = Math.toDegrees(Math.atan2(-bVector, dVector));
-        double mod1Angle = Math.toDegrees(Math.atan2(-bVector, cVector));
-        double mod2Angle = Math.toDegrees(Math.atan2(-aVector, dVector));
-        double mod3Angle = Math.toDegrees(Math.atan2(-aVector, cVector));
-        mod0Angle = (mod0Angle + 360) % 360;
-        mod1Angle = (mod1Angle + 360) % 360;
-        mod2Angle = (mod2Angle + 360) % 360;
-        mod3Angle = (mod3Angle + 360) % 360;
+        var mod0Angle = Math.toDegrees(atan2(-bVector, dVector))
+        var mod1Angle = Math.toDegrees(atan2(-bVector, cVector))
+        var mod2Angle = Math.toDegrees(atan2(-aVector, dVector))
+        var mod3Angle = Math.toDegrees(atan2(-aVector, cVector))
+        mod0Angle = (mod0Angle + 360) % 360
+        mod1Angle = (mod1Angle + 360) % 360
+        mod2Angle = (mod2Angle + 360) % 360
+        mod3Angle = (mod3Angle + 360) % 360
 
-        mod0.setDrivePower(mod0Speed);
-        mod1.setDrivePower(mod1Speed);
-        mod2.setDrivePower(mod2Speed);
-        mod3.setDrivePower(mod3Speed);
+        mod0.setDrivePower(mod0Speed)
+        mod1.setDrivePower(mod1Speed)
+        mod2.setDrivePower(mod2Speed)
+        mod3.setDrivePower(mod3Speed)
 
-        if(Math.abs(xVal) > 0.1 || Math.abs(yVal) > 0.1 || Math.abs(rVal) > 0.1){
-            mod0.setModuleSetpoint(mod0Angle);
-            mod1.setModuleSetpoint(mod1Angle);
-            mod2.setModuleSetpoint(mod2Angle);
-            mod3.setModuleSetpoint(mod3Angle);
+        if (abs(xVal) > 0.1 || abs(yVal) > 0.1 || abs(rVal) > 0.1) {
+            mod0.setModuleSetpoint(mod0Angle)
+            mod1.setModuleSetpoint(mod1Angle)
+            mod2.setModuleSetpoint(mod2Angle)
+            mod3.setModuleSetpoint(mod3Angle)
         }
 
-        mod0.setModulePosition();
-        mod1.setModulePosition();
-        mod2.setModulePosition();
-        mod3.setModulePosition();
-
+        mod0.setModulePosition()
+        mod1.setModulePosition()
+        mod2.setModulePosition()
+        mod3.setModulePosition()
     }
 
-    public void update(){
-
-        telemetry.addLine("Swerve");
-        telemetry.addData("X Position ", otos.getPose().x);
-        telemetry.addData("Y Position ", otos.getPose().y);
-        telemetry.addData("Heading ", otos.getHeading());
-        telemetry.addData("OTOS Heading ", otos.getPose().h);
-        telemetry.addLine();
+    fun update() {
+        telemetry!!.addLine("Swerve")
+        telemetry.addData("X Position ", otos.pose?.x)
+        telemetry.addData("Y Position ", otos.pose?.y)
+        telemetry.addData("Heading ", otos.heading)
+        telemetry.addData("OTOS Heading ", otos.pose?.h)
+        telemetry.addLine()
     }
-
 }

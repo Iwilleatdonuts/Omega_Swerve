@@ -1,132 +1,145 @@
-package org.firstinspires.ftc.teamcode.OpModes;
+package org.firstinspires.ftc.teamcode.OpModes
 
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
-import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
+import com.arcrobotics.ftclib.gamepad.GamepadEx
+import com.arcrobotics.ftclib.gamepad.GamepadKeys
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.teamcode.Constants
+import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor
+import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule
+import kotlin.math.abs
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.hypot
+import kotlin.math.max
+import kotlin.math.sin
 
 @TeleOp(name = "Janky Swerve")
-public class SwerveOpMode extends LinearOpMode {
+class SwerveOpMode : LinearOpMode() {
+    override fun runOpMode() {
+        val m_DriverOp = GamepadEx(gamepad1)
+        val m_OperatorOp = GamepadEx(gamepad2)
 
-    @Override
-    public void runOpMode() {
+        val s_Mod0 =
+            SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod0.modConstants)
+        val s_Mod1 =
+            SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod1.modConstants)
+        val s_Mod2 =
+            SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod2.modConstants)
+        val s_Mod3 =
+            SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod3.modConstants)
 
-        GamepadEx m_DriverOp = new GamepadEx(gamepad1);
-        GamepadEx m_OperatorOp = new GamepadEx(gamepad2);
+        val s_Sparky = OTOSSensor(hardwareMap, telemetry)
 
-        SwerveModule s_Mod0 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod0.modConstants);
-        SwerveModule s_Mod1 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod1.modConstants);
-        SwerveModule s_Mod2 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod2.modConstants);
-        SwerveModule s_Mod3 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod3.modConstants);
+        val runtime = ElapsedTime()
 
-        OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telemetry);
+        s_Sparky.configureOTOS()
 
-        ElapsedTime runtime = new ElapsedTime();
+        val hyp = hypot(
+            Constants.DriveTrainConstants.trackWidth / 2,
+            Constants.DriveTrainConstants.wheelbase / 2
+        )
 
-        s_Sparky.configureOTOS();
-
-        double hyp = Math.hypot(Constants.DriveTrainConstants.trackWidth / 2, Constants.DriveTrainConstants.wheelbase / 2);
-
-        waitForStart();
-        runtime.reset();
+        waitForStart()
+        runtime.reset()
 
 
         while (opModeIsActive()) {
+            m_DriverOp.readButtons()
+            m_OperatorOp.readButtons()
 
-            m_DriverOp.readButtons();
-            m_OperatorOp.readButtons();
+            var xJoy = m_DriverOp.getLeftX()
+            var yJoy = m_DriverOp.getLeftY()
 
-            double xJoy = m_DriverOp.getLeftX();
-            double yJoy = m_DriverOp.getLeftY();
-
-            if (Math.abs(xJoy) < 0.1) {
-                xJoy = 0;
+            if (abs(xJoy) < 0.1) {
+                xJoy = 0.0
             }
-            if (Math.abs(yJoy) < 0.1) {
-                yJoy = 0;
-            }
-
-            double robotHeading = Math.toRadians(s_Sparky.getHeading());
-
-            double x = xJoy * Math.cos(robotHeading) + yJoy * Math.sin(robotHeading);
-            double y = -xJoy * Math.sin(robotHeading) + yJoy * Math.cos(robotHeading);
-
-            double r = -m_DriverOp.getRightX();
-
-            if (Math.abs(r) < 0.1){
-                r = 0;
+            if (abs(yJoy) < 0.1) {
+                yJoy = 0.0
             }
 
-            double rotVec = r * (Constants.DriveTrainConstants.wheelbase / hyp);
+            val robotHeading = Math.toRadians(s_Sparky.heading)
 
-            double aVec = x - rotVec;
-            double bVec = x + rotVec;
-            double cVec = y - rotVec;
-            double dVec = y + rotVec;
+            val x = xJoy * cos(robotHeading) + yJoy * sin(robotHeading)
+            val y = -xJoy * sin(robotHeading) + yJoy * cos(robotHeading)
 
-            double mod0Speed = Math.hypot(bVec, dVec);
-            double mod1Speed = Math.hypot(bVec, cVec);
-            double mod2Speed = Math.hypot(aVec, dVec);
-            double mod3Speed = Math.hypot(aVec, cVec);
+            var r = -m_DriverOp.getRightX()
 
-            double max = Math.max(Math.abs(mod0Speed), Math.abs(mod1Speed));
-            max = Math.max(max, Math.abs(mod2Speed));
-            max = Math.max(max, Math.abs(mod3Speed));
+            if (abs(r) < 0.1) {
+                r = 0.0
+            }
+
+            val rotVec = r * (Constants.DriveTrainConstants.wheelbase / hyp)
+
+            val aVec = x - rotVec
+            val bVec = x + rotVec
+            val cVec = y - rotVec
+            val dVec = y + rotVec
+
+            var mod0Speed = hypot(bVec, dVec)
+            var mod1Speed = hypot(bVec, cVec)
+            var mod2Speed = hypot(aVec, dVec)
+            var mod3Speed = hypot(aVec, cVec)
+
+            var max = max(abs(mod0Speed), abs(mod1Speed))
+            max = max(max, abs(mod2Speed))
+            max = max(max, abs(mod3Speed))
 
             if (max > 1.0) {
-                mod0Speed /= max;
-                mod1Speed /= max;
-                mod2Speed /= max;
-                mod3Speed /= max;
+                mod0Speed /= max
+                mod1Speed /= max
+                mod2Speed /= max
+                mod3Speed /= max
             }
 
-            double mod0Angle = Math.toDegrees(Math.atan2(-bVec, dVec));
-            double mod1Angle = Math.toDegrees(Math.atan2(-bVec, cVec));
-            double mod2Angle = Math.toDegrees(Math.atan2(-aVec, dVec));
-            double mod3Angle = Math.toDegrees(Math.atan2(-aVec, cVec));
-            mod0Angle = (mod0Angle + 360) % 360;
-            mod1Angle = (mod1Angle + 360) % 360;
-            mod2Angle = (mod2Angle + 360) % 360;
-            mod3Angle = (mod3Angle + 360) % 360;
+            var mod0Angle = Math.toDegrees(atan2(-bVec, dVec))
+            var mod1Angle = Math.toDegrees(atan2(-bVec, cVec))
+            var mod2Angle = Math.toDegrees(atan2(-aVec, dVec))
+            var mod3Angle = Math.toDegrees(atan2(-aVec, cVec))
+            mod0Angle = (mod0Angle + 360) % 360
+            mod1Angle = (mod1Angle + 360) % 360
+            mod2Angle = (mod2Angle + 360) % 360
+            mod3Angle = (mod3Angle + 360) % 360
 
-            if(s_Mod0.atRoughSepoint() && s_Mod1.atRoughSepoint() && s_Mod2.atRoughSepoint() && s_Mod3.atRoughSepoint()){
-                s_Mod0.setDrivePower(mod0Speed);
-                s_Mod1.setDrivePower(mod1Speed);
-                s_Mod2.setDrivePower(mod2Speed);
-                s_Mod3.setDrivePower(mod3Speed);
+            if (s_Mod0.atRoughSepoint() && s_Mod1.atRoughSepoint() && s_Mod2.atRoughSepoint() && s_Mod3.atRoughSepoint()) {
+                s_Mod0.setDrivePower(mod0Speed)
+                s_Mod1.setDrivePower(mod1Speed)
+                s_Mod2.setDrivePower(mod2Speed)
+                s_Mod3.setDrivePower(mod3Speed)
             }
 
-            if(Math.abs(m_DriverOp.getLeftY())>0.1 || Math.abs(m_DriverOp.getRightX())>0.1 || Math.abs(m_DriverOp.getLeftX())>0.1){
-                s_Mod0.setModuleSetpoint(mod0Angle);
-                s_Mod1.setModuleSetpoint(mod1Angle);
-                s_Mod2.setModuleSetpoint(mod2Angle);
-                s_Mod3.setModuleSetpoint(mod3Angle);
+            if (abs(m_DriverOp.getLeftY()) > 0.1 || abs(m_DriverOp.getRightX()) > 0.1 || abs(
+                    m_DriverOp.getLeftX()
+                ) > 0.1
+            ) {
+                s_Mod0.setModuleSetpoint(mod0Angle)
+                s_Mod1.setModuleSetpoint(mod1Angle)
+                s_Mod2.setModuleSetpoint(mod2Angle)
+                s_Mod3.setModuleSetpoint(mod3Angle)
             }
 
-            s_Mod0.setModulePosition();
-            s_Mod1.setModulePosition();
-            s_Mod2.setModulePosition();
-            s_Mod3.setModulePosition();
+            s_Mod0.setModulePosition()
+            s_Mod1.setModulePosition()
+            s_Mod2.setModulePosition()
+            s_Mod3.setModulePosition()
 
-            if(m_DriverOp.wasJustPressed(GamepadKeys.Button.START)){
-                s_Sparky.zeroGyro();
+            if (m_DriverOp.wasJustPressed(GamepadKeys.Button.START)) {
+                s_Sparky.zeroGyro()
             }
 
-            s_Mod0.update();
-            s_Mod1.update();
-            s_Mod2.update();
-            s_Mod3.update();
-            s_Sparky.update();
+            s_Mod0.update()
+            s_Mod1.update()
+            s_Mod2.update()
+            s_Mod3.update()
+            s_Sparky.update()
             //TODO make sure that the heading is 0-360, CCW position, 0 is forwards
-            telemetry.addData("Left Joystick Angle \t", Math.toDegrees(Math.atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY())));
-            telemetry.addData("Right X \t", m_DriverOp.getRightX());
-            telemetry.update();
-
+            telemetry.addData(
+                "Left Joystick Angle \t",
+                Math.toDegrees(atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY()))
+            )
+            telemetry.addData("Right X \t", m_DriverOp.getRightX())
+            telemetry.update()
         }
     }
 }
