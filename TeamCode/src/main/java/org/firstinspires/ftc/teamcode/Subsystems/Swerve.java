@@ -85,13 +85,10 @@ public class Swerve {
             mod2Angle = (mod2Angle + 360) % 360;
             mod3Angle = (mod3Angle + 360) % 360;
 
-            if (mod0.atRoughSepoint() && mod1.atRoughSepoint() && mod2.atRoughSepoint() && mod3.atRoughSepoint()) {
-
-                mod0.setDrivePower(mod0Speed);
-                mod1.setDrivePower(mod1Speed);
-                mod2.setDrivePower(mod2Speed);
-                mod3.setDrivePower(mod3Speed);
-            }
+            mod0.setDrivePower(mod0Speed);
+            mod1.setDrivePower(mod1Speed);
+            mod2.setDrivePower(mod2Speed);
+            mod3.setDrivePower(mod3Speed);
 
             if (Math.abs(xVal) > 0.1 || Math.abs(yVal) > 0.1 || Math.abs(rVal) > 0.1) {
                 mod0.setModuleSetpoint(mod0Angle);

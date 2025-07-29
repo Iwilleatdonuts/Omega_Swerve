@@ -4,10 +4,13 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.CRServoImpl;
+import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
@@ -16,7 +19,7 @@ public class SwerveModule extends SubsystemBase {
 
     private final int modNumber;
     private final DcMotorEx drive;
-    private final CRServo angle;
+    private final CRServoImplEx angle;
     private final AnalogInput moduleHeading;
     private final PIDFController controller;
     private final double moduleOffset;
@@ -33,7 +36,7 @@ public class SwerveModule extends SubsystemBase {
         this.telemetry = telemetry;
 
         drive = hardwareMap.get(DcMotorEx.class, moduleConstants.driveMotor);
-        angle = hardwareMap.get(CRServo.class, moduleConstants.angleServo);
+        angle = hardwareMap.get(CRServoImplEx.class, moduleConstants.angleServo);
 
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -41,6 +44,7 @@ public class SwerveModule extends SubsystemBase {
         drive.setVelocityPIDFCoefficients(1, 0, 0, 0.00036);
 
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
+        angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
         controller = new PIDFController(moduleConstants.kP, moduleConstants.kI, moduleConstants.kD, moduleConstants.kF);
 
