@@ -37,8 +37,8 @@ public class NewSwerveOpMode extends LinearOpMode {
             m_OperatorOp.readButtons();
 
             s_Swerve.drive(
-                    m_DriverOp.getLeftY(),
                     m_DriverOp.getLeftX(),
+                    m_DriverOp.getLeftY(),
                     m_DriverOp.getRightX(),
                     true
             );

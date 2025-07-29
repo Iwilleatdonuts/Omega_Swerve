@@ -56,7 +56,7 @@ public class SwerveOpMode extends LinearOpMode {
             double x = xJoy * Math.cos(robotHeading) + yJoy * Math.sin(robotHeading);
             double y = -xJoy * Math.sin(robotHeading) + yJoy * Math.cos(robotHeading);
 
-            double r = -m_DriverOp.getRightX();
+            double r = m_DriverOp.getRightX();
 
             if (Math.abs(r) < 0.1){
                 r = 0;
