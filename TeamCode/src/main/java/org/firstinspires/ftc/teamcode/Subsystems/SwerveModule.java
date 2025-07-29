@@ -40,8 +40,8 @@ public class SwerveModule extends SubsystemBase {
 
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        drive.setVelocityPIDFCoefficients(5, 0, 0, 0.001);
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        drive.setVelocityPIDFCoefficients(20, 2, 0, 0.001);
 
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
         angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
