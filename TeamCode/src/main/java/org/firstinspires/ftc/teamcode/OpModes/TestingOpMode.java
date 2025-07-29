@@ -128,6 +128,18 @@ public class TestingOpMode extends LinearOpMode {
                 s_Mod3.setTurnSpeed(0);
             }
 
+            if(m_DriverOp.isDown(GamepadKeys.Button.LEFT_BUMPER)){
+                s_Mod0.setDrivePower(0.5);
+                s_Mod1.setDrivePower(0.5);
+                s_Mod2.setDrivePower(0.5);
+                s_Mod3.setDrivePower(0.5);
+            } else {
+                s_Mod0.setDrivePower(0);
+                s_Mod1.setDrivePower(0);
+                s_Mod2.setDrivePower(0);
+                s_Mod3.setDrivePower(0);
+            }
+
             telemetry.addData("Turn Servos", runTurnos);
             s_Mod0.update();
             s_Mod1.update();
