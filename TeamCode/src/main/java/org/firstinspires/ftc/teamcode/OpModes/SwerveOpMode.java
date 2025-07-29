@@ -94,12 +94,10 @@ public class SwerveOpMode extends LinearOpMode {
             mod2Angle = (mod2Angle + 360) % 360;
             mod3Angle = (mod3Angle + 360) % 360;
 
-            if(s_Mod0.atRoughSepoint() && s_Mod1.atRoughSepoint() && s_Mod2.atRoughSepoint() && s_Mod3.atRoughSepoint()){
-                s_Mod0.setDrivePower(mod0Speed);
-                s_Mod1.setDrivePower(mod1Speed);
-                s_Mod2.setDrivePower(mod2Speed);
-                s_Mod3.setDrivePower(mod3Speed);
-            }
+            s_Mod0.setDrivePower(mod0Speed);
+            s_Mod1.setDrivePower(mod1Speed);
+            s_Mod2.setDrivePower(mod2Speed);
+            s_Mod3.setDrivePower(mod3Speed);
 
             if(Math.abs(m_DriverOp.getLeftY())>0.1 || Math.abs(m_DriverOp.getRightX())>0.1 || Math.abs(m_DriverOp.getLeftX())>0.1){
                 s_Mod0.setModuleSetpoint(mod0Angle);
