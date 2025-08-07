@@ -116,10 +116,10 @@ public class SwerveModuleTestOpMode extends LinearOpMode {
 //            s_Mod3.setTurnSpeed(0);
 //            }
 
-            s_Mod0.update();
-            s_Mod1.update();
-            s_Mod2.update();
-            s_Mod3.update();
+            s_Mod0.update(true);
+            s_Mod1.update(true);
+            s_Mod2.update(true);
+            s_Mod3.update(true);
             s_Sparky.update();
             telemetry.update();
 

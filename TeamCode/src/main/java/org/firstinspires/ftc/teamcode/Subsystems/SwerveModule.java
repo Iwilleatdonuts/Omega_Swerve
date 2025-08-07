@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.PwmControl;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -41,13 +42,12 @@ public class SwerveModule extends SubsystemBase {
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        drive.setVelocityPIDFCoefficients(20, 0, 0, 1);
+        drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(20, 2, 0, 3));
 
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
         angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
         controller = new PIDFController(moduleConstants.kP, moduleConstants.kI, moduleConstants.kD, moduleConstants.kF);
-
 
         moduleHeading = hardwareMap.get(AnalogInput.class, moduleConstants.feedback);
         moduleOffset = moduleConstants.moduleOffset;
@@ -62,12 +62,11 @@ public class SwerveModule extends SubsystemBase {
 
         double newPower = power;
 
-        if(isModuleBackwards) {
-            newPower = -newPower;
-        }
-//TODO figure out velocity stuff, change PID coefficients to run veloicty
-        drive.setVelocity(newPower*2800);
-//        drive.setPower(newPower);
+            if(isModuleBackwards) {
+                newPower = -newPower;
+            }
+
+        drive.setVelocity(newPower * 2800);
 
     }
 
@@ -136,14 +135,16 @@ public class SwerveModule extends SubsystemBase {
         return error < 10;
     }
 
-    public void update() {
+    public void update(boolean useTelemetry) {
 
-        telemetry.addLine("Module " + modNumber);
-        telemetry.addData("Degrees \t", getDegrees(true));
-        telemetry.addData("Raw Angle \t", getDegrees(false));
-        telemetry.addData("Setpoint \t", getModuleSetpoint());
-        telemetry.addData("Drive speed \t", drive.getVelocity());
-        telemetry.addLine();
+        if(useTelemetry) {
+            telemetry.addLine("Module " + modNumber);
+            telemetry.addData("Degrees \t", getDegrees(true));
+            telemetry.addData("Raw Angle \t", getDegrees(false));
+            telemetry.addData("Setpoint \t", getModuleSetpoint());
+            telemetry.addData("Drive speed \t", drive.getVelocity());
+            telemetry.addLine();
+        }
 
     }
 

@@ -44,10 +44,10 @@ public class SwerveOpMode extends LinearOpMode {
             double xJoy = m_DriverOp.getLeftX();
             double yJoy = m_DriverOp.getLeftY();
 
-            if (Math.abs(xJoy) < 0.1) {
+            if (Math.abs(xJoy) < 0.03) {
                 xJoy = 0;
             }
-            if (Math.abs(yJoy) < 0.1) {
+            if (Math.abs(yJoy) < 0.03) {
                 yJoy = 0;
             }
 
@@ -58,7 +58,7 @@ public class SwerveOpMode extends LinearOpMode {
 
             double r = m_DriverOp.getRightX();
 
-            if (Math.abs(r) < 0.1){
+            if (Math.abs(r) < 0.03){
                 r = 0;
             }
 
@@ -99,7 +99,7 @@ public class SwerveOpMode extends LinearOpMode {
             s_Mod2.setDrivePower(mod2Speed);
             s_Mod3.setDrivePower(mod3Speed);
 
-            if(Math.abs(m_DriverOp.getLeftY())>0.1 || Math.abs(m_DriverOp.getRightX())>0.1 || Math.abs(m_DriverOp.getLeftX())>0.1){
+            if(Math.abs(m_DriverOp.getLeftY())>0.03 || Math.abs(m_DriverOp.getRightX())>0.03 || Math.abs(m_DriverOp.getLeftX())>0.03){
                 s_Mod0.setModuleSetpoint(mod0Angle);
                 s_Mod1.setModuleSetpoint(mod1Angle);
                 s_Mod2.setModuleSetpoint(mod2Angle);
@@ -115,12 +115,12 @@ public class SwerveOpMode extends LinearOpMode {
                 s_Sparky.zeroGyro();
             }
 
-            s_Mod0.update();
-            s_Mod1.update();
-            s_Mod2.update();
-            s_Mod3.update();
+            s_Mod0.update(true);
+            s_Mod1.update(true);
+            s_Mod2.update(true);
+            s_Mod3.update(true);
             s_Sparky.update();
-            //TODO make sure that the heading is 0-360, CCW position, 0 is forwards
+
             telemetry.addData("Left Joystick Angle \t", Math.toDegrees(Math.atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY())));
             telemetry.addData("Right X \t", m_DriverOp.getRightX());
             telemetry.update();

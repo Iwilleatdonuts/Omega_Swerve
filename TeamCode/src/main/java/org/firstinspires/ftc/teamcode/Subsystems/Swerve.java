@@ -46,11 +46,11 @@ public class Swerve {
         }
 
         if(fieldRelative) {
-
             double robotHeading = Math.toRadians(otos.getHeading());
 
             x = x * Math.cos(robotHeading) + y * Math.sin(robotHeading);
             y = -x * Math.sin(robotHeading) + y * Math.cos(robotHeading);
+        }
 
             double widthVector = r * Constants.DriveTrainConstants.widthRotation;
             double lengthVector = r * Constants.DriveTrainConstants.lengthRotation;
@@ -101,7 +101,7 @@ public class Swerve {
             mod1.setModulePosition();
             mod2.setModulePosition();
             mod3.setModulePosition();
-        }
+
     }
 
     public void update(){
