@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.PwmControl;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class SwerveModule extends SubsystemBase {
@@ -26,6 +27,8 @@ public class SwerveModule extends SubsystemBase {
     private final double moduleOffset;
     private final Telemetry telemetry;
     private double moduleSetpoint;
+
+    private double feedforward;
 
     //Idk if this is how ur supposed to make a swervy drive but I'm gonna
     // put a boolean to tell the module when it is backwards and so the
@@ -47,7 +50,7 @@ public class SwerveModule extends SubsystemBase {
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
         angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
-        controller = new PIDFController(moduleConstants.kP, moduleConstants.kI, moduleConstants.kD, moduleConstants.kF);
+        controller = new PIDFController(Constants.DriveTrainConstants.angleKP, Constants.DriveTrainConstants.angleKI, Constants.DriveTrainConstants.angleKD, 0);
 
         moduleHeading = hardwareMap.get(AnalogInput.class, moduleConstants.feedback);
         moduleOffset = moduleConstants.moduleOffset;
@@ -55,6 +58,8 @@ public class SwerveModule extends SubsystemBase {
         moduleSetpoint = getDegrees(true);
 
         modNumber = moduleConstants.modNumber;
+
+        feedforward = moduleConstants.kF;
 
     }
 
@@ -126,7 +131,17 @@ public class SwerveModule extends SubsystemBase {
 
         double placeholder = moduleSetpoint - error;
 
-        setTurnSpeed(controller.calculate(placeholder, moduleSetpoint));
+        double servoOutput = controller.calculate(placeholder, moduleSetpoint);
+
+        if(error < 0){
+            servoOutput -= feedforward;
+        }
+
+        if(error > 0) {
+            servoOutput += feedforward;
+        }
+
+        setTurnSpeed(servoOutput);
     }
 
     public boolean atRoughSepoint() {
@@ -143,6 +158,7 @@ public class SwerveModule extends SubsystemBase {
             telemetry.addData("Raw Angle \t", getDegrees(false));
             telemetry.addData("Setpoint \t", getModuleSetpoint());
             telemetry.addData("Drive speed \t", drive.getVelocity());
+            telemetry.addData("Angular Error \t", getWrappedError(moduleSetpoint, getDegrees(true)));
             telemetry.addLine();
         }
 
