@@ -28,7 +28,7 @@ public class TestingOpMode extends LinearOpMode {
 
         ElapsedTime runtime = new ElapsedTime();
 
-        boolean runTurnos = false;
+        boolean runTurns = false;
 
         s_Sparky.configureOTOS();
 
@@ -46,7 +46,7 @@ public class TestingOpMode extends LinearOpMode {
             }
 
             if(m_DriverOp.wasJustPressed(GamepadKeys.Button.BACK)){
-                runTurnos = !runTurnos;
+                runTurns = !runTurns;
             }
 
             double drivePower = m_DriverOp.getLeftY();
@@ -116,7 +116,7 @@ public class TestingOpMode extends LinearOpMode {
                 }
             }
 
-            if(runTurnos) {
+            if(runTurns) {
                 s_Mod0.setModulePosition();
                 s_Mod1.setModulePosition();
                 s_Mod2.setModulePosition();
@@ -135,7 +135,7 @@ public class TestingOpMode extends LinearOpMode {
                 s_Mod3.setTurnSpeed(1);
             }
 
-            telemetry.addData("Turn Servos", runTurnos);
+            telemetry.addData("Turn Servos", runTurns);
             s_Mod0.update(true);
             s_Mod1.update(true);
             s_Mod2.update(true);
@@ -146,22 +146,5 @@ public class TestingOpMode extends LinearOpMode {
             telemetry.update();
 
         }
-    }
-
-    public double getAngleFromJoystick(double x, double y){
-
-        double angle = Math.toDegrees(Math.atan2(y, x));
-
-        if (angle < 0) {
-            angle += 360;
-        }
-
-        angle -= 90;
-
-        if (angle < 0) {
-            angle += 360;
-        }
-
-        return angle;
     }
 }

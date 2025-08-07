@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.CRServoImpl;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -28,11 +26,11 @@ public class SwerveModule extends SubsystemBase {
     private final Telemetry telemetry;
     private double moduleSetpoint;
 
-    private double feedforward;
+    private final double feedforward;
 
     //Idk if this is how ur supposed to make a swervy drive but I'm gonna
     // put a boolean to tell the module when it is backwards and so the
-    // drivy motor should be backwards because im rly smart definetely yes yes i can speel
+    // drive motor should be backwards because im rly smart definitely yes yes i can spell
     private boolean isModuleBackwards;
 
     public SwerveModule(HardwareMap hardwareMap, Telemetry telemetry, SwerveModuleConstants moduleConstants) {
@@ -142,12 +140,6 @@ public class SwerveModule extends SubsystemBase {
         }
 
         setTurnSpeed(servoOutput);
-    }
-
-    public boolean atRoughSepoint() {
-        double error = getWrappedError(getModuleSetpoint(), getDegrees(true));
-
-        return error < 10;
     }
 
     public void update(boolean useTelemetry) {
