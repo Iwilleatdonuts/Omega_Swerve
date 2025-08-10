@@ -36,21 +36,27 @@ public class Swerve {
         if (Math.abs(yVal) < 0.03) {yVal = 0;}
         if (Math.abs(rVal) < 0.03) {rVal = 0;}
 
-        double robotHeading = Math.toRadians(otos.getHeading());
-        double cosHeading = Math.cos(robotHeading);
-        double sinHeading = Math.sin(robotHeading);
+        double x = xVal;
+        double y = yVal;
 
-        double x = xVal * cosHeading + yVal * sinHeading;
-        double y = -xVal * sinHeading + yVal * cosHeading;
+        if(fieldRelative){
+            double robotHeading = Math.toRadians(otos.getHeading());
+            double cosHeading = Math.cos(robotHeading);
+            double sinHeading = Math.sin(robotHeading);
+
+            x = xVal * cosHeading + yVal * sinHeading;
+            y = -xVal * sinHeading + yVal * cosHeading;
+        }
 
         double r = rVal;
 
-        double rotVec = r * (Constants.DriveTrainConstants.wheelbase / Constants.DriveTrainConstants.moduleHypotenuse);
+        double rotVecX = r * (Constants.DriveTrainConstants.trackWidth / Constants.DriveTrainConstants.moduleHypotenuse);
+        double rotVecY = r * (Constants.DriveTrainConstants.wheelbase / Constants.DriveTrainConstants.moduleHypotenuse);
 
-        double aVec = x - rotVec;
-        double bVec = x + rotVec;
-        double cVec = y - rotVec;
-        double dVec = y + rotVec;
+        double aVec = x - rotVecX;
+        double bVec = x + rotVecX;
+        double cVec = y - rotVecY;
+        double dVec = y + rotVecY;
 
         double mod0Speed = Math.hypot(bVec, dVec);
         double mod1Speed = Math.hypot(bVec, cVec);
@@ -118,9 +124,9 @@ public class Swerve {
     }
 
     private double normalizeAngle(double angle) {
+        angle %= 360;
         if (angle < 0) angle += 360;
         return angle;
     }
-
 }
 

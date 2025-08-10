@@ -147,6 +147,10 @@ public class SwerveModule extends SubsystemBase {
         return drive.getCurrent(CurrentUnit.AMPS);
     }
 
+    public boolean isWithinDegrees(double degrees) {
+        return Math.abs(getDegrees(true) - getModuleSetpoint()) < degrees;
+    }
+
     public void update(boolean useTelemetry) {
 
         if(useTelemetry) {
