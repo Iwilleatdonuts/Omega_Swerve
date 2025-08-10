@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,10 +10,7 @@ public class Swerve {
 
     private final Telemetry telemetry;
 
-    private final SwerveModule mod0;
-    private final SwerveModule mod1;
-    private final SwerveModule mod2;
-    private final SwerveModule mod3;
+    private final SwerveModule mod0, mod1, mod2, mod3;
 
     private final OTOSSensor otos;
 
@@ -31,76 +29,62 @@ public class Swerve {
 
     public void drive(double xVal, double yVal, double rVal, boolean fieldRelative){
 
-        double x = xVal;
-        double y = yVal;
+        if (Math.abs(xVal) < 0.03) {xVal = 0;}
+        if (Math.abs(yVal) < 0.03) {yVal = 0;}
+        if (Math.abs(rVal) < 0.03) {rVal = 0;}
+
+        double robotHeading = Math.toRadians(otos.getHeading());
+        double cosHeading = Math.cos(robotHeading);
+        double sinHeading = Math.sin(robotHeading);
+
+        double x = xVal * cosHeading + yVal * sinHeading;
+        double y = -xVal * sinHeading + yVal * cosHeading;
+
         double r = rVal;
 
-        if (Math.abs(x) < 0.1) {
-            x = 0;
+        double rotVec = r * (Constants.DriveTrainConstants.wheelbase / Constants.DriveTrainConstants.moduleHypotenuse);
+
+        double aVec = x - rotVec;
+        double bVec = x + rotVec;
+        double cVec = y - rotVec;
+        double dVec = y + rotVec;
+
+        double mod0Speed = Math.hypot(bVec, dVec);
+        double mod1Speed = Math.hypot(bVec, cVec);
+        double mod2Speed = Math.hypot(aVec, dVec);
+        double mod3Speed = Math.hypot(aVec, cVec);
+
+        double max = Math.max(Math.max(mod0Speed, mod1Speed), Math.max(mod2Speed, mod3Speed));
+
+        if (max > 1.0) {
+            double optimized = 1.0 / max;  // division is supposedly slower than multiplication, gonna optimize here
+            mod0Speed *= optimized;
+            mod1Speed *= optimized;
+            mod2Speed *= optimized;
+            mod3Speed *= optimized;
         }
-        if (Math.abs(y) < 0.1) {
-            y = 0;
+
+        double mod0Angle = normalizeAngle(Math.toDegrees(Math.atan2(-bVec, dVec)));
+        double mod1Angle = normalizeAngle(Math.toDegrees(Math.atan2(-bVec, cVec)));
+        double mod2Angle = normalizeAngle(Math.toDegrees(Math.atan2(-aVec, dVec)));
+        double mod3Angle = normalizeAngle(Math.toDegrees(Math.atan2(-aVec, cVec)));
+
+        mod0.setDrivePower(mod0Speed);
+        mod1.setDrivePower(mod1Speed);
+        mod2.setDrivePower(mod2Speed);
+        mod3.setDrivePower(mod3Speed);
+
+        if (xVal != 0 || yVal != 0 || rVal != 0) {
+            mod0.setModuleSetpoint(mod0Angle);
+            mod1.setModuleSetpoint(mod1Angle);
+            mod2.setModuleSetpoint(mod2Angle);
+            mod3.setModuleSetpoint(mod3Angle);
         }
-        if (Math.abs(r) < 0.1){
-            r = 0;
-        }
 
-        if(fieldRelative) {
-            double robotHeading = Math.toRadians(otos.getHeading());
-
-            x = x * Math.cos(robotHeading) + y * Math.sin(robotHeading);
-            y = -x * Math.sin(robotHeading) + y * Math.cos(robotHeading);
-        }
-
-            double widthVector = r * Constants.DriveTrainConstants.widthRotation;
-            double lengthVector = r * Constants.DriveTrainConstants.lengthRotation;
-
-            double aVector = x - widthVector;
-            double bVector = x + widthVector;
-            double cVector = y - lengthVector;
-            double dVector = y + lengthVector;
-
-            double mod0Speed = Math.hypot(bVector, dVector);
-            double mod1Speed = Math.hypot(bVector, cVector);
-            double mod2Speed = Math.hypot(aVector, dVector);
-            double mod3Speed = Math.hypot(aVector, cVector);
-
-            double max = Math.max(Math.abs(mod0Speed), Math.abs(mod1Speed));
-            max = Math.max(max, Math.abs(mod2Speed));
-            max = Math.max(max, Math.abs(mod3Speed));
-
-            if (max > 1.0) {
-                mod0Speed /= max;
-                mod1Speed /= max;
-                mod2Speed /= max;
-                mod3Speed /= max;
-            }
-
-            double mod0Angle = Math.toDegrees(Math.atan2(-bVector, dVector));
-            double mod1Angle = Math.toDegrees(Math.atan2(-bVector, cVector));
-            double mod2Angle = Math.toDegrees(Math.atan2(-aVector, dVector));
-            double mod3Angle = Math.toDegrees(Math.atan2(-aVector, cVector));
-            mod0Angle = (mod0Angle + 360) % 360;
-            mod1Angle = (mod1Angle + 360) % 360;
-            mod2Angle = (mod2Angle + 360) % 360;
-            mod3Angle = (mod3Angle + 360) % 360;
-
-            mod0.setDrivePower(mod0Speed);
-            mod1.setDrivePower(mod1Speed);
-            mod2.setDrivePower(mod2Speed);
-            mod3.setDrivePower(mod3Speed);
-
-            if (Math.abs(xVal) > 0.1 || Math.abs(yVal) > 0.1 || Math.abs(rVal) > 0.1) {
-                mod0.setModuleSetpoint(mod0Angle);
-                mod1.setModuleSetpoint(mod1Angle);
-                mod2.setModuleSetpoint(mod2Angle);
-                mod3.setModuleSetpoint(mod3Angle);
-            }
-
-            mod0.setModulePosition();
-            mod1.setModulePosition();
-            mod2.setModulePosition();
-            mod3.setModulePosition();
+        mod0.setModulePosition();
+        mod1.setModulePosition();
+        mod2.setModulePosition();
+        mod3.setModulePosition();
 
     }
 
@@ -112,6 +96,11 @@ public class Swerve {
         telemetry.addData("Heading ", otos.getHeading());
         telemetry.addData("OTOS Heading ", otos.getPose().h);
         telemetry.addLine();
+    }
+
+    private double normalizeAngle(double angle) {
+        if (angle < 0) angle += 360;
+        return angle;
     }
 
 }
