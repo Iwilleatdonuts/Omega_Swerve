@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Swerve {
 
     private final Telemetry telemetry;
@@ -27,7 +30,7 @@ public class Swerve {
 
     }
 
-    public void drive(double xVal, double yVal, double rVal, boolean fieldRelative){
+    public void drive(double xVal, double yVal, double rVal, boolean fieldRelative, boolean slowMode){
 
         if (Math.abs(xVal) < 0.03) {xVal = 0;}
         if (Math.abs(yVal) < 0.03) {yVal = 0;}
@@ -64,6 +67,13 @@ public class Swerve {
             mod3Speed *= optimized;
         }
 
+        if(slowMode) {
+            mod0Speed *= 0.3;
+            mod1Speed *= 0.3;
+            mod2Speed *= 0.3;
+            mod3Speed *= 0.3;
+        }
+
         double mod0Angle = normalizeAngle(Math.toDegrees(Math.atan2(-bVec, dVec)));
         double mod1Angle = normalizeAngle(Math.toDegrees(Math.atan2(-bVec, cVec)));
         double mod2Angle = normalizeAngle(Math.toDegrees(Math.atan2(-aVec, dVec)));
@@ -86,6 +96,15 @@ public class Swerve {
         mod2.setModulePosition();
         mod3.setModulePosition();
 
+    }
+
+    public Map<String, Object> getMotorCurrents(){
+        Map<String, Object> motorCurrents = new HashMap<>();
+        motorCurrents.put("Mod 0 Current: \t", mod0.getMotorCurrent());
+        motorCurrents.put("Mod 1 Current: \t", mod1.getMotorCurrent());
+        motorCurrents.put("Mod 2 Current: \t", mod2.getMotorCurrent());
+        motorCurrents.put("Mod 3 Current: \t", mod3.getMotorCurrent());
+        return motorCurrents;
     }
 
     public void update(){

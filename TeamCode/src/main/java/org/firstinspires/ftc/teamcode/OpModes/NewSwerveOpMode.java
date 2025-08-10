@@ -12,7 +12,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 
-//http://192.168.49.1:8080/dash
+//http://192.168.43.1:8080/dash
+//adb connect 192.168.43.1:5555
 @TeleOp(name = "New Swerve")
 public class NewSwerveOpMode extends LinearOpMode {
 
@@ -32,6 +33,9 @@ public class NewSwerveOpMode extends LinearOpMode {
 
         s_Sparky.configureOTOS();
 
+        boolean slowMode = false;
+        boolean dashboardDriving = false;
+
         waitForStart();
         runtime.reset();
 
@@ -40,30 +44,47 @@ public class NewSwerveOpMode extends LinearOpMode {
             m_DriverOp.readButtons();
             m_OperatorOp.readButtons();
 
+            double leftXVal = m_DriverOp.getLeftX();
+            double leftYVal = m_DriverOp.getLeftY();
+
+            if(dashboardDriving) {
+                leftXVal = m_DriverOp.getLeftY();
+                leftYVal = m_DriverOp.getLeftX();
+            }
+
             s_Swerve.drive(
-                    m_DriverOp.getLeftX(),
-                    m_DriverOp.getLeftY(),
+                    leftXVal,
+                    leftYVal,
                     m_DriverOp.getRightX(),
-                    true
+                    true,
+                    slowMode
             );
 
             if(m_DriverOp.wasJustPressed(GamepadKeys.Button.START)){
                 s_Sparky.zeroGyro();
             }
 
+            if(m_DriverOp.isDown(GamepadKeys.Button.LEFT_STICK_BUTTON) || m_DriverOp.isDown(GamepadKeys.Button.RIGHT_STICK_BUTTON)){
+                slowMode = true;
+            } else {
+                slowMode = false;
+            }
+
+            if(m_OperatorOp.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)) {
+                dashboardDriving = !dashboardDriving;
+            }
+
             TelemetryPacket packet = new TelemetryPacket();
-            packet.addLine("OTOS");
 
             SparkFunOTOS.Pose2D pose = s_Sparky.getPose();
 
             packet.put("X Position: \t", pose.x);
             packet.put("Y Position: \t", pose.y);
             packet.put("Heading: \t", s_Sparky.getHeading());
+            packet.put("SlowMode Enabled: \t", slowMode);
+            packet.putAll(s_Swerve.getMotorCurrents());
 
             dashboard.sendTelemetryPacket(packet);
-
-//            s_Swerve.update();
-//            telemetry.update();
 
         }
     }

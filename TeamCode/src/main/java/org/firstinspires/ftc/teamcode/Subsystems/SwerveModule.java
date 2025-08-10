@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.PwmControl;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
@@ -140,6 +141,10 @@ public class SwerveModule extends SubsystemBase {
         }
 
         setTurnSpeed(servoOutput);
+    }
+
+    public double getMotorCurrent() {
+        return drive.getCurrent(CurrentUnit.AMPS);
     }
 
     public void update(boolean useTelemetry) {
