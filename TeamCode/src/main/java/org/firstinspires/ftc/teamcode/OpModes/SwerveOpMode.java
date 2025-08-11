@@ -115,12 +115,6 @@ public class SwerveOpMode extends LinearOpMode {
                 s_Sparky.zeroGyro();
             }
 
-            s_Mod0.update(false);
-            s_Mod1.update(false);
-            s_Mod2.update(false);
-            s_Mod3.update(false);
-            s_Sparky.update();
-
             telemetry.addData("Left Joystick Angle \t", Math.toDegrees(Math.atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY())));
             telemetry.addData("Right X \t", m_DriverOp.getRightX());
             telemetry.update();

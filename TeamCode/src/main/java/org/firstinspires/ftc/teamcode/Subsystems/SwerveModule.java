@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -34,6 +35,10 @@ public class SwerveModule extends SubsystemBase {
     // drive motor should be backwards because im rly smart definitely yes yes i can spell
     private boolean isModuleBackwards;
 
+    private boolean enableTelemetry;
+
+    private final FtcDashboard dashboard;
+
     public SwerveModule(HardwareMap hardwareMap, Telemetry telemetry, SwerveModuleConstants moduleConstants) {
 
         this.telemetry = telemetry;
@@ -59,6 +64,10 @@ public class SwerveModule extends SubsystemBase {
         modNumber = moduleConstants.modNumber;
 
         feedforward = moduleConstants.kF;
+
+        enableTelemetry = false;
+
+        dashboard = FtcDashboard.getInstance();
 
     }
 
@@ -151,9 +160,14 @@ public class SwerveModule extends SubsystemBase {
         return Math.abs(getDegrees(true) - getModuleSetpoint()) < degrees;
     }
 
-    public void update(boolean useTelemetry) {
+    public void toggleTelemetry() {
+        enableTelemetry = !enableTelemetry;
+    }
 
-        if(useTelemetry) {
+    @Override
+    public void periodic(){
+
+        if(enableTelemetry) {
             telemetry.addLine("Module " + modNumber);
             telemetry.addData("Degrees \t", getDegrees(true));
             telemetry.addData("Raw Angle \t", getDegrees(false));

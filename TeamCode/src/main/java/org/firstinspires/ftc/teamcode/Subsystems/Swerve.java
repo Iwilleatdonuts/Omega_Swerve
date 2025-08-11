@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,13 +11,17 @@ import org.firstinspires.ftc.teamcode.Constants;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Swerve {
+public class Swerve extends SubsystemBase {
 
     private final Telemetry telemetry;
 
     private final SwerveModule mod0, mod1, mod2, mod3;
 
     private final OTOSSensor otos;
+
+    private boolean enableTelemetry;
+
+    private final FtcDashboard dashboard;
 
     public Swerve(HardwareMap hardwareMap, Telemetry telemetry){
 
@@ -27,6 +33,10 @@ public class Swerve {
         mod3 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod3.modConstants);
 
         otos = new OTOSSensor(hardwareMap, telemetry);
+
+        enableTelemetry = false;
+
+        dashboard = FtcDashboard.getInstance();
 
     }
 
@@ -113,20 +123,32 @@ public class Swerve {
         return motorCurrents;
     }
 
-    public void update(){
-
-        telemetry.addLine("Swerve");
-        telemetry.addData("X Position ", otos.getPose().x);
-        telemetry.addData("Y Position ", otos.getPose().y);
-        telemetry.addData("Heading ", otos.getHeading());
-        telemetry.addData("OTOS Heading ", otos.getPose().h);
-        telemetry.addLine();
-    }
-
     private double normalizeAngle(double angle) {
         angle %= 360;
         if (angle < 0) angle += 360;
         return angle;
+    }
+
+    public void toggleTelemetry() {
+        enableTelemetry = !enableTelemetry;
+    }
+
+    @Override
+    public void periodic(){
+
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.putAll(getMotorCurrents());
+
+        dashboard.sendTelemetryPacket(packet);
+
+        if(enableTelemetry) {
+            telemetry.addLine("Swerve");
+            telemetry.addData("X Position ", otos.getPose().x);
+            telemetry.addData("Y Position ", otos.getPose().y);
+            telemetry.addData("Heading ", otos.getHeading());
+            telemetry.addData("OTOS Heading ", otos.getPose().h);
+            telemetry.addLine();
+        }
     }
 }
 

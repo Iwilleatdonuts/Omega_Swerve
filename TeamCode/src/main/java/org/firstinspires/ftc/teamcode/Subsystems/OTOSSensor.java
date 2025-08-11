@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
@@ -21,6 +23,10 @@ public class OTOSSensor extends SubsystemBase {
 
     private final IMU imu;
 
+    private boolean enableTelemetry;
+
+    private final FtcDashboard dashboard;
+
     public OTOSSensor(HardwareMap hardwareMap, Telemetry telemetry){
 
         this.telemetry = telemetry;
@@ -37,6 +43,10 @@ public class OTOSSensor extends SubsystemBase {
         // This sample expects the IMU to be in a REV Hub and named "imu".
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(orientationOnRobot));
+
+        enableTelemetry = false;
+
+        dashboard = FtcDashboard.getInstance();
 
     }
 
@@ -121,15 +131,31 @@ public class OTOSSensor extends SubsystemBase {
         return otos.getVelocityStdDev();
     }
 
-    public void update(){
-        telemetry.addLine("OTOS");
-        telemetry.addData("X Position \t", getPose().x);
-        telemetry.addData("Y Position \t", getPose().y);
-        telemetry.addData("Rotation \t", getHeading());
-        telemetry.addData("X Velocity \t", getVelocity().x);
-        telemetry.addData("Y Velocity \t", getVelocity().y);
-        telemetry.addData("R Velocity \t", getVelocity().h);
-        telemetry.addLine();
+    public void toggleTelemetry() {
+        enableTelemetry = !enableTelemetry;
+    }
+
+    @Override
+    public void periodic(){
+
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.put("X Pos", getPose().x);
+        packet.put("Y Pos", getPose().y);
+        packet.put("Heading", getHeading());
+        packet.put("OTOS Heading", getPose().h);
+
+        dashboard.sendTelemetryPacket(packet);
+
+        if(enableTelemetry){
+            telemetry.addLine("OTOS");
+            telemetry.addData("X Position \t", getPose().x);
+            telemetry.addData("Y Position \t", getPose().y);
+            telemetry.addData("Rotation \t", getHeading());
+            telemetry.addData("X Velocity \t", getVelocity().x);
+            telemetry.addData("Y Velocity \t", getVelocity().y);
+            telemetry.addData("R Velocity \t", getVelocity().h);
+            telemetry.addLine();
+        }
     }
 
 }

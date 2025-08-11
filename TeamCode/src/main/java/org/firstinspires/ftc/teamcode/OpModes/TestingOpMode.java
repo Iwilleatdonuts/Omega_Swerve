@@ -136,11 +136,6 @@ public class TestingOpMode extends LinearOpMode {
             }
 
             telemetry.addData("Turn Servos", runTurns);
-            s_Mod0.update(true);
-            s_Mod1.update(true);
-            s_Mod2.update(true);
-            s_Mod3.update(true);
-            s_Sparky.update();
             telemetry.addData("Left Joystick Angle \t", Math.atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY()));
             telemetry.addData("Right X \t", m_DriverOp.getRightX());
             telemetry.update();
