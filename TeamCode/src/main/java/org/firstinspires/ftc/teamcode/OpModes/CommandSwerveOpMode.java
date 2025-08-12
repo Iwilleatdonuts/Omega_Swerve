@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -24,7 +25,7 @@ public class CommandSwerveOpMode extends CommandOpMode {
 
     private FtcDashboard dashboard;
 
-    private GamepadButton zeroGyroButton;
+    private Button zeroGyroButton;
 
     @Override
     public void initialize() {
