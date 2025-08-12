@@ -24,6 +24,8 @@ public class CommandSwerveOpMode extends CommandOpMode {
 
     private FtcDashboard dashboard;
 
+    private GamepadButton zeroGyroButton;
+
     @Override
     public void initialize() {
 
@@ -32,12 +34,14 @@ public class CommandSwerveOpMode extends CommandOpMode {
         m_Driver = new GamepadEx(gamepad1);
         m_Operator = new GamepadEx(gamepad2);
 
+        zeroGyroButton = new GamepadButton(m_Driver, GamepadKeys.Button.START);
+
         s_Swerve = new Swerve(hardwareMap, telemetry);
         s_Sparky = new OTOSSensor(hardwareMap, telemetry);
 
         s_Swerve.setDefaultCommand(new Drive(s_Swerve, m_Driver, m_Operator));
 
-        new GamepadButton(m_Driver, GamepadKeys.Button.START).whenPressed(new InstantCommand(() -> s_Sparky.zeroGyro()));
+        zeroGyroButton.whenPressed(new InstantCommand(() -> s_Sparky.zeroGyro(), s_Sparky));
 
     }
 
