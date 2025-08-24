@@ -6,7 +6,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 
-public class Drive extends CommandBase {
+public class TeleOpDrive extends CommandBase {
 
     private final Swerve s_Swerve;
     private final GamepadEx m_Driver;
@@ -15,7 +15,7 @@ public class Drive extends CommandBase {
     private boolean slowMode;
     private boolean dashboardDriving;
 
-    public Drive(Swerve s_Swerve, GamepadEx m_Driver, GamepadEx m_Operator){
+    public TeleOpDrive(Swerve s_Swerve, GamepadEx m_Driver, GamepadEx m_Operator){
 
         this.s_Swerve = s_Swerve;
         this.m_Driver = m_Driver;
