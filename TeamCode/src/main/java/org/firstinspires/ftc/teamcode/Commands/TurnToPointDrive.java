@@ -35,7 +35,7 @@ public class TurnToPointDrive extends CommandBase {
         slowMode = false;
         dashboardDriving = false;
 
-        anglePID = new PIDController(0.001, 0, 0);
+        anglePID = new PIDController(0.003, 0.01, 0);
 
         addRequirements(s_Swerve);
     }
@@ -66,15 +66,15 @@ public class TurnToPointDrive extends CommandBase {
 
             double robotHeading = s_Sparky.getHeading();
 
-            double turnAngle = Math.toDegrees(Math.atan2(rightY,rightX));
-            turnAngle = (turnAngle + 360) % 360;
+            double turnAngle = Math.toDegrees(Math.atan2(rightX,rightY));
+            turnAngle = (turnAngle + 180) % 360;
 
             double error = turnAngle - robotHeading;
             error = ((error + 180) % 360 + 360) % 360 - 180;
 
             double placeholder = turnAngle - error;
 
-            rotationOutput = anglePID.calculate(placeholder, turnAngle);
+            rotationOutput = -anglePID.calculate(placeholder, turnAngle);
 
             telemetry.addData("Right x", rightX);
             telemetry.addData("Right y", rightY);
