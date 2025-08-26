@@ -27,7 +27,7 @@ public class Constants {
             public static final String driveMotor = "drive0";
             public static final String angleServo = "angle0";
             public static final String feedback = "angleFeedback0";
-            public static final double moduleOffset = 89.8909;
+            public static final double moduleOffset = 91.0909;
 
             public static final double angleKP = 0;
             public static final double angleKI = 0;
@@ -43,7 +43,7 @@ public class Constants {
             public static final String driveMotor = "drive1";
             public static final String angleServo = "angle1";
             public static final String feedback = "angleFeedback1";
-            public static final double moduleOffset = 267.2727;
+            public static final double moduleOffset = 271.6364;
 
             public static final double angleKP = 0;
             public static final double angleKI = 0;
@@ -59,7 +59,7 @@ public class Constants {
             public static final String driveMotor = "drive2";
             public static final String angleServo = "angle2";
             public static final String feedback = "angleFeedback2";
-            public static final double moduleOffset = 338.7273;
+            public static final double moduleOffset = 337.8545;
 
             public static final double angleKP = 0;
             public static final double angleKI = 0;
@@ -75,7 +75,7 @@ public class Constants {
             public static final String driveMotor = "drive3";
             public static final String angleServo = "angle3";
             public static final String feedback = "angleFeedback3";
-            public static final double moduleOffset = 143.7818;
+            public static final double moduleOffset = 274.2545;
 
             public static final double angleKP = 0;//0.02
             public static final double angleKI = 0;

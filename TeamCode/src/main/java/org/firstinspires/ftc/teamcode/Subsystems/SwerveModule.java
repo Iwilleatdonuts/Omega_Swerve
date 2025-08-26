@@ -2,14 +2,13 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.controller.PIDFController;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.PwmControl;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -23,12 +22,13 @@ public class SwerveModule extends SubsystemBase {
     private final DcMotorEx drive;
     private final CRServoImplEx angle;
     private final AnalogInput moduleHeading;
-    private final PIDFController controller;
+    private final PIDController angleController;
     private final double moduleOffset;
     private final Telemetry telemetry;
     private double moduleSetpoint;
 
-    private final double feedforward;
+    private final double angularFeedforward;
+    private final double velocityFeedforward = 0.1;
 
     //Idk if this is how ur supposed to make a swervy drive but I'm gonna
     // put a boolean to tell the module when it is backwards and so the
@@ -48,13 +48,12 @@ public class SwerveModule extends SubsystemBase {
 
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
-        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(20, 2, 0, 3));
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
         angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
-        controller = new PIDFController(Constants.DriveTrainConstants.angleKP, Constants.DriveTrainConstants.angleKI, Constants.DriveTrainConstants.angleKD, 0);
+        angleController = new PIDController(Constants.DriveTrainConstants.angleKP, Constants.DriveTrainConstants.angleKI, Constants.DriveTrainConstants.angleKD);
 
         moduleHeading = hardwareMap.get(AnalogInput.class, moduleConstants.feedback);
         moduleOffset = moduleConstants.moduleOffset;
@@ -63,7 +62,7 @@ public class SwerveModule extends SubsystemBase {
 
         modNumber = moduleConstants.modNumber;
 
-        feedforward = moduleConstants.kF;
+        angularFeedforward = moduleConstants.kF;
 
         enableTelemetry = false;
 
@@ -73,14 +72,24 @@ public class SwerveModule extends SubsystemBase {
 
     public void setDrivePower(double power) {
 
-        double newPower = power;
-
-            if(isModuleBackwards) {
-                newPower = -newPower;
-            }
-
-        drive.setVelocity(newPower * 2800);
-
+//        double velocityTarget = power;
+//
+//        if (isModuleBackwards) {
+//            velocityTarget = -velocityTarget;
+//        }
+//
+//        double currentVelocity = drive.getVelocity()/2800;
+//
+//        double feedforward = velocityFeedforward * Math.signum(velocityTarget);
+//
+//        double output = driveController.calculate(currentVelocity, velocityTarget) + feedforward;
+//        output = Math.max(-1.0, Math.min(1.0, output));
+//
+//        drive.setPower(output);
+        if (isModuleBackwards) {
+            power = -power;
+        }
+        drive.setPower(power);
     }
 
     //take a value from -1 to 1
@@ -139,16 +148,17 @@ public class SwerveModule extends SubsystemBase {
 
         double placeholder = moduleSetpoint - error;
 
-        double servoOutput = controller.calculate(placeholder, moduleSetpoint);
+        double servoOutput = angleController.calculate(placeholder, moduleSetpoint);
 
         if(error < 0){
-            servoOutput -= feedforward;
+            servoOutput -= angularFeedforward;
         }
 
         if(error > 0) {
-            servoOutput += feedforward;
+            servoOutput += angularFeedforward;
         }
 
+        servoOutput = Math.max(-1.0, Math.min(1.0, servoOutput));
         setTurnSpeed(servoOutput);
     }
 
