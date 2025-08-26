@@ -9,14 +9,14 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Commands.TeleOpDrive;
+import org.firstinspires.ftc.teamcode.Commands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 
 //http://192.168.43.1:8080/dash
 //adb connect 192.168.43.1:5555
-@TeleOp(name = "Command Swerve")
-public class CommandSwerveOpMode extends CommandOpMode {
+@TeleOp(name = "Ginger Driving Core")
+public class RileysFunkyDriveMode extends CommandOpMode {
 
     private Swerve s_Swerve;
     private OTOSSensor s_Sparky;
@@ -40,7 +40,7 @@ public class CommandSwerveOpMode extends CommandOpMode {
         s_Swerve = new Swerve(hardwareMap, telemetry);
         s_Sparky = new OTOSSensor(hardwareMap, telemetry);
 
-        s_Swerve.setDefaultCommand(new TeleOpDrive(s_Swerve, m_Driver, m_Operator));
+        s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, s_Swerve, s_Sparky, m_Driver, m_Operator));
 
         zeroGyroButton.whenPressed(new InstantCommand(() -> s_Sparky.zeroGyro(), s_Sparky));
 
