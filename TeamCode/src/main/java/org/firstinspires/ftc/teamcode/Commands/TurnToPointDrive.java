@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -10,6 +8,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 
 public class TurnToPointDrive extends CommandBase {
 
@@ -35,7 +34,8 @@ public class TurnToPointDrive extends CommandBase {
         slowMode = false;
         dashboardDriving = false;
 
-        anglePID = new PIDController(0.003, 0.01, 0);
+        anglePID = new PIDController(0.0026, 0.035, 0);
+//        anglePID = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kF);
 
         addRequirements(s_Swerve);
     }
