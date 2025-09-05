@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 @TeleOp(name = "Test Mode")
 public class TestingOpMode extends LinearOpMode {
@@ -29,17 +31,19 @@ public class TestingOpMode extends LinearOpMode {
 
         AprilVision s_Vision = new AprilVision(hardwareMap, telemetry);
 
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
+
         ElapsedTime runtime = new ElapsedTime();
 
         boolean runTurns = false;
+        boolean enableOtherTelemetries = false;
 
         waitForStart();
         runtime.reset();
 
 
         while (opModeIsActive()) {
-
-            s_Vision.update();
 
             m_DriverOp.readButtons();
             m_OperatorOp.readButtons();
@@ -49,6 +53,9 @@ public class TestingOpMode extends LinearOpMode {
                 s_Mod1.toggleTelemetry();
                 s_Mod2.toggleTelemetry();
                 s_Mod3.toggleTelemetry();
+                s_Sparky.toggleTelemetry();
+                s_Vision.toggleTelemetry();
+                enableOtherTelemetries = !enableOtherTelemetries;
             }
 
             if(m_DriverOp.wasJustPressed(GamepadKeys.Button.BACK)){
@@ -134,22 +141,22 @@ public class TestingOpMode extends LinearOpMode {
                 s_Mod3.setTurnSpeed(0);
             }
 
-//            if(m_DriverOp.isDown(GamepadKeys.Button.START)) {
-//                s_Mod0.setTurnSpeed(1);
-//                s_Mod1.setTurnSpeed(1);
-//                s_Mod2.setTurnSpeed(1);
-//                s_Mod3.setTurnSpeed(1);
-//            }
-
             s_Mod0.periodic();
             s_Mod1.periodic();
             s_Mod2.periodic();
             s_Mod3.periodic();
+            s_Vision.periodic(dashboard);
 
-            telemetry.addData("Turn Servos", runTurns);
-            telemetry.addData("Left Joystick Angle \t", Math.atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY()));
-            telemetry.addData("Right X \t", m_DriverOp.getRightX());
+            if(enableOtherTelemetries){
+                telemetry.addData("Turn Servos", runTurns);
+                telemetry.addData("Left Joystick Angle \t", Math.atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY()));
+                telemetry.addData("Right X \t", m_DriverOp.getRightX());
+            }
+            if (!enableOtherTelemetries) {
+                telemetry.addLine("Telemetry Off");
+            }
             telemetry.update();
+
 
         }
     }

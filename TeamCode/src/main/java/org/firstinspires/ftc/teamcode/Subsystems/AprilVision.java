@@ -2,13 +2,18 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import android.util.Size;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Canvas;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -18,6 +23,8 @@ public class AprilVision extends SubsystemBase {
     private AprilTagProcessor aprilTagProcessor;
 
     private final Telemetry telemetry;
+
+    private boolean enableTelemetry;
 
     public AprilVision(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -46,17 +53,57 @@ public class AprilVision extends SubsystemBase {
 
     }
 
-    public void update() {
-        if (!aprilTagProcessor.getDetections().isEmpty()) {
-            telemetry.addData("Detected Tags", aprilTagProcessor.getDetections().size());
-            telemetry.addData("First Tag ID", aprilTagProcessor.getDetections().get(0).id);
-            telemetry.addData("X (in)", aprilTagProcessor.getDetections().get(0).ftcPose.x);
-            telemetry.addData("Y (in)", aprilTagProcessor.getDetections().get(0).ftcPose.y);
-            telemetry.addData("Yaw (deg)", aprilTagProcessor.getDetections().get(0).ftcPose.yaw);
-        } else {
-            telemetry.addLine("No AprilTags detected");
-        }
+    public void toggleTelemetry() {
+        enableTelemetry = !enableTelemetry;
     }
 
+    public VisionPortal getAprilCamera() {
+        return aprilCamera;
+    }
+
+    public void periodic(FtcDashboard dashboard) {
+
+        if(enableTelemetry) {
+            if (!aprilTagProcessor.getDetections().isEmpty()) {
+                for (AprilTagDetection detection : aprilTagProcessor.getDetections()) {
+                    telemetry.addData("Tag ID", detection.id);
+                    telemetry.addData("Tag X Pose", detection.ftcPose.x);
+                    telemetry.addData("Tag Y Pose", detection.ftcPose.y);
+                    telemetry.addData("Tag Z Pose", detection.ftcPose.z);
+                    telemetry.addData("Tag Yaw", detection.ftcPose.yaw);
+                    telemetry.addData("Tag Pitch", detection.ftcPose.pitch);
+                    telemetry.addData("Tag Roll", detection.ftcPose.roll);
+                    telemetry.addData("Tag Elevation", detection.ftcPose.elevation);
+                    telemetry.addData("Tag Bearing", detection.ftcPose.bearing);
+                    telemetry.addData("Tag Range", detection.ftcPose.range);
+                }
+            } else {
+                telemetry.addLine("No AprilTags detected");
+            }
+        }
+
+        TelemetryPacket packet = new TelemetryPacket();
+
+        if (!aprilTagProcessor.getDetections().isEmpty()) {
+                for (AprilTagDetection detection : aprilTagProcessor.getDetections()) {
+                packet.addLine("Tag ID: " + detection.id);
+//                packet.addLine("Tag X Pose: " + detection.ftcPose.x);
+//                packet.addLine("Tag Y Pose: " + detection.ftcPose.y);
+//                packet.addLine("Tag Z Pose: " + detection.ftcPose.z);
+//                packet.addLine("Tag Yaw: " + detection.ftcPose.yaw);
+//                packet.addLine("Tag Roll: " + detection.ftcPose.elevation);
+//                packet.addLine("Tag Pitch: " + detection.ftcPose.pitch);
+//                packet.addLine("Tag Roll: " + detection.ftcPose.roll);
+//                packet.addLine("Tag Elevation: " + detection.ftcPose.elevation);
+//                packet.addLine("Tag Bearing: " + detection.ftcPose.bearing);
+//                packet.addLine("Tag Range: " + detection.ftcPose.range);
+                packet.addLine("Robot X Pose: " + detection.robotPose.getPosition().x);
+                packet.addLine("Robot Y Pose: " + detection.robotPose.getPosition().y);
+                packet.addLine("Robot Yaw: " + detection.robotPose.getOrientation().getYaw());
+            }
+        }
+
+        dashboard.sendTelemetryPacket(packet);
+    }
 
 }
