@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
 
@@ -26,17 +27,19 @@ public class TestingOpMode extends LinearOpMode {
 
         OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telemetry);
 
+        AprilVision s_Vision = new AprilVision(hardwareMap, telemetry);
+
         ElapsedTime runtime = new ElapsedTime();
 
         boolean runTurns = false;
-
-        s_Sparky.configureOTOS();
 
         waitForStart();
         runtime.reset();
 
 
         while (opModeIsActive()) {
+
+            s_Vision.update();
 
             m_DriverOp.readButtons();
             m_OperatorOp.readButtons();

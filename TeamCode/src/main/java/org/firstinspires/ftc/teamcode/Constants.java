@@ -2,6 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class Constants {
@@ -95,5 +100,13 @@ public class Constants {
             public static final SparkFunOTOS.Pose2D sensorOffset = new SparkFunOTOS.Pose2D(0, -48, 0);
 
         }
+    }
+
+    public static final class Vision {
+
+        public static final String AprilTagCameraName = "april";
+        public static final Position aprilTagCameraPosition = new Position(DistanceUnit.MM, 0, 0, 0, 0);
+        public static final YawPitchRollAngles aprilTagCameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES, 0, -90, 0, 0);
+
     }
 }

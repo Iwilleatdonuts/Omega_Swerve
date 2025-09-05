@@ -48,6 +48,8 @@ public class OTOSSensor extends SubsystemBase {
 
         dashboard = FtcDashboard.getInstance();
 
+        configureOTOS();
+
     }
 
     public void configureOTOS() {
