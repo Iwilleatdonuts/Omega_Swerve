@@ -46,8 +46,8 @@ public class Swerve extends SubsystemBase {
         if (Math.abs(yVal) < 0.03) {yVal = 0;}
         if (Math.abs(rVal) < 0.03) {rVal = 0;}
 
-        double x = xVal;
-        double y = yVal;
+        double x = yVal;
+        double y = -xVal;
 
         if(fieldRelative){
             double robotHeading = Math.toRadians(otos.getHeading());
@@ -60,18 +60,18 @@ public class Swerve extends SubsystemBase {
 
         double r = rVal;
 
-        double rotVecX = r * (Constants.DriveTrainConstants.trackWidth / Constants.DriveTrainConstants.moduleHypotenuse);
-        double rotVecY = r * (Constants.DriveTrainConstants.wheelbase / Constants.DriveTrainConstants.moduleHypotenuse);
+        double rotationXComponent = r * (Constants.DriveTrainConstants.trackWidth / Constants.DriveTrainConstants.moduleHypotenuse);
+        double rotationYComponent = r * (Constants.DriveTrainConstants.wheelbase / Constants.DriveTrainConstants.moduleHypotenuse);
 
-        double aVec = x - rotVecX;
-        double bVec = x + rotVecX;
-        double cVec = y - rotVecY;
-        double dVec = y + rotVecY;
+        double xLeftComponent = x - rotationXComponent;
+        double xRightComponent = x + rotationXComponent;
+        double yBackComponent = y - rotationYComponent;
+        double yFrontComponent = y + rotationYComponent;
 
-        double mod0Speed = Math.hypot(bVec, dVec);
-        double mod1Speed = Math.hypot(bVec, cVec);
-        double mod2Speed = Math.hypot(aVec, dVec);
-        double mod3Speed = Math.hypot(aVec, cVec);
+        double mod0Speed = Math.hypot(xLeftComponent, yFrontComponent);
+        double mod1Speed = Math.hypot(xRightComponent, yFrontComponent);
+        double mod2Speed = Math.hypot(xLeftComponent, yBackComponent);
+        double mod3Speed = Math.hypot(xRightComponent, yBackComponent);
 
         double max = Math.max(Math.max(mod0Speed, mod1Speed), Math.max(mod2Speed, mod3Speed));
 
@@ -90,10 +90,10 @@ public class Swerve extends SubsystemBase {
             mod3Speed *= 0.3;
         }
 
-        double mod0Angle = normalizeAngle(Math.toDegrees(Math.atan2(-bVec, dVec)));
-        double mod1Angle = normalizeAngle(Math.toDegrees(Math.atan2(-bVec, cVec)));
-        double mod2Angle = normalizeAngle(Math.toDegrees(Math.atan2(-aVec, dVec)));
-        double mod3Angle = normalizeAngle(Math.toDegrees(Math.atan2(-aVec, cVec)));
+        double mod0Angle = normalizeAngle(Math.toDegrees(Math.atan2(yFrontComponent, xLeftComponent)));
+        double mod1Angle = normalizeAngle(Math.toDegrees(Math.atan2(yFrontComponent, xRightComponent)));
+        double mod2Angle = normalizeAngle(Math.toDegrees(Math.atan2(yBackComponent, xLeftComponent)));
+        double mod3Angle = normalizeAngle(Math.toDegrees(Math.atan2(yBackComponent, xRightComponent)));
 
         mod0.setDrivePower(mod0Speed);
         mod1.setDrivePower(mod1Speed);

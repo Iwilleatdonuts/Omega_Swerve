@@ -20,8 +20,8 @@ public class Constants {
         //unit in MM
         //Track width is side to side modules
         //Wheelbase is front to back modules
-        public static final double trackWidth = 286.40000;
-        public static final double wheelbase = 286.40000;
+        public static final double trackWidth = 262;
+        public static final double wheelbase = 262;
 
         public static final double moduleHypotenuse = Math.hypot(trackWidth/2, wheelbase/2);
         public static final double widthRotation = trackWidth/moduleHypotenuse;
