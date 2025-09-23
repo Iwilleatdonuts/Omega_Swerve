@@ -3,14 +3,12 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -40,11 +38,11 @@ public class AprilVision extends SubsystemBase {
                 .setDrawAxes(true)
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
-                .setCameraPose(Constants.Vision.aprilTagCameraPosition, Constants.Vision.aprilTagCameraOrientation)
+                .setCameraPose(Constants.VisionConstants.aprilTagCameraPosition, Constants.VisionConstants.aprilTagCameraOrientation)
                 .build();
 
         aprilCamera = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, Constants.Vision.AprilTagCameraName))
+                .setCamera(hardwareMap.get(WebcamName.class, Constants.VisionConstants.AprilTagCameraName))
                 .addProcessor(aprilTagProcessor)
                 .setCameraResolution(new Size(320, 240))
                 .enableLiveView(true)

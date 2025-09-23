@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
@@ -102,7 +101,22 @@ public class Constants {
         }
     }
 
-    public static final class Vision {
+    public static final class IntakeConstants {
+
+        public static final String intakeMotor = "intake";
+
+    }
+
+    public static final class TurretConstants {
+
+        public static final String turretMotor = "turret";
+
+        public static final double lowerRotationLimit = -270;
+        public static final double upperRotationLimit = 270;
+
+    }
+
+    public static final class VisionConstants {
 
         public static final String AprilTagCameraName = "april";
         public static final Position aprilTagCameraPosition = new Position(DistanceUnit.MM, 0, 0, 0, 0);

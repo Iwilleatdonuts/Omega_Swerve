@@ -49,16 +49,19 @@ public class Swerve extends SubsystemBase {
         double x = yVal;
         double y = -xVal;
 
+        double xValPlaceholder = x;
+        double yValPlaceholder = y;
+
         if(fieldRelative){
             double robotHeading = Math.toRadians(otos.getHeading());
             double cosHeading = Math.cos(robotHeading);
             double sinHeading = Math.sin(robotHeading);
 
-            x = xVal * cosHeading + yVal * sinHeading;
-            y = -xVal * sinHeading + yVal * cosHeading;
+            x = xValPlaceholder * cosHeading + yValPlaceholder * sinHeading;
+            y = -xValPlaceholder * sinHeading + yValPlaceholder * cosHeading;
         }
 
-        double r = rVal;
+        double r = -rVal;
 
         double rotationXComponent = r * (Constants.DriveTrainConstants.trackWidth / Constants.DriveTrainConstants.moduleHypotenuse);
         double rotationYComponent = r * (Constants.DriveTrainConstants.wheelbase / Constants.DriveTrainConstants.moduleHypotenuse);
@@ -90,10 +93,10 @@ public class Swerve extends SubsystemBase {
             mod3Speed *= 0.3;
         }
 
-        double mod0Angle = normalizeAngle(Math.toDegrees(Math.atan2(yFrontComponent, xLeftComponent)));
-        double mod1Angle = normalizeAngle(Math.toDegrees(Math.atan2(yFrontComponent, xRightComponent)));
-        double mod2Angle = normalizeAngle(Math.toDegrees(Math.atan2(yBackComponent, xLeftComponent)));
-        double mod3Angle = normalizeAngle(Math.toDegrees(Math.atan2(yBackComponent, xRightComponent)));
+        double mod0Angle = normalizeModuleAngle(Math.toDegrees(Math.atan2(yFrontComponent, xLeftComponent)));
+        double mod1Angle = normalizeModuleAngle(Math.toDegrees(Math.atan2(yFrontComponent, xRightComponent)));
+        double mod2Angle = normalizeModuleAngle(Math.toDegrees(Math.atan2(yBackComponent, xLeftComponent)));
+        double mod3Angle = normalizeModuleAngle(Math.toDegrees(Math.atan2(yBackComponent, xRightComponent)));
 
         mod0.setDrivePower(mod0Speed);
         mod1.setDrivePower(mod1Speed);
@@ -123,7 +126,7 @@ public class Swerve extends SubsystemBase {
         return motorCurrents;
     }
 
-    private double normalizeAngle(double angle) {
+    private double normalizeModuleAngle(double angle) {
         angle %= 360;
         if (angle < 0) angle += 360;
         return angle;
