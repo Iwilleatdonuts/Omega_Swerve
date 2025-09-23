@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 
 //http://192.168.43.1:8080/dash
 //adb connect 192.168.43.1:5555
-@TeleOp(name = "Command Swerve")
+@TeleOp(name = "Normie Swerve")
 public class CommandSwerveOpMode extends CommandOpMode {
 
     private Swerve s_Swerve;
