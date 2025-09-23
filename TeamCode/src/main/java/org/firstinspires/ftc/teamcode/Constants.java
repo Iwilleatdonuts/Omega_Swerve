@@ -116,6 +116,15 @@ public class Constants {
 
     }
 
+    public static final class ShooterConstants {
+
+        public static final String upperMotor = "upperShooter";
+        public static final String lowerMotor = "lowerShooter";
+
+        public static final double launchSpeed = 6000;
+
+    }
+
     public static final class VisionConstants {
 
         public static final String AprilTagCameraName = "april";

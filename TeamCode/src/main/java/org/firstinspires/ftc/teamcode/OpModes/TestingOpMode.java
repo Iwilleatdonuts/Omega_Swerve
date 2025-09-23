@@ -7,14 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 @TeleOp(name = "Test Mode")
 public class TestingOpMode extends LinearOpMode {
@@ -31,7 +30,7 @@ public class TestingOpMode extends LinearOpMode {
         SwerveModule s_Mod3 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod3.modConstants);
         Intake s_Intake = new Intake(hardwareMap, telemetry);
         Turret s_Turret = new Turret(hardwareMap, telemetry);
-
+        Shooter s_Shooter = new Shooter(hardwareMap, telemetry);
         OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telemetry);
 
 //        AprilVision s_Vision = new AprilVision(hardwareMap, telemetry);
@@ -108,6 +107,8 @@ public class TestingOpMode extends LinearOpMode {
             } else {
                 s_Turret.setSpeed(0);
             }
+
+            s_Shooter.setShooterSpeed(m_DriverOp.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 
             double drivePower = m_DriverOp.getLeftY();
 
