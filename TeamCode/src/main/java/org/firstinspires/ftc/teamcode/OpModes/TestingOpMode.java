@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
@@ -33,10 +34,10 @@ public class TestingOpMode extends LinearOpMode {
         Shooter s_Shooter = new Shooter(hardwareMap, telemetry);
         OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telemetry);
 
-//        AprilVision s_Vision = new AprilVision(hardwareMap, telemetry);
+        AprilVision s_Vision = new AprilVision(hardwareMap, telemetry);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
-//        dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
+        dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
 
         ElapsedTime runtime = new ElapsedTime();
 
@@ -62,7 +63,7 @@ public class TestingOpMode extends LinearOpMode {
                 s_Sparky.toggleTelemetry();
                 s_Intake.toggleTelemetry();
                 s_Turret.toggleTelemetry();
-//                s_Vision.toggleTelemetry();
+                s_Vision.toggleTelemetry();
                 enableOtherTelemetries = !enableOtherTelemetries;
             }
 
@@ -108,7 +109,7 @@ public class TestingOpMode extends LinearOpMode {
                 s_Turret.setSpeed(0);
             }
 
-            s_Shooter.setShooterSpeed(m_DriverOp.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
+            s_Shooter.setShooterSpeed(m_OperatorOp.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 
             double drivePower = m_DriverOp.getLeftY();
 
@@ -195,7 +196,7 @@ public class TestingOpMode extends LinearOpMode {
             s_Mod3.periodic();
             s_Intake.periodic();
             s_Turret.periodic();
-//            s_Vision.periodic(dashboard);
+            s_Vision.periodic(dashboard);
 
             if(enableOtherTelemetries){
                 telemetry.addData("Turn Servos", runTurns);

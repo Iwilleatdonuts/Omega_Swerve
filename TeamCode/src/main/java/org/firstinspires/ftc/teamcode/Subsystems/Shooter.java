@@ -27,8 +27,8 @@ public class Shooter extends SubsystemBase {
         upperShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         lowerShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        upperShooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lowerShooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        upperShooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lowerShooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         upperShooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         lowerShooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -42,9 +42,11 @@ public class Shooter extends SubsystemBase {
 
     //input from 0-1
     public void setShooterSpeed(double speed) {
-        double velocity = speed * 6000;
-        upperShooterMotor.setVelocity(velocity);
-        lowerShooterMotor.setVelocity(velocity);
+//        double velocity = speed * 6000;
+//        upperShooterMotor.setVelocity(velocity);
+//        lowerShooterMotor.setVelocity(velocity);
+        upperShooterMotor.setPower(speed);
+        lowerShooterMotor.setPower(speed);
     }
 
     public double getUpperVelocity() {
