@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 public class CommandSwerveOpMode extends CommandOpMode {
 
     private Swerve s_Swerve;
-    private OTOSSensor s_Sparky;
+//    private OTOSSensor s_Sparky;
     private GamepadEx m_Driver;
     private GamepadEx m_Operator;
 
@@ -38,11 +38,11 @@ public class CommandSwerveOpMode extends CommandOpMode {
         zeroGyroButton = new GamepadButton(m_Driver, GamepadKeys.Button.START);
 
         s_Swerve = new Swerve(hardwareMap, telemetry);
-        s_Sparky = new OTOSSensor(hardwareMap, telemetry);
+//        s_Sparky = new OTOSSensor(hardwareMap, telemetry);
 
         s_Swerve.setDefaultCommand(new TeleOpDrive(s_Swerve, m_Driver, m_Operator));
 
-        zeroGyroButton.whenPressed(new InstantCommand(() -> s_Sparky.zeroGyro(), s_Sparky));
+        zeroGyroButton.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro(), s_Swerve));
 
 
     }

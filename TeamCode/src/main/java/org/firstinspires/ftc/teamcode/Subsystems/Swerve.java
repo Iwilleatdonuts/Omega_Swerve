@@ -3,9 +3,12 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 
 import java.util.HashMap;
@@ -16,8 +19,9 @@ public class Swerve extends SubsystemBase {
     private final Telemetry telemetry;
 
     private final SwerveModule mod0, mod1, mod2, mod3;
+    private final IMU imu;
 
-    private final OTOSSensor otos;
+//    private final OTOSSensor otos;
 
     private boolean enableTelemetry;
 
@@ -32,9 +36,18 @@ public class Swerve extends SubsystemBase {
         mod2 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod2.modConstants);
         mod3 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod3.modConstants);
 
-        otos = new OTOSSensor(hardwareMap, telemetry);
+//        otos = new OTOSSensor(hardwareMap, telemetry);
 
         enableTelemetry = false;
+
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+
+        // Now initialize the IMU with this mounting orientation
+        // This sample expects the IMU to be in a REV Hub and named "imu".
+        imu = hardwareMap.get(IMU.class, "imu");
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         dashboard = FtcDashboard.getInstance();
 
@@ -53,7 +66,7 @@ public class Swerve extends SubsystemBase {
         double yValPlaceholder = y;
 
         if(fieldRelative){
-            double robotHeading = Math.toRadians(otos.getHeading());
+            double robotHeading = Math.toRadians(getHeading());
             double cosHeading = Math.cos(robotHeading);
             double sinHeading = Math.sin(robotHeading);
 
@@ -132,6 +145,18 @@ public class Swerve extends SubsystemBase {
         return angle;
     }
 
+    public double getHeading() {
+        double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+
+        rotation = (rotation+360)%360;
+
+        return rotation;
+    }
+
+    public void zeroGyro() {
+        imu.resetYaw();
+    }
+
     public void toggleTelemetry() {
         enableTelemetry = !enableTelemetry;
     }
@@ -146,10 +171,10 @@ public class Swerve extends SubsystemBase {
 
         if(enableTelemetry) {
             telemetry.addLine("Swerve");
-            telemetry.addData("X Position ", otos.getPose().x);
-            telemetry.addData("Y Position ", otos.getPose().y);
-            telemetry.addData("Heading ", otos.getHeading());
-            telemetry.addData("OTOS Heading ", otos.getPose().h);
+//            telemetry.addData("X Position ", otos.getPose().x);
+//            telemetry.addData("Y Position ", otos.getPose().y);
+            telemetry.addData("Heading ", getHeading());
+//            telemetry.addData("OTOS Heading ", otos.getPose().h);
             telemetry.addLine();
         }
     }

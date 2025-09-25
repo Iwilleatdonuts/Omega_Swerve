@@ -14,7 +14,6 @@ public class TurnToPointDrive extends CommandBase {
 
     private final Telemetry telemetry;
     private final Swerve s_Swerve;
-    private final OTOSSensor s_Sparky;
     private final GamepadEx m_Driver;
     private final GamepadEx m_Operator;
 
@@ -23,11 +22,10 @@ public class TurnToPointDrive extends CommandBase {
 
     private final PIDController anglePID;
 
-    public TurnToPointDrive(Telemetry telemetry, Swerve s_Swerve, OTOSSensor s_Sparky, GamepadEx m_Driver, GamepadEx m_Operator){
+    public TurnToPointDrive(Telemetry telemetry, Swerve s_Swerve, GamepadEx m_Driver, GamepadEx m_Operator){
 
         this.telemetry = telemetry;
         this.s_Swerve = s_Swerve;
-        this.s_Sparky = s_Sparky;
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
 
@@ -64,7 +62,7 @@ public class TurnToPointDrive extends CommandBase {
 
         if(Math.hypot(rightX, rightY) > 0.9) {
 
-            double robotHeading = s_Sparky.getHeading();
+            double robotHeading = s_Swerve.getHeading();
 
             double turnAngle = Math.toDegrees(Math.atan2(rightX,rightY));
             turnAngle = (turnAngle + 180) % 360;
