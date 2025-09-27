@@ -120,6 +120,7 @@ public class Constants {
 
         public static final String upperMotor = "upperShooter";
         public static final String lowerMotor = "lowerShooter";
+        public static final String angleServo = "angleShooter";
 
         public static final double launchSpeed = 6000;
 

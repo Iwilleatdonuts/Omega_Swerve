@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
@@ -13,6 +16,7 @@ public class Shooter extends SubsystemBase {
 
     private final DcMotorEx upperShooterMotor;
     private final DcMotorEx lowerShooterMotor;
+    private final ServoImplEx angleServo;
 
     private final Telemetry telemetry;
     private boolean enableTelemetry;
@@ -23,6 +27,7 @@ public class Shooter extends SubsystemBase {
 
         upperShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.upperMotor);
         lowerShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.lowerMotor);
+        angleServo = hardwareMap.get(ServoImplEx.class, Constants.ShooterConstants.angleServo);
 
         upperShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         lowerShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -36,7 +41,12 @@ public class Shooter extends SubsystemBase {
         upperShooterMotor.setVelocityPIDFCoefficients(1, 0, 0, 0);
         lowerShooterMotor.setVelocityPIDFCoefficients(1, 0, 0, 0);
 
+        angleServo.setDirection(Servo.Direction.FORWARD);
+        angleServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
+
         enableTelemetry = false;
+
+        angleServo.setPosition(0);
 
     }
 
@@ -61,6 +71,14 @@ public class Shooter extends SubsystemBase {
         return (getUpperVelocity()+getLowerVelocity())/2;
     }
 
+    public void setShooterAngle(double degrees) {
+        angleServo.setPosition(degrees);
+    }
+
+    public double getShooterAngle(){
+        return angleServo.getPosition();
+    }
+
     public void toggleTelemetry() {
         enableTelemetry = !enableTelemetry;
     }
@@ -70,6 +88,7 @@ public class Shooter extends SubsystemBase {
         if(enableTelemetry) {
             telemetry.addLine("Shooter");
             telemetry.addData("RPM", getAverageVelocity());
+            telemetry.addData("Shooter Angle", getShooterAngle());
         }
 
     }

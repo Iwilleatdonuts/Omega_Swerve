@@ -63,6 +63,7 @@ public class TestingOpMode extends LinearOpMode {
                 s_Sparky.toggleTelemetry();
                 s_Intake.toggleTelemetry();
                 s_Turret.toggleTelemetry();
+                s_Shooter.toggleTelemetry();
                 s_Vision.toggleTelemetry();
                 enableOtherTelemetries = !enableOtherTelemetries;
             }
@@ -80,19 +81,11 @@ public class TestingOpMode extends LinearOpMode {
             }
 
             if(m_OperatorOp.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-                s_Turret.setSetpoint(0);
-            }
-
-            if(m_OperatorOp.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-                s_Turret.setSetpoint(90);
+                s_Shooter.setShooterAngle(s_Shooter.getShooterAngle() + 0.05);
             }
 
             if(m_OperatorOp.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-                s_Turret.setSetpoint(180);
-            }
-
-            if(m_OperatorOp.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
-                s_Turret.setSetpoint(270);
+                s_Shooter.setShooterAngle(s_Shooter.getShooterAngle() - 0.05);
             }
 
             double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_OperatorOp.getLeftX(), m_OperatorOp.getLeftY()));
@@ -196,6 +189,7 @@ public class TestingOpMode extends LinearOpMode {
             s_Mod3.periodic();
             s_Intake.periodic();
             s_Turret.periodic();
+            s_Shooter.periodic();
             s_Vision.periodic(dashboard);
 
             if(enableOtherTelemetries){
