@@ -38,11 +38,11 @@ public class AprilVision extends SubsystemBase {
                 .setDrawAxes(true)
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
-                .setCameraPose(Constants.VisionConstants.aprilTagCameraPosition, Constants.VisionConstants.aprilTagCameraOrientation)
+                .setCameraPose(Constants.VisionConstants.poseCameraPosition, Constants.VisionConstants.poseCameraOrientation)
                 .build();
 
         aprilCamera = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, Constants.VisionConstants.AprilTagCameraName))
+                .setCamera(hardwareMap.get(WebcamName.class, Constants.VisionConstants.poseCameraName))
                 .addProcessor(aprilTagProcessor)
                 .setCameraResolution(new Size(320, 240))
                 .enableLiveView(true)
@@ -57,6 +57,15 @@ public class AprilVision extends SubsystemBase {
 
     public VisionPortal getAprilCamera() {
         return aprilCamera;
+    }
+
+    //TODO MAKE THESE DO SOMETHING
+    public double getAprilX() {
+        return 0;
+    }
+
+    public double getAprilZ() {
+        return 0;
     }
 
     public void periodic(FtcDashboard dashboard) {
