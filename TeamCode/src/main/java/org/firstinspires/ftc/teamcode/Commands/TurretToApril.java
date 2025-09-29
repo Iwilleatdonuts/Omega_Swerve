@@ -1,25 +1,31 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
-import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 
 public class TurretToApril extends CommandBase {
 
     private final Turret s_Turret;
     private final AprilVision s_Vision;
+    private final FtcDashboard dashboard;
 
     private double aprilX;
-    private double aprilZ;
+    private double aprilY;
     private double cos, sin;
 
-    public TurretToApril(Turret s_Turret, AprilVision s_Vision){
+
+    TelemetryPacket packet = new TelemetryPacket();
+
+    public TurretToApril(Turret s_Turret, AprilVision s_Vision, FtcDashboard dashboard){
 
         this.s_Turret = s_Turret;
         this.s_Vision = s_Vision;
+        this.dashboard = dashboard;
 
         addRequirements(s_Turret);
     }
@@ -28,42 +34,49 @@ public class TurretToApril extends CommandBase {
     public void initialize(){
 
         aprilX = s_Vision.getAprilX();
-        aprilZ = s_Vision.getAprilZ();
+        aprilY = s_Vision.getAprilZ();
 
         cos = Math.cos(Constants.VisionConstants.aimingCameraYaw);
         sin = Math.sin(Constants.VisionConstants.aimingCameraYaw);
 
-        s_Vision.toggleTelemetry();
 
     }
 
     @Override
     public void execute(){
 
-        s_Vision.periodic();
+        s_Vision.periodic(dashboard);
 
 
         if(s_Vision.hasTag()){
 
             aprilX = s_Vision.getAprilX();
-            aprilZ = s_Vision.getAprilZ();
+            aprilY = s_Vision.getAprilY();
 
-            double rotatedX = cos * aprilX - sin * aprilZ;
-            double rotatedY = sin * aprilX + cos * aprilZ;
+            double rotatedX = cos * aprilX - sin * aprilY;
+            double rotatedY = sin * aprilX + cos * aprilY;
 
             double normalX =  rotatedX + Constants.VisionConstants.xOffsetFromTurret;
             double normalY = rotatedY + Constants.VisionConstants.yOffsetFromTurret;
 
-            double bearing = Math.toDegrees(Math.atan2(normalX, normalY));
+            double bearing = Math.toDegrees(Math.atan2(-normalX, normalY));
+            bearing = (bearing+360)%360;
 
-            double targetRotation = s_Turret.getDegrees() + bearing;
-            s_Turret.setSetpoint(targetRotation);
+            s_Turret.setSetpoint(bearing);
             s_Turret.runToSetpoint();
 
+            packet.put("tag x", aprilX);
+            packet.put("tag y", aprilY);
+            packet.put("turret Setpoint", bearing);
         }
 
+        dashboard.sendTelemetryPacket(packet);
 
+    }
 
+    @Override
+    public void end(boolean interrupted) {
+        s_Turret.setSpeed(0);
     }
 
     @Override

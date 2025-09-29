@@ -50,6 +50,7 @@ public class RileysFunkyDriveMode extends CommandOpMode {
         s_Intake = new Intake(hardwareMap, telemetry);
         s_Turret = new Turret(hardwareMap, telemetry);
         s_Vision = new AprilVision(hardwareMap, telemetry);
+        dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
 
         s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, s_Swerve, m_Driver, m_Operator));
         s_Intake.setDefaultCommand(new RunCommand(() -> s_Intake.setSpeed(m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)), s_Intake));
@@ -57,7 +58,7 @@ public class RileysFunkyDriveMode extends CommandOpMode {
 
         zeroGyroButton.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro(), s_Swerve));
 
-        shooterLockButton.whenHeld(new TurretToApril(s_Turret, s_Vision));
+        shooterLockButton.whenHeld(new TurretToApril(s_Turret, s_Vision, dashboard));
 
     }
 

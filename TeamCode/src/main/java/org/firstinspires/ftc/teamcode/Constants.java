@@ -134,8 +134,8 @@ public class Constants {
 
         public static final String aimingCameraName = "aimCamera";
 
-        public static final double xOffsetFromTurret = 99.56333;
-        public static final double yOffsetFromTurret = 26.33424;
+        public static final double xOffsetFromTurret = 0.09956333;
+        public static final double yOffsetFromTurret = 0.02633424;
         public static final double aimingCameraYaw = 0;
 
     }

@@ -69,13 +69,13 @@ public class AprilVision extends SubsystemBase {
             latestDetection = null;
         }
 
-        if(enableTelemetry) {
+//        if(enableTelemetry) {
             TelemetryPacket packet = new TelemetryPacket();
             if (latestDetection != null) {
-                packet.addLine("Tag ID: " + latestDetection.id);
-                packet.addLine("Robot X Pose: " + latestDetection.robotPose.getPosition().x);
-                packet.addLine("Robot Y Pose: " + latestDetection.robotPose.getPosition().y);
-                packet.addLine("Robot Yaw: " + latestDetection.robotPose.getOrientation().getYaw());
+                packet.put("Tag ID: ", latestDetection.id);
+                packet.put("Robot X Pose: ", latestDetection.robotPose.getPosition().x);
+                packet.put("Robot Y Pose: ", latestDetection.robotPose.getPosition().y);
+                packet.put("Robot Yaw: ", latestDetection.robotPose.getOrientation().getYaw());
 
                 telemetry.addLine("Vision");
                 telemetry.addData("Robot X Pose:", latestDetection.robotPose.getPosition().x);
@@ -85,7 +85,7 @@ public class AprilVision extends SubsystemBase {
                 packet.addLine("No AprilTags detected");
             }
             dashboard.sendTelemetryPacket(packet);
-        }
+//        }
     }
 
     public boolean hasTag() {
