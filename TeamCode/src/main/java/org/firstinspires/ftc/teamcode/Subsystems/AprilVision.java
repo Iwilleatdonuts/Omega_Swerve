@@ -21,8 +21,9 @@ public class AprilVision extends SubsystemBase {
     private AprilTagProcessor aprilTagProcessor;
 
     private final Telemetry telemetry;
-
     private boolean enableTelemetry;
+
+    private AprilTagDetection latestDetection;
 
     public AprilVision(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -39,13 +40,14 @@ public class AprilVision extends SubsystemBase {
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
                 .setCameraPose(Constants.VisionConstants.poseCameraPosition, Constants.VisionConstants.poseCameraOrientation)
+                .setLensIntrinsics(552.2287565089085, 549.2233357291731, 330.46847362162896, 207.9732802095237)
                 .build();
 
         aprilCamera = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, Constants.VisionConstants.poseCameraName))
                 .addProcessor(aprilTagProcessor)
-                .setCameraResolution(new Size(320, 240))
-                .enableLiveView(true)
+                .setCameraResolution(new Size(640, 480))
+                .enableLiveView(false)
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .build();
 
@@ -59,58 +61,71 @@ public class AprilVision extends SubsystemBase {
         return aprilCamera;
     }
 
-    //TODO MAKE THESE DO SOMETHING
+    public void periodic(FtcDashboard dashboard) {
+
+        if (!aprilTagProcessor.getDetections().isEmpty()) {
+            latestDetection = aprilTagProcessor.getDetections().get(0);
+        } else {
+            latestDetection = null;
+        }
+
+        if(enableTelemetry) {
+            TelemetryPacket packet = new TelemetryPacket();
+            if (latestDetection != null) {
+                packet.addLine("Tag ID: " + latestDetection.id);
+                packet.addLine("Robot X Pose: " + latestDetection.robotPose.getPosition().x);
+                packet.addLine("Robot Y Pose: " + latestDetection.robotPose.getPosition().y);
+                packet.addLine("Robot Yaw: " + latestDetection.robotPose.getOrientation().getYaw());
+
+                telemetry.addLine("Vision");
+                telemetry.addData("Robot X Pose:", latestDetection.robotPose.getPosition().x);
+                telemetry.addData("Robot Y Pose:", latestDetection.robotPose.getPosition().y);
+                telemetry.addData("Robot Yaw:", latestDetection.robotPose.getOrientation().getYaw());
+            } else {
+                packet.addLine("No AprilTags detected");
+            }
+            dashboard.sendTelemetryPacket(packet);
+        }
+    }
+
+    public boolean hasTag() {
+        return latestDetection != null;
+    }
+
     public double getAprilX() {
-        return 0;
+        return latestDetection != null ? latestDetection.ftcPose.x : 0.0;
+    }
+
+    public double getAprilY() {
+        return latestDetection != null ? latestDetection.ftcPose.y : 0.0;
     }
 
     public double getAprilZ() {
-        return 0;
+        return latestDetection != null ? latestDetection.ftcPose.z : 0.0;
     }
 
-    public void periodic(FtcDashboard dashboard) {
+    public double getAprilYaw() {
+        return latestDetection != null ? latestDetection.ftcPose.yaw : 0.0;
+    }
 
-        if(enableTelemetry) {
-            if (!aprilTagProcessor.getDetections().isEmpty()) {
-                for (AprilTagDetection detection : aprilTagProcessor.getDetections()) {
-                    telemetry.addData("Tag ID", detection.id);
-                    telemetry.addData("Tag X Pose", detection.ftcPose.x);
-                    telemetry.addData("Tag Y Pose", detection.ftcPose.y);
-                    telemetry.addData("Tag Z Pose", detection.ftcPose.z);
-                    telemetry.addData("Tag Yaw", detection.ftcPose.yaw);
-                    telemetry.addData("Tag Pitch", detection.ftcPose.pitch);
-                    telemetry.addData("Tag Roll", detection.ftcPose.roll);
-                    telemetry.addData("Tag Elevation", detection.ftcPose.elevation);
-                    telemetry.addData("Tag Bearing", detection.ftcPose.bearing);
-                    telemetry.addData("Tag Range", detection.ftcPose.range);
-                }
-            } else {
-                telemetry.addLine("No AprilTags detected");
-            }
-        }
+    public double getAprilPitch() {
+        return latestDetection != null ? latestDetection.ftcPose.pitch : 0.0;
+    }
 
-        TelemetryPacket packet = new TelemetryPacket();
+    public double getAprilRoll() {
+        return latestDetection != null ? latestDetection.ftcPose.roll : 0.0;
+    }
 
-        if (!aprilTagProcessor.getDetections().isEmpty()) {
-                for (AprilTagDetection detection : aprilTagProcessor.getDetections()) {
-                packet.addLine("Tag ID: " + detection.id);
-//                packet.addLine("Tag X Pose: " + detection.ftcPose.x);
-//                packet.addLine("Tag Y Pose: " + detection.ftcPose.y);
-//                packet.addLine("Tag Z Pose: " + detection.ftcPose.z);
-//                packet.addLine("Tag Yaw: " + detection.ftcPose.yaw);
-//                packet.addLine("Tag Roll: " + detection.ftcPose.elevation);
-//                packet.addLine("Tag Pitch: " + detection.ftcPose.pitch);
-//                packet.addLine("Tag Roll: " + detection.ftcPose.roll);
-//                packet.addLine("Tag Elevation: " + detection.ftcPose.elevation);
-//                packet.addLine("Tag Bearing: " + detection.ftcPose.bearing);
-//                packet.addLine("Tag Range: " + detection.ftcPose.range);
-                packet.addLine("Robot X Pose: " + detection.robotPose.getPosition().x);
-                packet.addLine("Robot Y Pose: " + detection.robotPose.getPosition().y);
-                packet.addLine("Robot Yaw: " + detection.robotPose.getOrientation().getYaw());
-            }
-        }
+    public double getAprilRange() {
+        return latestDetection != null ? latestDetection.ftcPose.range : 0.0;
+    }
 
-        dashboard.sendTelemetryPacket(packet);
+    public double getAprilBearing() {
+        return latestDetection != null ? latestDetection.ftcPose.bearing : 0.0;
+    }
+
+    public double getAprilElevation() {
+        return latestDetection != null ? latestDetection.ftcPose.elevation : 0.0;
     }
 
 }

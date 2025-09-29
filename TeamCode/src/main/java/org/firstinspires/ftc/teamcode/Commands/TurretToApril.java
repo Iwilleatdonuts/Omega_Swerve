@@ -33,26 +33,36 @@ public class TurretToApril extends CommandBase {
         cos = Math.cos(Constants.VisionConstants.aimingCameraYaw);
         sin = Math.sin(Constants.VisionConstants.aimingCameraYaw);
 
+        s_Vision.toggleTelemetry();
+
     }
 
     @Override
     public void execute(){
 
-        aprilX = s_Vision.getAprilX();
-        aprilZ = s_Vision.getAprilZ();
+        s_Vision.periodic();
 
-        double rotatedX = cos * aprilX - sin * aprilZ;
-        double rotatedY = sin * aprilX + cos * aprilZ;
 
-        double normalX =  rotatedX + Constants.VisionConstants.xOffsetFromTurret;
-        double normalY = rotatedY + Constants.VisionConstants.yOffsetFromTurret;
+        if(s_Vision.hasTag()){
 
-        double bearing = Math.toDegrees(Math.atan2(normalX, normalY));
+            aprilX = s_Vision.getAprilX();
+            aprilZ = s_Vision.getAprilZ();
 
-        double targetRotation = s_Turret.getDegrees() + bearing;
+            double rotatedX = cos * aprilX - sin * aprilZ;
+            double rotatedY = sin * aprilX + cos * aprilZ;
 
-        s_Turret.setSetpoint(targetRotation);
-        s_Turret.runToSetpoint();
+            double normalX =  rotatedX + Constants.VisionConstants.xOffsetFromTurret;
+            double normalY = rotatedY + Constants.VisionConstants.yOffsetFromTurret;
+
+            double bearing = Math.toDegrees(Math.atan2(normalX, normalY));
+
+            double targetRotation = s_Turret.getDegrees() + bearing;
+            s_Turret.setSetpoint(targetRotation);
+            s_Turret.runToSetpoint();
+
+        }
+
+
 
     }
 
