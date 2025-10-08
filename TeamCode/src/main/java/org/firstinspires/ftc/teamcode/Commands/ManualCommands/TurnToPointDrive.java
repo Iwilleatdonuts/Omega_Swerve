@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.Commands;
+package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 
@@ -15,24 +15,25 @@ public class TurnToPointDrive extends CommandBase {
     private final Telemetry telemetry;
     private final Swerve s_Swerve;
     private final GamepadEx m_Driver;
-    private final GamepadEx m_Operator;
 
     private boolean slowMode;
-    private boolean dashboardDriving;
-
     private final PIDController anglePID;
 
-    public TurnToPointDrive(Telemetry telemetry, Swerve s_Swerve, GamepadEx m_Driver, GamepadEx m_Operator){
+    private boolean enableAutoRotate;
+    private double turnAngle;
+
+    public TurnToPointDrive(Telemetry telemetry, Swerve s_Swerve, GamepadEx m_Driver){
 
         this.telemetry = telemetry;
         this.s_Swerve = s_Swerve;
         this.m_Driver = m_Driver;
-        this.m_Operator = m_Operator;
 
         slowMode = false;
-        dashboardDriving = false;
+        enableAutoRotate = false;
 
-        anglePID = new PIDController(0.0026, 0.035, 0);
+        turnAngle = 0;
+
+        anglePID = new PIDController(0.0026, 0.01, 0);
 //        anglePID = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kF);
 
         addRequirements(s_Swerve);
@@ -41,17 +42,14 @@ public class TurnToPointDrive extends CommandBase {
     @Override
     public void execute(){
 
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)){
-            dashboardDriving = !dashboardDriving;
+        m_Driver.readButtons();
+
+        if(m_Driver.wasJustPressed(GamepadKeys.Button.BACK)){
+            enableAutoRotate = !enableAutoRotate;
         }
 
         double xVal = m_Driver.getLeftX();
         double yVal = m_Driver.getLeftY();
-
-        if(dashboardDriving){
-            xVal = m_Driver.getLeftY();
-            yVal = m_Driver.getLeftX();
-        }
 
         slowMode = m_Driver.isDown(GamepadKeys.Button.LEFT_STICK_BUTTON) || m_Driver.isDown(GamepadKeys.Button.RIGHT_STICK_BUTTON);
 
@@ -61,18 +59,20 @@ public class TurnToPointDrive extends CommandBase {
         double rightY = m_Driver.getRightY();
 
         if(Math.hypot(rightX, rightY) > 0.9) {
+            turnAngle = Math.toDegrees(Math.atan2(rightX,rightY));
+            turnAngle = (turnAngle + 180) % 360;
+        }
+
+        if(Math.hypot(rightX, rightY) > 0.9 || enableAutoRotate) {
 
             double robotHeading = s_Swerve.getHeading();
-
-            double turnAngle = Math.toDegrees(Math.atan2(rightX,rightY));
-            turnAngle = (turnAngle + 180) % 360;
 
             double error = turnAngle - robotHeading;
             error = ((error + 180) % 360 + 360) % 360 - 180;
 
-            double placeholder = turnAngle - error;
+//            double placeholder = turnAngle - error;
 
-            rotationOutput = -anglePID.calculate(placeholder, turnAngle);
+            rotationOutput = -anglePID.calculate(0, error);
 
             telemetry.addData("Right x", rightX);
             telemetry.addData("Right y", rightY);

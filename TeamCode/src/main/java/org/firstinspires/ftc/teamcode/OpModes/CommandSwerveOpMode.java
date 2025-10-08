@@ -9,8 +9,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Commands.TeleOpDrive;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
+import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TeleOpDrive;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 
 //http://192.168.43.1:8080/dash

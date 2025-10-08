@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,7 +13,11 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.PIDController;
+import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.SwerveModuleState;
+import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 
 public class SwerveModule extends SubsystemBase {
 
@@ -39,30 +42,59 @@ public class SwerveModule extends SubsystemBase {
 
     private final FtcDashboard dashboard;
 
+    private double lastVelocity = 0.0;
+
+    private double targetVelocityTicksPerSec;
+
+    private final double kS = 0.05;      // static friction term
+    private final double kV = 1/Constants.DriveTrainConstants.MAX_TICKS_PER_SEC;    //ticks per second
+    private final double kA = 0.0;
+
     public SwerveModule(HardwareMap hardwareMap, Telemetry telemetry, SwerveModuleConstants moduleConstants) {
 
         this.telemetry = telemetry;
+
+        modNumber = moduleConstants.modNumber;
 
         drive = hardwareMap.get(DcMotorEx.class, moduleConstants.driveMotor);
         angle = hardwareMap.get(CRServoImplEx.class, moduleConstants.angleServo);
 
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        drive.setVelocityPIDFCoefficients(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD, PIDTuning.kF);
+//        drive.setVelocityPIDFCoefficients(20, 6, 0, 0.8);
 
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
         angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
+        switch(modNumber) {
+            case 0:
+                angularFeedforward = PIDTuning.randomVal0;
+            break;
+            case 1:
+                angularFeedforward = PIDTuning.randomVal1;
+                break;
+            case 2:
+                angularFeedforward = PIDTuning.randomVal2;
+                break;
+            case 3:
+                angularFeedforward = PIDTuning.randomVal3;
+                break;
+            default:
+                angularFeedforward = 0;
+                break;
+        }
+//        angularFeedforward = moduleConstants.kF;
         angleController = new PIDController(Constants.DriveTrainConstants.angleKP, Constants.DriveTrainConstants.angleKI, Constants.DriveTrainConstants.angleKD);
+//        angleController = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD);
+        angleController.enableContinuousInput(0, 360);
+        angleController.setIZone(30);
 
         moduleHeading = hardwareMap.get(AnalogInput.class, moduleConstants.feedback);
         moduleOffset = moduleConstants.moduleOffset;
 
         moduleSetpoint = getDegrees(true);
-
-        modNumber = moduleConstants.modNumber;
-
-        angularFeedforward = moduleConstants.kF;
 
         enableTelemetry = false;
 
@@ -72,24 +104,35 @@ public class SwerveModule extends SubsystemBase {
 
     public void setDrivePower(double power) {
 
-//        double velocityTarget = power;
-//
-//        if (isModuleBackwards) {
-//            velocityTarget = -velocityTarget;
-//        }
-//
-//        double currentVelocity = drive.getVelocity()/2800;
-//
-//        double feedforward = velocityFeedforward * Math.signum(velocityTarget);
-//
-//        double output = driveController.calculate(currentVelocity, velocityTarget) + feedforward;
-//        output = Math.max(-1.0, Math.min(1.0, output));
-//
-//        drive.setPower(output);
-        if (isModuleBackwards) {
-            power = -power;
-        }
-        drive.setPower(power);
+        double targetMotorRpm = Constants.DriveTrainConstants.MAX_MOTOR_RPM * power;
+        targetVelocityTicksPerSec = (targetMotorRpm * Constants.DriveTrainConstants.TICKS_PER_REV) / 60.0;
+
+        if (isModuleBackwards) targetVelocityTicksPerSec *= -1;
+
+        double currentVelocity = drive.getVelocity();
+
+        double acceleration = (currentVelocity - lastVelocity) / 0.02; // ~20ms loop
+        lastVelocity = currentVelocity;
+
+        double ff = kS * Math.signum(targetVelocityTicksPerSec)
+                + kV * targetVelocityTicksPerSec
+                + kA * acceleration;
+
+        ff = Math.max(-1.0, Math.min(1.0, ff));
+
+        drive.setPower(ff);
+    }
+
+    public double getVelocity() {
+        return drive.getVelocity();
+    }
+
+    public double getVelocityError() {
+        return Math.abs(drive.getVelocity() - getVelocityTarget());
+    }
+
+    public double getVelocityTarget() {
+        return targetVelocityTicksPerSec;
     }
 
     //take a value from -1 to 1
@@ -144,21 +187,18 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public void setModulePosition() {
-        double error = getWrappedError(moduleSetpoint, getDegrees(true));
-
-        double placeholder = moduleSetpoint - error;
-
-        double servoOutput = angleController.calculate(placeholder, moduleSetpoint);
-
-        if(error < 0){
-            servoOutput -= angularFeedforward;
-        }
-
-        if(error > 0) {
-            servoOutput += angularFeedforward;
-        }
-
-        servoOutput = Math.max(-1.0, Math.min(1.0, servoOutput));
+//        double error = getWrappedError(moduleSetpoint, getDegrees(true));
+//
+//        double placeholder = moduleSetpoint - error;
+//
+//        double servoOutput = angleController.calculate(0, error);
+//
+//        servoOutput += angularFeedforward * Math.signum(error);
+//
+//        servoOutput = Math.max(-1.0, Math.min(1.0, servoOutput));
+//        setTurnSpeed(servoOutput);
+        double servoOutput = angleController.calculate(getDegrees(true), getModuleSetpoint());
+        servoOutput = Math.max(-1, Math.min(1, servoOutput));
         setTurnSpeed(servoOutput);
     }
 
@@ -179,11 +219,11 @@ public class SwerveModule extends SubsystemBase {
 
         if(enableTelemetry) {
             telemetry.addLine("Module " + modNumber);
-            telemetry.addData("Degrees \t", getDegrees(true));
             telemetry.addData("Raw Angle \t", getDegrees(false));
-            telemetry.addData("Setpoint \t", getModuleSetpoint());
-            telemetry.addData("Drive speed \t", drive.getVelocity());
+            telemetry.addData("Degrees \t", getDegrees(true));
             telemetry.addData("Angular Error \t", getWrappedError(moduleSetpoint, getDegrees(true)));
+            telemetry.addData("Drive speed \t", drive.getVelocity());
+            telemetry.addData("Velocity Error\t", getVelocityError());
             telemetry.addLine();
         }
 

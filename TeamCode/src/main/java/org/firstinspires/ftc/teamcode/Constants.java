@@ -12,8 +12,8 @@ public class Constants {
 
     public static final class DriveTrainConstants {
 
-        public static final double angleKP = 0.0042;//0.0042
-        public static final double angleKI = 0.005;
+        public static final double angleKP = 0.009;//0.0042
+        public static final double angleKI = 0.004;
         public static final double angleKD = 0;
 
         //unit in MM
@@ -26,12 +26,16 @@ public class Constants {
         public static final double widthRotation = trackWidth/moduleHypotenuse;
         public static final double lengthRotation = wheelbase/moduleHypotenuse;
 
+        public static final double TICKS_PER_REV = 28;
+        public static final double MAX_MOTOR_RPM = 6000.0;
+        public static final double MAX_TICKS_PER_SEC = (MAX_MOTOR_RPM * TICKS_PER_REV) / 60.0;
+
         public static final class Mod0 {
 
             public static final String driveMotor = "drive0";
             public static final String angleServo = "angle0";
             public static final String feedback = "angleFeedback0";
-            public static final double moduleOffset = 93.7091;
+            public static final double moduleOffset = 138.4364;
 
             public static final double angleKP = 0;
             public static final double angleKI = 0;
@@ -47,7 +51,7 @@ public class Constants {
             public static final String driveMotor = "drive1";
             public static final String angleServo = "angle1";
             public static final String feedback = "angleFeedback1";
-            public static final double moduleOffset = 101.1273;
+            public static final double moduleOffset = 106.8;
 
             public static final double angleKP = 0;
             public static final double angleKI = 0;
@@ -63,7 +67,7 @@ public class Constants {
             public static final String driveMotor = "drive2";
             public static final String angleServo = "angle2";
             public static final String feedback = "angleFeedback2";
-            public static final double moduleOffset = 288.1091;
+            public static final double moduleOffset = 252;
 
             public static final double angleKP = 0;
             public static final double angleKI = 0;
@@ -79,7 +83,7 @@ public class Constants {
             public static final String driveMotor = "drive3";
             public static final String angleServo = "angle3";
             public static final String feedback = "angleFeedback3";
-            public static final double moduleOffset = 27.3818;
+            public static final double moduleOffset = 244.1455;
 
             public static final double angleKP = 0;//0.02
             public static final double angleKI = 0;
@@ -104,6 +108,7 @@ public class Constants {
     public static final class IntakeConstants {
 
         public static final String intakeMotor = "intake";
+        public static final String feederServo = "feeder";
 
     }
 
@@ -111,8 +116,8 @@ public class Constants {
 
         public static final String turretMotor = "turret";
 
-        public static final double lowerRotationLimit = -270;
-        public static final double upperRotationLimit = 270;
+        public static final double lowerRotationLimit = -100;
+        public static final double upperRotationLimit = 100;
 
     }
 
@@ -121,6 +126,9 @@ public class Constants {
         public static final String upperMotor = "upperShooter";
         public static final String lowerMotor = "lowerShooter";
         public static final String angleServo = "angleShooter";
+
+        public static final double aimerDown = 0;
+        public static final double aimerUp = 0.4;
 
         public static final double launchSpeed = 6000;
 

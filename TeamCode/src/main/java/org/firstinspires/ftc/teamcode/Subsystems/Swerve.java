@@ -139,6 +139,24 @@ public class Swerve extends SubsystemBase {
         return motorCurrents;
     }
 
+    public Map<String, Object> getVelocityErrors() {
+        Map<String, Object> motorErrors = new HashMap<>();
+        motorErrors.put("Mod 0 Velocity Error: \t", mod0.getVelocityError());
+        motorErrors.put("Mod 1 Velocity Error: \t", mod1.getVelocityError());
+        motorErrors.put("Mod 2 Velocity Error: \t", mod2.getVelocityError());
+        motorErrors.put("Mod 3 Velocity Error: \t", mod3.getVelocityError());
+        return motorErrors;
+    }
+
+    public Map<String, Object> getAngularError() {
+        Map<String, Object> angleErrors = new HashMap<>();
+        angleErrors.put("Mod 0 Angle Error: \t", mod0.getWrappedError(mod0.getModuleSetpoint(), mod0.getDegrees(true)));
+        angleErrors.put("Mod 1 Angle Error: \t", mod1.getWrappedError(mod1.getModuleSetpoint(), mod1.getDegrees(true)));
+        angleErrors.put("Mod 2 Angle Error: \t", mod2.getWrappedError(mod2.getModuleSetpoint(), mod2.getDegrees(true)));
+        angleErrors.put("Mod 3 Angle Error: \t", mod3.getWrappedError(mod3.getModuleSetpoint(), mod3.getDegrees(true)));
+        return angleErrors;
+    }
+
     private double normalizeModuleAngle(double angle) {
         angle %= 360;
         if (angle < 0) angle += 360;
@@ -165,7 +183,14 @@ public class Swerve extends SubsystemBase {
     public void periodic(){
 
         TelemetryPacket packet = new TelemetryPacket();
+
+        packet.addLine("Module 0 Speed: \t" + mod0.getVelocityError());
+        packet.addLine("Module 1 Speed: \t" + mod1.getVelocityError());
+        packet.addLine("Module 2 Speed: \t" +  mod2.getVelocityError());
+        packet.addLine("Module 3 Speed: \t" + mod3.getVelocityError());
         packet.putAll(getMotorCurrents());
+        packet.putAll(getVelocityErrors());
+        packet.putAll(getAngularError());
 
         dashboard.sendTelemetryPacket(packet);
 

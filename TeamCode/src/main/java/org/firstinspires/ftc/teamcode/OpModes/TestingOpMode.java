@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -202,6 +203,15 @@ public class TestingOpMode extends LinearOpMode {
                 telemetry.addLine("Telemetry Off");
             }
             telemetry.update();
+
+            TelemetryPacket packet = new TelemetryPacket();
+
+            packet.addLine("Module 0 Speed: \t" + s_Mod0.getVelocity());
+            packet.addLine("Module 1 Speed: \t" + s_Mod1.getVelocity());
+            packet.addLine("Module 2 Speed: \t" + s_Mod2.getVelocity());
+            packet.addLine("Module 3 Speed: \t" + s_Mod3.getVelocity());
+
+            dashboard.sendTelemetryPacket(packet);
 
 
         }
