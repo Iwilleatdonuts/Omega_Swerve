@@ -13,13 +13,8 @@ public class TurretToApril extends CommandBase {
     private final Turret s_Turret;
     private final AprilVision s_Vision;
     private final FtcDashboard dashboard;
-
-    private double aprilX;
-    private double aprilY;
     private double aprilBearing;
-
-    private double cos, sin;
-
+    private double previousBearing;
 
     TelemetryPacket packet = new TelemetryPacket();
 
@@ -35,12 +30,8 @@ public class TurretToApril extends CommandBase {
     @Override
     public void initialize(){
 
-        aprilX = s_Vision.getAprilX();
-        aprilY = s_Vision.getAprilZ();
-
-        cos = Math.cos(Constants.VisionConstants.aimingCameraYaw);
-        sin = Math.sin(Constants.VisionConstants.aimingCameraYaw);
-
+        aprilBearing = s_Vision.getAprilBearing();
+        previousBearing = aprilBearing;
 
     }
 
@@ -52,27 +43,17 @@ public class TurretToApril extends CommandBase {
 
         if(s_Vision.hasTag()){
 
-//            aprilX = s_Vision.getAprilX();
-//            aprilY = s_Vision.getAprilY();
-
             aprilBearing = s_Vision.getAprilBearing();
-//
-//            double rotatedX = cos * aprilX - sin * aprilY;
-//            double rotatedY = sin * aprilX + cos * aprilY;
-//
-//            double normalX =  rotatedX + Constants.VisionConstants.xOffsetFromTurret;
-//            double normalY = rotatedY + Constants.VisionConstants.yOffsetFromTurret;
-//
-//            double bearing = Math.toDegrees(Math.atan2(-normalX, normalY));
-//            bearing = (bearing+360)%360;
-//
             double bearing = s_Turret.getDegrees() + aprilBearing;
 
-            s_Turret.setSetpoint(bearing);
-//            s_Turret.runToSetpoint();
+            double filteredBearing = 0.8 * previousBearing + 0.2 * aprilBearing;
+            previousBearing = bearing;
+
+            s_Turret.setSetpoint(filteredBearing);
+            s_Turret.runToSetpoint();
 
             packet.put("April tag bearing", aprilBearing);
-            packet.put("turret Setpoint", bearing);
+            packet.put("turret Setpoint", filteredBearing);
             packet.put("turret position", s_Turret.getDegrees());
             packet.put("turret is out of boudns", s_Turret.isOutOfBounds());
         }
@@ -85,10 +66,4 @@ public class TurretToApril extends CommandBase {
     public void end(boolean interrupted) {
         s_Turret.setSpeed(0);
     }
-
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-
 }

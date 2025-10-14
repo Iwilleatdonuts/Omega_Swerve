@@ -100,6 +100,8 @@ public class Turret extends SubsystemBase {
             }
         }
 
+        nearestAngle = Math.min(Constants.TurretConstants.upperRotationLimit, Math.max(Constants.TurretConstants.lowerRotationLimit, nearestAngle));
+
         setpoint = nearestAngle;
 
     }

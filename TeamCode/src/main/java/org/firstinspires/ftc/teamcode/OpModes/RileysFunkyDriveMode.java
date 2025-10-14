@@ -36,10 +36,11 @@ public class RileysFunkyDriveMode extends CommandOpMode {
     private Shooter s_Shooter;
     private AprilVision s_Vision;
     private OTOSSensor s_Sparky;
-    private GamepadEx m_Driver;
-    private GamepadEx m_Operator;
 
     private FtcDashboard dashboard;
+
+    private GamepadEx m_Driver;
+    private GamepadEx m_Operator;
 
     private Button zeroGyroButton;
     private Button autoDriveButton;
