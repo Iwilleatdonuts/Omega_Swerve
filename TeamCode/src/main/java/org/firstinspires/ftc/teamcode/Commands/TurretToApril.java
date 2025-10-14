@@ -16,6 +16,8 @@ public class TurretToApril extends CommandBase {
 
     private double aprilX;
     private double aprilY;
+    private double aprilBearing;
+
     private double cos, sin;
 
 
@@ -50,24 +52,29 @@ public class TurretToApril extends CommandBase {
 
         if(s_Vision.hasTag()){
 
-            aprilX = s_Vision.getAprilX();
-            aprilY = s_Vision.getAprilY();
+//            aprilX = s_Vision.getAprilX();
+//            aprilY = s_Vision.getAprilY();
 
-            double rotatedX = cos * aprilX - sin * aprilY;
-            double rotatedY = sin * aprilX + cos * aprilY;
-
-            double normalX =  rotatedX + Constants.VisionConstants.xOffsetFromTurret;
-            double normalY = rotatedY + Constants.VisionConstants.yOffsetFromTurret;
-
-            double bearing = Math.toDegrees(Math.atan2(-normalX, normalY));
-            bearing = (bearing+360)%360;
+            aprilBearing = s_Vision.getAprilBearing();
+//
+//            double rotatedX = cos * aprilX - sin * aprilY;
+//            double rotatedY = sin * aprilX + cos * aprilY;
+//
+//            double normalX =  rotatedX + Constants.VisionConstants.xOffsetFromTurret;
+//            double normalY = rotatedY + Constants.VisionConstants.yOffsetFromTurret;
+//
+//            double bearing = Math.toDegrees(Math.atan2(-normalX, normalY));
+//            bearing = (bearing+360)%360;
+//
+            double bearing = s_Turret.getDegrees() + aprilBearing;
 
             s_Turret.setSetpoint(bearing);
-            s_Turret.runToSetpoint();
+//            s_Turret.runToSetpoint();
 
-            packet.put("tag x", aprilX);
-            packet.put("tag y", aprilY);
+            packet.put("April tag bearing", aprilBearing);
             packet.put("turret Setpoint", bearing);
+            packet.put("turret position", s_Turret.getDegrees());
+            packet.put("turret is out of boudns", s_Turret.isOutOfBounds());
         }
 
         dashboard.sendTelemetryPacket(packet);

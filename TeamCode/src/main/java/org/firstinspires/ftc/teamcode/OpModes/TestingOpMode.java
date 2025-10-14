@@ -73,10 +73,6 @@ public class TestingOpMode extends LinearOpMode {
                 runTurns = !runTurns;
             }
 
-            if(m_OperatorOp.wasJustPressed(GamepadKeys.Button.START)) {
-                s_Sparky.zeroGyro();
-            }
-
             if(m_OperatorOp.wasJustPressed(GamepadKeys.Button.BACK)) {
                 s_Turret.resetTurretPosition();
             }
@@ -97,11 +93,11 @@ public class TestingOpMode extends LinearOpMode {
                 s_Turret.setSetpoint(operatorJoystickAngle);
             }
 
-            if(m_OperatorOp.isDown(GamepadKeys.Button.A)) {
-                s_Turret.runToSetpoint();
-            } else {
-                s_Turret.setSpeed(0);
-            }
+//            if(m_OperatorOp.isDown(GamepadKeys.Button.A)) {
+//                s_Turret.runToSetpoint();
+//            } else {
+//                s_Turret.setSpeed(0);
+//            }
 
             s_Shooter.setShooterSpeed(m_OperatorOp.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 

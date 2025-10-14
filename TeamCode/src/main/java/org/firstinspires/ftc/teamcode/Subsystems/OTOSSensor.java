@@ -21,8 +21,6 @@ public class OTOSSensor extends SubsystemBase {
 
     private boolean isReady;
 
-    private final IMU imu;
-
     private boolean enableTelemetry;
 
     private final FtcDashboard dashboard;
@@ -34,15 +32,6 @@ public class OTOSSensor extends SubsystemBase {
         otos = hardwareMap.get(SparkFunOTOS.class, Constants.DriveTrainConstants.OTOS.sparkfun);
 
         isReady = false;
-
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-
-        // Now initialize the IMU with this mounting orientation
-        // This sample expects the IMU to be in a REV Hub and named "imu".
-        imu = hardwareMap.get(IMU.class, "imu");
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         enableTelemetry = false;
 
@@ -64,6 +53,7 @@ public class OTOSSensor extends SubsystemBase {
         // back and forth is - + y
         // counter clockwise is positive degrees
 
+
         SparkFunOTOS.Pose2D offset = Constants.DriveTrainConstants.OTOS.sensorOffset;
         otos.setOffset(offset);
 
@@ -83,8 +73,8 @@ public class OTOSSensor extends SubsystemBase {
         // multiple speeds to get an average, then set the linear scalar to the
         // inverse of the error. For example, if you move the robot 100 inches and
         // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
-        otos.setLinearScalar(1.0);
-        otos.setAngularScalar(1.0);
+        otos.setLinearScalar(1.01038810319);
+        otos.setAngularScalar(1.000859071);
 
         otos.calibrateImu();
 
@@ -110,7 +100,7 @@ public class OTOSSensor extends SubsystemBase {
     }
 
     public double getHeading() {
-        double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double rotation = otos.getPosition().h;
 
         rotation = (rotation+360)%360;
 
@@ -118,7 +108,11 @@ public class OTOSSensor extends SubsystemBase {
     }
 
     public void zeroGyro() {
-        imu.resetYaw();
+        otos.setPosition(new SparkFunOTOS.Pose2D(otos.getPosition().x, otos.getPosition().y, 0));
+    }
+
+    public void resetPositionTracking() {
+        otos.resetTracking();
     }
 
     public SparkFunOTOS.Pose2D getVelocity() {
@@ -144,7 +138,7 @@ public class OTOSSensor extends SubsystemBase {
         packet.put("X Pos", getPose().x);
         packet.put("Y Pos", getPose().y);
         packet.put("Heading", getHeading());
-        packet.put("OTOS Heading", getPose().h);
+        packet.put("OTOS Heading", getHeading());
 
         dashboard.sendTelemetryPacket(packet);
 

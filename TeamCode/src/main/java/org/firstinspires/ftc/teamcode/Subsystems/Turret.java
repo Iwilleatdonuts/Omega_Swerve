@@ -90,7 +90,7 @@ public class Turret extends SubsystemBase {
         int maxMultiple = (int)Math.ceil((upperLimit - newSetpoint) / 360.0);
 
         for(int i = minMultiple; i < maxMultiple; i++) {
-            double angle = newSetpoint + 360.0 * i;
+            double angle = newSetpoint + (360.0 * i);
             if (angle >= lowerLimit && angle <= upperLimit) {
                 double error = Math.abs(angle - currentRotation);
                 if (error < smallestError) {
@@ -116,6 +116,11 @@ public class Turret extends SubsystemBase {
         setSpeed(output);
     }
 
+    public boolean isOutOfBounds() {
+        double currentAngle = getDegrees();
+        return currentAngle < Constants.TurretConstants.lowerRotationLimit || currentAngle > Constants.TurretConstants.upperRotationLimit;
+    }
+
     @Override
     public void periodic(){
 
@@ -124,6 +129,7 @@ public class Turret extends SubsystemBase {
             telemetry.addData("Turret Raw Position", getRawPosition());
             telemetry.addData("Setpoint", getSetpoint());
             telemetry.addData("Turret Degrees", getDegrees());
+            telemetry.addData("Turret Is out of boudns AHHHHHHHH", isOutOfBounds());
             telemetry.addLine();
         }
 

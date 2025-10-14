@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -8,7 +7,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
-import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 
 public class TurnToPointDrive extends CommandBase {
 

@@ -182,17 +182,17 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
 
-        TelemetryPacket packet = new TelemetryPacket();
+//        TelemetryPacket packet = new TelemetryPacket();
 
-        packet.addLine("Module 0 Speed: \t" + mod0.getVelocityError());
-        packet.addLine("Module 1 Speed: \t" + mod1.getVelocityError());
-        packet.addLine("Module 2 Speed: \t" +  mod2.getVelocityError());
-        packet.addLine("Module 3 Speed: \t" + mod3.getVelocityError());
-        packet.putAll(getMotorCurrents());
-        packet.putAll(getVelocityErrors());
-        packet.putAll(getAngularError());
+//        packet.addLine("Module 0 Speed: \t" + mod0.getVelocityError());
+//        packet.addLine("Module 1 Speed: \t" + mod1.getVelocityError());
+//        packet.addLine("Module 2 Speed: \t" +  mod2.getVelocityError());
+//        packet.addLine("Module 3 Speed: \t" + mod3.getVelocityError());
+//        packet.putAll(getMotorCurrents());
+//        packet.putAll(getVelocityErrors());
+//        packet.putAll(getAngularError());
 
-        dashboard.sendTelemetryPacket(packet);
+//        dashboard.sendTelemetryPacket(packet);
 
         if(enableTelemetry) {
             telemetry.addLine("Swerve");

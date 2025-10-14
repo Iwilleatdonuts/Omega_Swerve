@@ -51,13 +51,10 @@ public class JoystickTurret extends CommandBase {
         operatorJoystickAngle += 360;
         operatorJoystickAngle %= 360;
 
-//        operatorJoystickAngle -= s_Swerve.getHeading();
-//
-//        operatorJoystickAngle += 360;
-//        operatorJoystickAngle %= 360;
+        operatorJoystickAngle -= s_Swerve.getHeading();
 
-        s_Turret.setSetpoint(operatorJoystickAngle);
-        s_Turret.runToSetpoint();
+        operatorJoystickAngle += 360;
+        operatorJoystickAngle %= 360;
 
         if(Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9) {
             s_Turret.setSetpoint(operatorJoystickAngle);
@@ -79,6 +76,7 @@ public class JoystickTurret extends CommandBase {
 
         m_Operator.readButtons();
 
+        s_Turret.runToSetpoint();
     }
 
     @Override
