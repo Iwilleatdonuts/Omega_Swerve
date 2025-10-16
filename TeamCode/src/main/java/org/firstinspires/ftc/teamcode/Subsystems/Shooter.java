@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -26,11 +28,14 @@ public class Shooter extends SubsystemBase {
 
     private final PIDController shooterController;
 
+    private final FtcDashboard dashboard;
+
     public Shooter(HardwareMap hardwareMap, Telemetry telemetry) {
 
         this.telemetry = telemetry;
 
-        shooterController = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD);
+//        shooterController = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD);
+        shooterController = new PIDController(0.0075, 0.0055, 0);
 
         upperShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.upperMotor);
         lowerShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.lowerMotor);
@@ -52,12 +57,14 @@ public class Shooter extends SubsystemBase {
 
         angleServo.setPosition(0);
 
+        dashboard = FtcDashboard.getInstance();
+
     }
 
     //input from 0-1
     public void setShooterSpeed(double speed) {
-//        double output = shooterController.calculate(getUpperVelocity(), speed * 6000);
-        double output = speed;
+        double output = shooterController.calculate(getLowerVelocity(), speed * 1800);
+//        double output = speed;
         output = Math.max(-1.0, Math.min(1.0, output));
         upperShooterMotor.setPower(output);
         lowerShooterMotor.setPower(output);
@@ -88,6 +95,11 @@ public class Shooter extends SubsystemBase {
     }
 
     public void periodic() {
+
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.put("Shooter Ticks per second", getLowerVelocity());
+        dashboard.sendTelemetryPacket(packet);
+
 
         if(enableTelemetry) {
             telemetry.addLine("Shooter");
