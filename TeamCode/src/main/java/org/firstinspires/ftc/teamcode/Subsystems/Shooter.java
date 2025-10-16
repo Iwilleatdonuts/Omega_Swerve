@@ -8,9 +8,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.PIDController;
+import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 
 public class Shooter extends SubsystemBase {
 
@@ -21,9 +24,13 @@ public class Shooter extends SubsystemBase {
     private final Telemetry telemetry;
     private boolean enableTelemetry;
 
+    private final PIDController shooterController;
+
     public Shooter(HardwareMap hardwareMap, Telemetry telemetry) {
 
         this.telemetry = telemetry;
+
+        shooterController = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD);
 
         upperShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.upperMotor);
         lowerShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.lowerMotor);
@@ -38,9 +45,6 @@ public class Shooter extends SubsystemBase {
         upperShooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         lowerShooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        upperShooterMotor.setVelocityPIDFCoefficients(1, 0, 0, 0);
-        lowerShooterMotor.setVelocityPIDFCoefficients(1, 0, 0, 0);
-
         angleServo.setDirection(Servo.Direction.FORWARD);
         angleServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
@@ -52,11 +56,11 @@ public class Shooter extends SubsystemBase {
 
     //input from 0-1
     public void setShooterSpeed(double speed) {
-//        double velocity = speed * 6000;
-//        upperShooterMotor.setVelocity(velocity);
-//        lowerShooterMotor.setVelocity(velocity);
-        upperShooterMotor.setPower(speed);
-        lowerShooterMotor.setPower(speed);
+//        double output = shooterController.calculate(getUpperVelocity(), speed * 6000);
+        double output = speed;
+        output = Math.max(-1.0, Math.min(1.0, output));
+        upperShooterMotor.setPower(output);
+        lowerShooterMotor.setPower(output);
     }
 
     public double getUpperVelocity() {

@@ -46,12 +46,12 @@ public class Turret extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-//        if(getDegrees() < Constants.TurretConstants.lowerRotationLimit){
-//            speed = Math.max(speed, 0);
-//        }
-//        if(getDegrees() > Constants.TurretConstants.upperRotationLimit){
-//            speed = Math.min(speed, 0);
-//        }
+        if(getDegrees() < Constants.TurretConstants.lowerRotationLimit){
+            speed = Math.max(speed, 0);
+        }
+        if(getDegrees() > Constants.TurretConstants.upperRotationLimit){
+            speed = Math.min(speed, 0);
+        }
         turretMotor.setPower(speed);
     }
 

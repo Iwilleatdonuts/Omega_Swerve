@@ -62,8 +62,6 @@ public class SwerveModule extends SubsystemBase {
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        drive.setVelocityPIDFCoefficients(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD, PIDTuning.kF);
-//        drive.setVelocityPIDFCoefficients(20, 6, 0, 0.8);
 
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
         angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
@@ -187,16 +185,6 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public void setModulePosition() {
-//        double error = getWrappedError(moduleSetpoint, getDegrees(true));
-//
-//        double placeholder = moduleSetpoint - error;
-//
-//        double servoOutput = angleController.calculate(0, error);
-//
-//        servoOutput += angularFeedforward * Math.signum(error);
-//
-//        servoOutput = Math.max(-1.0, Math.min(1.0, servoOutput));
-//        setTurnSpeed(servoOutput);
         double servoOutput = angleController.calculate(getDegrees(true), getModuleSetpoint());
         servoOutput = Math.max(-1, Math.min(1, servoOutput));
         setTurnSpeed(servoOutput);

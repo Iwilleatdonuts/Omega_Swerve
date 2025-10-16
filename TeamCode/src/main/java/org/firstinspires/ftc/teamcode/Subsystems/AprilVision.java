@@ -64,6 +64,7 @@ public class AprilVision extends SubsystemBase {
     public void periodic(FtcDashboard dashboard) {
 
         if (!aprilTagProcessor.getDetections().isEmpty()) {
+
             latestDetection = aprilTagProcessor.getDetections().get(0);
         } else {
             latestDetection = null;

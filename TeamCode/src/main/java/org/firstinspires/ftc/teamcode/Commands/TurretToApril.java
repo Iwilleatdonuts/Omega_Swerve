@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 
@@ -14,7 +13,6 @@ public class TurretToApril extends CommandBase {
     private final AprilVision s_Vision;
     private final FtcDashboard dashboard;
     private double aprilBearing;
-    private double previousBearing;
 
     TelemetryPacket packet = new TelemetryPacket();
 
@@ -31,7 +29,6 @@ public class TurretToApril extends CommandBase {
     public void initialize(){
 
         aprilBearing = s_Vision.getAprilBearing();
-        previousBearing = aprilBearing;
 
     }
 
@@ -46,24 +43,25 @@ public class TurretToApril extends CommandBase {
             aprilBearing = s_Vision.getAprilBearing();
             double bearing = s_Turret.getDegrees() + aprilBearing;
 
-            double filteredBearing = 0.8 * previousBearing + 0.2 * aprilBearing;
-            previousBearing = bearing;
-
-            s_Turret.setSetpoint(filteredBearing);
+            s_Turret.setSetpoint(bearing);
             s_Turret.runToSetpoint();
 
-            packet.put("April tag bearing", aprilBearing);
-            packet.put("turret Setpoint", filteredBearing);
-            packet.put("turret position", s_Turret.getDegrees());
-            packet.put("turret is out of boudns", s_Turret.isOutOfBounds());
+        } else {
+            s_Turret.setSpeed(0);
+            s_Turret.setSetpoint(s_Turret.getDegrees());
         }
 
+        packet.put("April tag bearing", aprilBearing);
+        packet.put("actual turret setpoint", s_Turret.getSetpoint());
+        packet.put("turret position", s_Turret.getDegrees());
+        packet.put("turret is out of Bounts", s_Turret.isOutOfBounds());
         dashboard.sendTelemetryPacket(packet);
 
     }
 
     @Override
     public void end(boolean interrupted) {
+        s_Turret.setSetpoint(s_Turret.getDegrees());
         s_Turret.setSpeed(0);
     }
 }

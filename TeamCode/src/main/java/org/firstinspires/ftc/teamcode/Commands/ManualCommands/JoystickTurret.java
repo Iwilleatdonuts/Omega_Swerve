@@ -17,30 +17,27 @@ public class JoystickTurret extends CommandBase {
 
     private final Swerve s_Swerve;
     private final Turret s_Turret;
-    private final Shooter s_Shooter;
     private final FtcDashboard dashboard;
 
     private final GamepadEx m_Operator;
 
     TelemetryPacket packet = new TelemetryPacket();
 
-    public JoystickTurret(Swerve s_Swerve, Turret s_Turret, Shooter s_Shooter, GamepadEx m_Operator, FtcDashboard dashboard){
+    public JoystickTurret(Swerve s_Swerve, Turret s_Turret, GamepadEx m_Operator, FtcDashboard dashboard){
 
         this.s_Swerve = s_Swerve;
         this.s_Turret = s_Turret;
-        this.s_Shooter = s_Shooter;
         this.dashboard = dashboard;
 
         this.m_Operator = m_Operator;
 
-        addRequirements(s_Turret, s_Shooter);
+        addRequirements(s_Turret);
     }
 
     @Override
     public void initialize(){
 
         s_Turret.setSetpoint(s_Turret.getDegrees());
-        s_Shooter.setShooterAngle(0);
 
     }
 
@@ -58,16 +55,6 @@ public class JoystickTurret extends CommandBase {
 
         if(Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9) {
             s_Turret.setSetpoint(operatorJoystickAngle);
-        }
-
-        s_Shooter.setShooterSpeed(m_Operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
-
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-            s_Shooter.setShooterAngle(Constants.ShooterConstants.aimerUp);
-        }
-
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-            s_Shooter.setShooterAngle(Constants.ShooterConstants.aimerDown);
         }
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.START)) {

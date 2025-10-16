@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.Commands.ManualCommands.JoystickTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -68,6 +69,26 @@ public class RileysFunkyDriveMode extends CommandOpMode {
         s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, s_Swerve, m_Driver));
         s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, m_Driver, dashboard));
         s_Turret.setDefaultCommand(new TurretToApril(s_Turret, s_Vision, dashboard));
+//        s_Turret.setDefaultCommand(new JoystickTurret(s_Swerve, s_Turret, m_Operator, dashboard));
+        s_Shooter.setDefaultCommand(new RunCommand(() -> {
+            s_Shooter.setShooterSpeed(m_Operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
+            if(m_Operator.wasJustPressed(GamepadKeys.Button.Y)){
+                s_Shooter.setShooterAngle(Constants.ShooterConstants.aimerUp);
+            }
+            if(m_Operator.wasJustPressed(GamepadKeys.Button.A)) {
+                s_Shooter.setShooterAngle(Constants.ShooterConstants.aimerDown);
+            }
+            if(m_Operator.isDown(GamepadKeys.Button.DPAD_UP)) {
+                s_Shooter.setShooterSpeed(1);
+            } else if (m_Operator.isDown(GamepadKeys.Button.DPAD_LEFT)) {
+                s_Shooter.setShooterSpeed(0.95);
+            } else if (m_Operator.isDown(GamepadKeys.Button.DPAD_RIGHT)) {
+                s_Shooter.setShooterSpeed(0.9);
+            } else if (m_Operator.isDown(GamepadKeys.Button.DPAD_DOWN)) {
+                s_Shooter.setShooterSpeed(0.85);
+            }
+            m_Operator.readButtons();
+        }, s_Shooter));
         s_Sparky.setDefaultCommand(new RunCommand(() -> s_Sparky.periodic(), s_Sparky));
         s_Vision.setDefaultCommand(new RunCommand(() -> s_Vision.periodic(), s_Vision));
 
