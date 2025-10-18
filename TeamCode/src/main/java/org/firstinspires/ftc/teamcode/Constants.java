@@ -130,7 +130,14 @@ public class Constants {
         public static final double aimerDown = 0;
         public static final double aimerUp = 0.4;
 
-        public static final double launchSpeed = 6000;
+        public static final int maxSpeed = 1800;
+
+        public static final double smallBig = 0.85;
+        public static final double smallSmall = 0.83;
+
+        public static final double bigBig = 0.7;
+        public static final double bigMedium = 0.65;
+        public static final double bigSmall = 0.6;
 
     }
 

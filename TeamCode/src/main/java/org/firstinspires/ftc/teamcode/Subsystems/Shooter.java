@@ -63,7 +63,7 @@ public class Shooter extends SubsystemBase {
 
     //input from 0-1
     public void setShooterSpeed(double speed) {
-        double output = shooterController.calculate(getLowerVelocity(), speed * 1800);
+        double output = shooterController.calculate(getLowerVelocity(), speed * Constants.ShooterConstants.maxSpeed);
 //        double output = speed;
         output = Math.max(-1.0, Math.min(1.0, output));
         upperShooterMotor.setPower(output);

@@ -46,6 +46,8 @@ public class RileysFunkyDriveMode extends CommandOpMode {
     private Button zeroGyroButton;
     private Button autoDriveButton;
 
+    private double shooterPercent = 0;
+
     @Override
     public void initialize() {
 
@@ -68,26 +70,36 @@ public class RileysFunkyDriveMode extends CommandOpMode {
 
         s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, s_Swerve, m_Driver));
         s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, m_Driver, dashboard));
-//        s_Turret.setDefaultCommand(new TurretToApril(s_Turret, s_Vision, dashboard));
+        s_Turret.setDefaultCommand(new TurretToApril(s_Turret, s_Vision, dashboard));
 //        s_Turret.setDefaultCommand(new JoystickTurret(s_Swerve, s_Turret, m_Operator, dashboard));
         s_Shooter.setDefaultCommand(new RunCommand(() -> {
+
+            if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                if(shooterPercent == 0) {
+                    shooterPercent = 0.8;
+                } else {
+                    shooterPercent = 0;
+                }
+            }
+
+            if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_UP) && shooterPercent != 0){
+                shooterPercent += 0.02;
+            }
+            if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && shooterPercent != 0) {
+                shooterPercent-= 0.02;
+            }
+
+            s_Shooter.setShooterSpeed(shooterPercent);
             if(m_Operator.wasJustPressed(GamepadKeys.Button.Y)){
                 s_Shooter.setShooterAngle(Constants.ShooterConstants.aimerUp);
             }
             if(m_Operator.wasJustPressed(GamepadKeys.Button.A)) {
                 s_Shooter.setShooterAngle(Constants.ShooterConstants.aimerDown);
             }
-            if(m_Operator.isDown(GamepadKeys.Button.DPAD_UP)) {
-                s_Shooter.setShooterSpeed(1);
-            } else if (m_Operator.isDown(GamepadKeys.Button.DPAD_LEFT)) {
-                s_Shooter.setShooterSpeed(0.95);
-            } else if (m_Operator.isDown(GamepadKeys.Button.DPAD_RIGHT)) {
-                s_Shooter.setShooterSpeed(0.9);
-            } else if (m_Operator.isDown(GamepadKeys.Button.DPAD_DOWN)) {
-                s_Shooter.setShooterSpeed(0.85);
-            } else {
-                s_Shooter.setShooterSpeed(m_Operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
-            }
+
+            telemetry.addData("Speed on shootter", s_Shooter.getLowerVelocity());
+            telemetry.addData("Speeb percentage", shooterPercent);
+            telemetry.update();
 
             m_Operator.readButtons();
         }, s_Shooter));
