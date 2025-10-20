@@ -27,6 +27,12 @@ public class Swerve extends SubsystemBase {
 
     private final FtcDashboard dashboard;
 
+    private final Map<String, Object> motorCurrents = new HashMap<>();
+    private final Map<String, Object> velocityErrors = new HashMap<>();
+    private final Map<String, Object> angleErrors = new HashMap<>();
+
+    private double currentHeading;
+
     public Swerve(HardwareMap hardwareMap, Telemetry telemetry){
 
         this.telemetry = telemetry;
@@ -50,6 +56,9 @@ public class Swerve extends SubsystemBase {
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         dashboard = FtcDashboard.getInstance();
+
+        currentHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        currentHeading = (currentHeading+360)%360;
 
     }
 
@@ -131,7 +140,6 @@ public class Swerve extends SubsystemBase {
     }
 
     public Map<String, Object> getMotorCurrents(){
-        Map<String, Object> motorCurrents = new HashMap<>();
         motorCurrents.put("Mod 0 Current: \t", mod0.getMotorCurrent());
         motorCurrents.put("Mod 1 Current: \t", mod1.getMotorCurrent());
         motorCurrents.put("Mod 2 Current: \t", mod2.getMotorCurrent());
@@ -140,20 +148,18 @@ public class Swerve extends SubsystemBase {
     }
 
     public Map<String, Object> getVelocityErrors() {
-        Map<String, Object> motorErrors = new HashMap<>();
-        motorErrors.put("Mod 0 Velocity Error: \t", mod0.getVelocityError());
-        motorErrors.put("Mod 1 Velocity Error: \t", mod1.getVelocityError());
-        motorErrors.put("Mod 2 Velocity Error: \t", mod2.getVelocityError());
-        motorErrors.put("Mod 3 Velocity Error: \t", mod3.getVelocityError());
-        return motorErrors;
+        velocityErrors.put("Mod 0 Velocity Error: \t", mod0.getVelocityError());
+        velocityErrors.put("Mod 1 Velocity Error: \t", mod1.getVelocityError());
+        velocityErrors.put("Mod 2 Velocity Error: \t", mod2.getVelocityError());
+        velocityErrors.put("Mod 3 Velocity Error: \t", mod3.getVelocityError());
+        return velocityErrors;
     }
 
     public Map<String, Object> getAngularError() {
-        Map<String, Object> angleErrors = new HashMap<>();
-        angleErrors.put("Mod 0 Angle Error: \t", mod0.getWrappedError(mod0.getModuleSetpoint(), mod0.getDegrees(true)));
-        angleErrors.put("Mod 1 Angle Error: \t", mod1.getWrappedError(mod1.getModuleSetpoint(), mod1.getDegrees(true)));
-        angleErrors.put("Mod 2 Angle Error: \t", mod2.getWrappedError(mod2.getModuleSetpoint(), mod2.getDegrees(true)));
-        angleErrors.put("Mod 3 Angle Error: \t", mod3.getWrappedError(mod3.getModuleSetpoint(), mod3.getDegrees(true)));
+        angleErrors.put("Mod 0 Angle Error: \t", mod0.getWrappedError(mod0.getModuleSetpoint(), mod0.getDegrees()));
+        angleErrors.put("Mod 1 Angle Error: \t", mod1.getWrappedError(mod1.getModuleSetpoint(), mod1.getDegrees()));
+        angleErrors.put("Mod 2 Angle Error: \t", mod2.getWrappedError(mod2.getModuleSetpoint(), mod2.getDegrees()));
+        angleErrors.put("Mod 3 Angle Error: \t", mod3.getWrappedError(mod3.getModuleSetpoint(), mod3.getDegrees()));
         return angleErrors;
     }
 
@@ -164,11 +170,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getHeading() {
-        double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-
-        rotation = (rotation+360)%360;
-
-        return rotation;
+        return currentHeading;
     }
 
     public void zeroGyro() {
@@ -181,6 +183,9 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
+
+        currentHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        currentHeading = (currentHeading+360)%360;
 
 //        TelemetryPacket packet = new TelemetryPacket();
 

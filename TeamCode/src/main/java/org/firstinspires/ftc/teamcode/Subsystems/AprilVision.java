@@ -9,11 +9,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import java.util.List;
 
 public class AprilVision extends SubsystemBase {
 
@@ -24,19 +27,33 @@ public class AprilVision extends SubsystemBase {
     private boolean enableTelemetry;
 
     private AprilTagDetection latestDetection;
+    private AprilTagDetection allianceGoalTag;
+    private AprilTagDetection randomPatternTag;
 
-    public AprilVision(HardwareMap hardwareMap, Telemetry telemetry) {
+    private final TelemetryPacket packet = new TelemetryPacket();
+    private List<AprilTagDetection> detections;
+    private Pose3D currentPose;
+
+    private final boolean areWeWinners;
+
+
+    public AprilVision(HardwareMap hardwareMap, Telemetry telemetry, boolean areWeWinners) {
 
         configureAprilTagCamera(hardwareMap);
 
+        detections = aprilTagProcessor.getDetections();
+
         this.telemetry = telemetry;
+
+        this.areWeWinners = areWeWinners;
 
     }
 
     public void configureAprilTagCamera(HardwareMap hardwareMap) {
 
         aprilTagProcessor = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
+                .setDrawAxes(false)
+                .setDrawTagOutline(false)
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
                 .setCameraPose(Constants.VisionConstants.poseCameraPosition, Constants.VisionConstants.poseCameraOrientation)
@@ -61,72 +78,70 @@ public class AprilVision extends SubsystemBase {
         return aprilCamera;
     }
 
-    public void periodic(FtcDashboard dashboard) {
-
-        if (!aprilTagProcessor.getDetections().isEmpty()) {
-
-            latestDetection = aprilTagProcessor.getDetections().get(0);
-        } else {
-            latestDetection = null;
-        }
-
-//        if(enableTelemetry) {
-            TelemetryPacket packet = new TelemetryPacket();
-            if (latestDetection != null) {
-                packet.put("Tag ID: ", latestDetection.id);
-                packet.put("Robot X Pose: ", latestDetection.robotPose.getPosition().x);
-                packet.put("Robot Y Pose: ", latestDetection.robotPose.getPosition().y);
-                packet.put("Robot Yaw: ", latestDetection.robotPose.getOrientation().getYaw());
-
-                telemetry.addLine("Vision");
-                telemetry.addData("Robot X Pose:", latestDetection.robotPose.getPosition().x);
-                telemetry.addData("Robot Y Pose:", latestDetection.robotPose.getPosition().y);
-                telemetry.addData("Robot Yaw:", latestDetection.robotPose.getOrientation().getYaw());
-            } else {
-                packet.addLine("No AprilTags detected");
-            }
-            dashboard.sendTelemetryPacket(packet);
-//        }
-    }
-
     public boolean hasTag() {
         return latestDetection != null;
     }
 
-    public double getAprilX() {
-        return latestDetection != null ? latestDetection.ftcPose.x : 0.0;
+    public double getGoalBearing() {
+        return allianceGoalTag != null ? allianceGoalTag.ftcPose.bearing : 0.0;
     }
 
-    public double getAprilY() {
-        return latestDetection != null ? latestDetection.ftcPose.y : 0.0;
+    public int getObeliskTarget() {
+        return
     }
 
-    public double getAprilZ() {
-        return latestDetection != null ? latestDetection.ftcPose.z : 0.0;
-    }
+    @Override
+    public void periodic() {
 
-    public double getAprilYaw() {
-        return latestDetection != null ? latestDetection.ftcPose.yaw : 0.0;
-    }
+        packet.clearLines();
 
-    public double getAprilPitch() {
-        return latestDetection != null ? latestDetection.ftcPose.pitch : 0.0;
-    }
+        detections = aprilTagProcessor.getDetections();
+        latestDetection = null;
+        allianceGoalTag = null;
+        randomPatternTag = null;
 
-    public double getAprilRoll() {
-        return latestDetection != null ? latestDetection.ftcPose.roll : 0.0;
-    }
+        if(!detections.isEmpty()) {
+            for (AprilTagDetection tag : detections) {
+                int id = tag.id;
 
-    public double getAprilRange() {
-        return latestDetection != null ? latestDetection.ftcPose.range : 0.0;
-    }
+                // localization stuff only with good tags
+                if (id == 20 || id == 24) {
+                    latestDetection = tag;
+                    currentPose = tag.robotPose;
 
-    public double getAprilBearing() {
-        return latestDetection != null ? latestDetection.ftcPose.bearing : 0.0;
-    }
+                    //find alliance tag
+                    if ((areWeWinners && id == 24) || (!areWeWinners && id == 20)) {
+                        allianceGoalTag = tag;
+                    }
+                } else if (id >= 21 && id <= 23) {
+                    randomPatternTag = tag;
+                }
+            }
+        }
 
-    public double getAprilElevation() {
-        return latestDetection != null ? latestDetection.ftcPose.elevation : 0.0;
+        if (enableTelemetry) {
+            packet.clearLines();
+
+            if (latestDetection != null) {
+                packet.put("Tag ID", latestDetection.id);
+                packet.put("Robot X Pose", currentPose.getPosition().x);
+                packet.put("Robot Y Pose", currentPose.getPosition().y);
+                packet.put("Robot Yaw", currentPose.getOrientation().getYaw());
+            } else {
+                packet.addLine("No Localization Tags");
+            }
+
+            if (randomPatternTag != null) {
+                packet.put("Random Pattern ID", randomPatternTag.id);
+            }
+
+            telemetry.addLine("Vision");
+            telemetry.addData("Alliance", areWeWinners ? "Red" : "Blue");
+            telemetry.addData("Localization Tag", latestDetection != null ? latestDetection.id : "None");
+            telemetry.addData("Random Pattern ID", randomPatternTag != null ? randomPatternTag.id : "None");
+        }
+
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
 
 }

@@ -35,7 +35,7 @@ public class TestingOpMode extends LinearOpMode {
         Shooter s_Shooter = new Shooter(hardwareMap, telemetry);
         OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telemetry);
 
-        AprilVision s_Vision = new AprilVision(hardwareMap, telemetry);
+        AprilVision s_Vision = new AprilVision(hardwareMap, telemetry, true);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
         dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
@@ -187,7 +187,7 @@ public class TestingOpMode extends LinearOpMode {
             s_Intake.periodic();
             s_Turret.periodic();
             s_Shooter.periodic();
-            s_Vision.periodic(dashboard);
+            s_Vision.periodic();
 
             if(enableOtherTelemetries){
                 telemetry.addData("Turn Servos", runTurns);

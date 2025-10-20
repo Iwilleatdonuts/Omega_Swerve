@@ -30,7 +30,6 @@ public class SwerveModule extends SubsystemBase {
     private final Telemetry telemetry;
     private double moduleSetpoint;
 
-    private final double angularFeedforward;
     private final double velocityFeedforward = 0.1;
 
     //Idk if this is how ur supposed to make a swervy drive but I'm gonna
@@ -50,6 +49,9 @@ public class SwerveModule extends SubsystemBase {
     private final double kV = 1/Constants.DriveTrainConstants.MAX_TICKS_PER_SEC;    //ticks per second
     private final double kA = 0.0;
 
+    private double currentVelocity;
+    private double currentAngle;
+
     public SwerveModule(HardwareMap hardwareMap, Telemetry telemetry, SwerveModuleConstants moduleConstants) {
 
         this.telemetry = telemetry;
@@ -66,24 +68,6 @@ public class SwerveModule extends SubsystemBase {
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
         angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
-        switch(modNumber) {
-            case 0:
-                angularFeedforward = PIDTuning.randomVal0;
-            break;
-            case 1:
-                angularFeedforward = PIDTuning.randomVal1;
-                break;
-            case 2:
-                angularFeedforward = PIDTuning.randomVal2;
-                break;
-            case 3:
-                angularFeedforward = PIDTuning.randomVal3;
-                break;
-            default:
-                angularFeedforward = 0;
-                break;
-        }
-//        angularFeedforward = moduleConstants.kF;
         angleController = new PIDController(Constants.DriveTrainConstants.angleKP, Constants.DriveTrainConstants.angleKI, Constants.DriveTrainConstants.angleKD);
 //        angleController = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD);
         angleController.enableContinuousInput(0, 360);
@@ -92,11 +76,14 @@ public class SwerveModule extends SubsystemBase {
         moduleHeading = hardwareMap.get(AnalogInput.class, moduleConstants.feedback);
         moduleOffset = moduleConstants.moduleOffset;
 
-        moduleSetpoint = getDegrees(true);
+        moduleSetpoint = getDegrees();
 
         enableTelemetry = false;
 
         dashboard = FtcDashboard.getInstance();
+
+        currentVelocity = drive.getVelocity();
+        currentAngle = (((getRawAngle() / moduleHeading.getMaxVoltage()) * 360) - moduleOffset + 360) % 360;
 
     }
 
@@ -122,7 +109,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return drive.getVelocity();
+        return currentVelocity;
     }
 
     public double getVelocityError() {
@@ -143,19 +130,18 @@ public class SwerveModule extends SubsystemBase {
     public double getRawAngle() {
         return moduleHeading.getVoltage();
     }
-
-    //withOffset set to true will return real angle, else will return raw angle
-    public double getDegrees(boolean withOffset) {
+    public double getRawDegrees() {
 
         double rawAngle = (getRawAngle() / moduleHeading.getMaxVoltage()) * 360;
 
-        double realAngle = rawAngle - moduleOffset;
+        rawAngle = (rawAngle + 360) % 360;
 
-        realAngle = (realAngle + 360) % 360;
+        return rawAngle;
+    }
 
-        double realRealAngle = (360 - realAngle) % 360;
-
-        return withOffset ? realRealAngle : rawAngle;
+    //withOffset set to true will return real angle, else will return raw angle
+    public double getDegrees() {
+        return currentAngle;
     }
 
     public double getWrappedError(double setpoint, double measurement) {
@@ -172,7 +158,7 @@ public class SwerveModule extends SubsystemBase {
 
         double newSetpoint = setpoint;
 
-        double error = Math.abs(getWrappedError(newSetpoint, getDegrees(true)));
+        double error = Math.abs(getWrappedError(newSetpoint, getDegrees()));
 
         if(error > 90){
             newSetpoint  = (newSetpoint + 180) % 360;
@@ -185,7 +171,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public void setModulePosition() {
-        double servoOutput = angleController.calculate(getDegrees(true), getModuleSetpoint());
+        double servoOutput = angleController.calculate(getDegrees(), getModuleSetpoint());
         servoOutput = Math.max(-1, Math.min(1, servoOutput));
         setTurnSpeed(servoOutput);
     }
@@ -195,7 +181,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public boolean isWithinDegrees(double degrees) {
-        return Math.abs(getDegrees(true) - getModuleSetpoint()) < degrees;
+        return Math.abs(getDegrees() - getModuleSetpoint()) < degrees;
     }
 
     public void toggleTelemetry() {
@@ -205,11 +191,14 @@ public class SwerveModule extends SubsystemBase {
     @Override
     public void periodic(){
 
+        currentVelocity = drive.getVelocity();
+        currentAngle = (((getRawAngle() / moduleHeading.getMaxVoltage()) * 360) - moduleOffset + 360) % 360;
+
         if(enableTelemetry) {
             telemetry.addLine("Module " + modNumber);
-            telemetry.addData("Raw Angle \t", getDegrees(false));
-            telemetry.addData("Degrees \t", getDegrees(true));
-            telemetry.addData("Angular Error \t", getWrappedError(moduleSetpoint, getDegrees(true)));
+            telemetry.addData("Raw Angle \t", getRawDegrees());
+            telemetry.addData("Degrees \t", getDegrees());
+            telemetry.addData("Angular Error \t", getWrappedError(moduleSetpoint, getDegrees()));
             telemetry.addData("Drive speed \t", drive.getVelocity());
             telemetry.addData("Velocity Error\t", getVelocityError());
             telemetry.addLine();
