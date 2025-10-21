@@ -68,8 +68,6 @@ public class TurnToPointDrive extends CommandBase {
             double error = turnAngle - robotHeading;
             error = ((error + 180) % 360 + 360) % 360 - 180;
 
-//            double placeholder = turnAngle - error;
-
             rotationOutput = -anglePID.calculate(0, error);
 
             telemetry.addData("Right x", rightX);

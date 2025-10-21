@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -30,12 +31,18 @@ public class Shooter extends SubsystemBase {
 
     private final FtcDashboard dashboard;
 
+    private final double kS = 0.005;      // static friction term
+    private final double kV = 1/Constants.ShooterConstants.MAX_TICKS_PER_SEC;    //ticks per second
+    private final double kA = 0.0;
+
+    private final SimpleMotorFeedforward shooterFF;
+
     public Shooter(HardwareMap hardwareMap, Telemetry telemetry) {
 
         this.telemetry = telemetry;
 
-//        shooterController = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD);
-        shooterController = new PIDController(0.0075, 0.0055, 0);
+        shooterController = new PIDController(0.008, 0, 0);
+//        shooterController = new PIDController(0.0075, 0.0055, 0);
 
         upperShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.upperMotor);
         lowerShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.lowerMotor);
@@ -55,19 +62,34 @@ public class Shooter extends SubsystemBase {
 
         enableTelemetry = false;
 
-        angleServo.setPosition(0);
+        angleServo.setPosition(Constants.ShooterConstants.aimerDown);
 
         dashboard = FtcDashboard.getInstance();
+
+        shooterFF = new SimpleMotorFeedforward(PIDTuning.kP,1/Constants.ShooterConstants.MAX_TICKS_PER_SEC, 0);
 
     }
 
     //input from 0-1
     public void setShooterSpeed(double speed) {
-        double output = shooterController.calculate(getLowerVelocity(), speed * Constants.ShooterConstants.maxSpeed);
-//        double output = speed;
-        output = Math.max(-1.0, Math.min(1.0, output));
-        upperShooterMotor.setPower(output);
+//        double output = shooterController.calculate(getLowerVelocity(), speed * Constants.ShooterConstants.maxSpeed);
+////        double output = speed;
+//        output = Math.max(-1.0, Math.min(1.0, output));
+//        upperShooterMotor.setPower(output);
+//        lowerShooterMotor.setPower(output);
+        double targetVelocity = speed * Constants.ShooterConstants.MAX_TICKS_PER_SEC;
+        double ff = shooterFF.calculate(targetVelocity);
+
+        double PID = shooterController.calculate(getLowerVelocity(), targetVelocity);
+
+        double output = ff + PID;
+
+        telemetry.addData("Target Velocity:", targetVelocity);
+        telemetry.addData("shooter speed", getLowerVelocity());
+
+
         lowerShooterMotor.setPower(output);
+        upperShooterMotor.setPower(output);
     }
 
     public double getUpperVelocity() {
@@ -88,6 +110,10 @@ public class Shooter extends SubsystemBase {
 
     public double getShooterAngle(){
         return angleServo.getPosition();
+    }
+
+    public double getShooterSpeed(double distance) {
+        return distance * 0.0023768 + 0.410216;
     }
 
     public void toggleTelemetry() {

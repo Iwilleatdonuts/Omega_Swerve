@@ -8,11 +8,9 @@ import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Commands.DriveToPoint;
-import org.firstinspires.ftc.teamcode.Commands.ManualCommands.JoystickTurret;
+import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
@@ -44,7 +42,7 @@ public class RileysFunkyDriveMode extends CommandOpMode {
     private GamepadEx m_Operator;
 
     private Button zeroGyroButton;
-    private Button autoDriveButton;
+    private boolean shootersGunnaShoot = false;
 
     private double shooterPercent = 0;
 
@@ -57,7 +55,6 @@ public class RileysFunkyDriveMode extends CommandOpMode {
         m_Operator = new GamepadEx(gamepad2);
 
         zeroGyroButton = new GamepadButton(m_Driver, GamepadKeys.Button.START);
-        autoDriveButton = new GamepadButton(m_Driver, GamepadKeys.Button.Y);
 
         s_Swerve = new Swerve(hardwareMap, telemetry);
         s_Intake = new Intake(hardwareMap, telemetry);
@@ -70,45 +67,15 @@ public class RileysFunkyDriveMode extends CommandOpMode {
 
         s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, s_Swerve, m_Driver));
         s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, m_Driver, dashboard));
-        s_Turret.setDefaultCommand(new TurretToApril(s_Turret, s_Vision, dashboard));
-//        s_Turret.setDefaultCommand(new JoystickTurret(s_Swerve, s_Turret, m_Operator, dashboard));
-        s_Shooter.setDefaultCommand(new RunCommand(() -> {
-
-            if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-                if(shooterPercent == 0) {
-                    shooterPercent = 0.8;
-                } else {
-                    shooterPercent = 0;
-                }
-            }
-
-            if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_UP) && shooterPercent != 0){
-                shooterPercent += 0.02;
-            }
-            if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN) && shooterPercent != 0) {
-                shooterPercent-= 0.02;
-            }
-
-            s_Shooter.setShooterSpeed(shooterPercent);
-            if(m_Operator.wasJustPressed(GamepadKeys.Button.Y)){
-                s_Shooter.setShooterAngle(Constants.ShooterConstants.aimerUp);
-            }
-            if(m_Operator.wasJustPressed(GamepadKeys.Button.A)) {
-                s_Shooter.setShooterAngle(Constants.ShooterConstants.aimerDown);
-            }
-
-            telemetry.addData("Speed on shootter", s_Shooter.getLowerVelocity());
-            telemetry.addData("Speeb percentage", shooterPercent);
-            telemetry.update();
-
-            m_Operator.readButtons();
-        }, s_Shooter));
+        s_Turret.setDefaultCommand(new TurretToApril(s_Swerve, s_Turret, s_Vision, dashboard));
+        s_Shooter.setDefaultCommand(new CoolShooters(s_Shooter, s_Vision, m_Driver, telemetry));
         s_Sparky.setDefaultCommand(new RunCommand(() -> s_Sparky.periodic(), s_Sparky));
-        s_Vision.setDefaultCommand(new RunCommand(() -> s_Vision.periodic(), s_Vision));
+        s_Vision.setDefaultCommand(new RunCommand(() -> {
+            s_Vision.periodic();
+            telemetry.addData("Distance to Target", s_Vision.getGoalDistance());
+            }, s_Vision));
 
         zeroGyroButton.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro(), s_Swerve));
-
-        autoDriveButton.whenHeld(new DriveToPoint(s_Swerve, s_Sparky, new SparkFunOTOS.Pose2D(1500, 1500, 0)));
 
     }
 

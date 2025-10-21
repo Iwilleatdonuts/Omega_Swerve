@@ -31,8 +31,6 @@ public class Swerve extends SubsystemBase {
     private final Map<String, Object> velocityErrors = new HashMap<>();
     private final Map<String, Object> angleErrors = new HashMap<>();
 
-    private double currentHeading;
-
     public Swerve(HardwareMap hardwareMap, Telemetry telemetry){
 
         this.telemetry = telemetry;
@@ -56,9 +54,6 @@ public class Swerve extends SubsystemBase {
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         dashboard = FtcDashboard.getInstance();
-
-        currentHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-        currentHeading = (currentHeading+360)%360;
 
     }
 
@@ -156,10 +151,10 @@ public class Swerve extends SubsystemBase {
     }
 
     public Map<String, Object> getAngularError() {
-        angleErrors.put("Mod 0 Angle Error: \t", mod0.getWrappedError(mod0.getModuleSetpoint(), mod0.getDegrees()));
-        angleErrors.put("Mod 1 Angle Error: \t", mod1.getWrappedError(mod1.getModuleSetpoint(), mod1.getDegrees()));
-        angleErrors.put("Mod 2 Angle Error: \t", mod2.getWrappedError(mod2.getModuleSetpoint(), mod2.getDegrees()));
-        angleErrors.put("Mod 3 Angle Error: \t", mod3.getWrappedError(mod3.getModuleSetpoint(), mod3.getDegrees()));
+        angleErrors.put("Mod 0 Angle Error: \t", mod0.getWrappedError(mod0.getModuleSetpoint(), mod0.getDegrees(true)));
+        angleErrors.put("Mod 1 Angle Error: \t", mod1.getWrappedError(mod1.getModuleSetpoint(), mod1.getDegrees(true)));
+        angleErrors.put("Mod 2 Angle Error: \t", mod2.getWrappedError(mod2.getModuleSetpoint(), mod2.getDegrees(true)));
+        angleErrors.put("Mod 3 Angle Error: \t", mod3.getWrappedError(mod3.getModuleSetpoint(), mod3.getDegrees(true)));
         return angleErrors;
     }
 
@@ -170,7 +165,11 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getHeading() {
-        return currentHeading;
+        double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+
+        rotation = (rotation+360)%360;
+
+        return rotation;
     }
 
     public void zeroGyro() {
@@ -183,9 +182,6 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic(){
-
-        currentHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-        currentHeading = (currentHeading+360)%360;
 
 //        TelemetryPacket packet = new TelemetryPacket();
 

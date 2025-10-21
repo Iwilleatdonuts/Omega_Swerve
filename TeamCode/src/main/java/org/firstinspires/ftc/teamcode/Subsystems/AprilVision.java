@@ -56,12 +56,12 @@ public class AprilVision extends SubsystemBase {
                 .setDrawTagOutline(false)
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
-                .setCameraPose(Constants.VisionConstants.poseCameraPosition, Constants.VisionConstants.poseCameraOrientation)
+//                .setCameraPose(Constants.VisionConstants.poseCameraPosition, Constants.VisionConstants.poseCameraOrientation)
                 .setLensIntrinsics(552.2287565089085, 549.2233357291731, 330.46847362162896, 207.9732802095237)
                 .build();
 
         aprilCamera = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, Constants.VisionConstants.poseCameraName))
+                .setCamera(hardwareMap.get(WebcamName.class, Constants.VisionConstants.aprilCameraName))
                 .addProcessor(aprilTagProcessor)
                 .setCameraResolution(new Size(640, 480))
                 .enableLiveView(false)
@@ -82,12 +82,24 @@ public class AprilVision extends SubsystemBase {
         return latestDetection != null;
     }
 
+    public boolean hasGoalTag() {
+        return allianceGoalTag != null;
+    }
+
     public double getGoalBearing() {
         return allianceGoalTag != null ? allianceGoalTag.ftcPose.bearing : 0.0;
     }
 
-    public int getObeliskTarget() {
-        return
+    public double getGoalX() {
+        return allianceGoalTag != null ? allianceGoalTag.ftcPose.x : 0;
+    }
+
+    public double getGoalY() {
+        return allianceGoalTag != null ? allianceGoalTag.ftcPose.y : 0;
+    }
+
+    public double getGoalDistance() {
+        return allianceGoalTag != null ? allianceGoalTag.ftcPose.range : 0;
     }
 
     @Override

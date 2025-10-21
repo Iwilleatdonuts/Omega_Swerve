@@ -127,10 +127,17 @@ public class Constants {
         public static final String lowerMotor = "lowerShooter";
         public static final String angleServo = "angleShooter";
 
-        public static final double aimerDown = 0;
-        public static final double aimerUp = 0.4;
+        public static final int MAX_TRUE_RPM = 3860;
 
-        public static final int maxSpeed = 1800;
+        public static final double TICKS_PER_REV = 28;
+        public static final double MAX_TICKS_PER_SEC = (MAX_TRUE_RPM * TICKS_PER_REV) / 60;
+
+//        public static final double MAX_MOTOR_RPM_THEORETICAL = 6000.0;
+//        public static final double MAX_TICKS_PER_SEC = (MAX_MOTOR_RPM_THEORETICAL * TICKS_PER_REV) / 60.0;
+
+        public static final double aimerDown = 0.13;
+        public static final double aimerUp = 0.5;
+
 
         public static final double smallBig = 0.85;
         public static final double smallSmall = 0.83;
@@ -143,11 +150,9 @@ public class Constants {
 
     public static final class VisionConstants {
 
-        public static final String poseCameraName = "april";
+        public static final String aprilCameraName = "april";
         public static final Position poseCameraPosition = new Position(DistanceUnit.MM, 0, 0, 0, 0);
         public static final YawPitchRollAngles poseCameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES, 0, -90, 0, 0);
-
-        public static final String aimingCameraName = "aimCamera";
 
         public static final double xOffsetFromTurret = 0.09956333;
         public static final double yOffsetFromTurret = 0.02633424;
