@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -9,7 +7,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 
 public class CoolShooters extends CommandBase {
 
@@ -53,7 +50,7 @@ public class CoolShooters extends CommandBase {
 
         if(shootersGunnaShoot){
             if(s_Vision.hasGoalTag()){
-                shooterPercent = s_Shooter.getShooterSpeed(s_Vision.getGoalDistance());
+                shooterPercent = s_Shooter.getShooterSpeedFromDistance(s_Vision.getGoalDistance());
             } else {
                 shooterPercent = 0.7;
             }

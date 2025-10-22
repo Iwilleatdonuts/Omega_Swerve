@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
@@ -112,7 +111,7 @@ public class Shooter extends SubsystemBase {
         return angleServo.getPosition();
     }
 
-    public double getShooterSpeed(double distance) {
+    public double getShooterSpeedFromDistance(double distance) {
         return distance * 0.0023768 + 0.410216;
     }
 
