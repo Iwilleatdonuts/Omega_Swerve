@@ -112,7 +112,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getShooterSpeedFromDistance(double distance) {
-        return distance * 0.0023768 + 0.410216;
+        return 0.00238816 * distance+0.432881;
+//        return 0.00000403057 * Math.pow(distance, 2) + 0.00168635 * distance + 0.459608;
     }
 
     public void toggleTelemetry() {

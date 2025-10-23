@@ -109,6 +109,10 @@ public class Constants {
 
         public static final String intakeMotor = "intake";
         public static final String feederServo = "feeder";
+        public static final String gateServo = "gate";
+
+        public static final double gateClosed = 0;
+        public static final double gateOpen = 0.2;
 
     }
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Commands;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
@@ -19,14 +20,18 @@ public class TurretToApril extends CommandBase {
     private double aprilX;
     private double aprilY;
 
+    private GamepadEx m_Operator;
+
     TelemetryPacket packet = new TelemetryPacket();
 
-    public TurretToApril(Swerve s_Swerve, Turret s_Turret, AprilVision s_Vision, FtcDashboard dashboard){
+    public TurretToApril(Swerve s_Swerve, Turret s_Turret, AprilVision s_Vision, FtcDashboard dashboard, GamepadEx m_Operator){
 
         this.s_Swerve = s_Swerve;
         this.s_Turret = s_Turret;
         this.s_Vision = s_Vision;
         this.dashboard = dashboard;
+
+        this.m_Operator = m_Operator;
 
         addRequirements(s_Turret);
     }
@@ -43,12 +48,27 @@ public class TurretToApril extends CommandBase {
     @Override
     public void execute(){
 
-        if(s_Vision.hasTag()){
+        if(s_Vision.hasGoalTag()){
 
             aprilBearing = s_Vision.getGoalBearing();
             double bearing = s_Turret.getDegrees() + aprilBearing;
 
             s_Turret.setSetpoint(bearing);
+
+        } else {
+
+            double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
+            operatorJoystickAngle += 360;
+            operatorJoystickAngle %= 360;
+
+            operatorJoystickAngle -= s_Swerve.getHeading();
+
+            operatorJoystickAngle += 360;
+            operatorJoystickAngle %= 360;
+
+            if(Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9) {
+                s_Turret.setSetpoint(operatorJoystickAngle);
+            }
 
         }
         s_Turret.runToSetpoint();
