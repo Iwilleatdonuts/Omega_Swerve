@@ -147,6 +147,10 @@ public class AprilVision extends SubsystemBase {
                 packet.put("Random Pattern ID", randomPatternTag.id);
             }
 
+            if(allianceGoalTag != null) {
+                packet.put("Tag Skew", allianceGoalTag.ftcPose.yaw);
+            }
+
             telemetry.addLine("Vision");
             telemetry.addData("Alliance", areWeWinners ? "Red" : "Blue");
             telemetry.addData("Localization Tag", latestDetection != null ? latestDetection.id : "None");

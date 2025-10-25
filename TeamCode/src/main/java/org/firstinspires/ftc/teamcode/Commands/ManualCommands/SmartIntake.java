@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -19,6 +20,8 @@ public class SmartIntake extends CommandBase {
 
     TelemetryPacket packet = new TelemetryPacket();
 
+    double timestamp;
+
     public SmartIntake(Intake s_Intake, Feeder s_Feeder, GamepadEx m_Driver, FtcDashboard dashboard){
 
         this.s_Intake = s_Intake;
@@ -32,7 +35,7 @@ public class SmartIntake extends CommandBase {
 
     @Override
     public void initialize(){
-
+        
     }
 
     @Override
@@ -41,9 +44,9 @@ public class SmartIntake extends CommandBase {
         s_Intake.setSpeed(m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
         if(m_Driver.isDown(GamepadKeys.Button.A)) {
-            s_Feeder.setFeederSpeed(1);
             s_Feeder.openGate();
-            s_Intake.setSpeed(1);
+            s_Feeder.setFeederSpeed(1);
+            s_Intake.setSpeed(0.8);
         } else if (m_Driver.isDown(GamepadKeys.Button.B)) {
             s_Feeder.setFeederSpeed(-1);
             s_Feeder.openGate();

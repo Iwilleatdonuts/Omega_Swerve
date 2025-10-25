@@ -111,8 +111,8 @@ public class Constants {
         public static final String feederServo = "feeder";
         public static final String gateServo = "gate";
 
-        public static final double gateClosed = 0;
-        public static final double gateOpen = 0.2;
+        public static final double gateClosed = 0.05;
+        public static final double gateOpen = 0.25;
 
     }
 

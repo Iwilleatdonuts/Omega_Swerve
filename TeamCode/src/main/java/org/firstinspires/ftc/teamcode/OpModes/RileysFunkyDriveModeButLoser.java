@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -25,8 +24,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 
 //http://192.168.43.1:8080/dash
 //adb connect 192.168.43.1:5555
-@TeleOp(name = "Ginger Driving Core")
-public class RileysFunkyDriveMode extends CommandOpMode {
+@TeleOp(name = "Sad Ginger Driving Core")
+public class RileysFunkyDriveModeButLoser extends CommandOpMode {
 
     private Swerve s_Swerve;
     private Intake s_Intake;
@@ -63,7 +62,7 @@ public class RileysFunkyDriveMode extends CommandOpMode {
         s_Turret = new Turret(hardwareMap, telemetry);
         s_Shooter = new Shooter(hardwareMap, telemetry);
         s_Sparky = new OTOSSensor(hardwareMap, telemetry);
-        s_Vision = new AprilVision(hardwareMap, telemetry, true);
+        s_Vision = new AprilVision(hardwareMap, telemetry, false);
         dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
 
         s_Vision.toggleTelemetry();
