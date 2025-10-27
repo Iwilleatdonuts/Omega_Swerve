@@ -66,8 +66,6 @@ public class RileysFunkyDriveMode extends CommandOpMode {
         s_Vision = new AprilVision(hardwareMap, telemetry, true);
         dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
 
-        s_Vision.toggleTelemetry();
-
         s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, s_Swerve, m_Driver));
         s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, m_Driver, dashboard));
         s_Turret.setDefaultCommand(new TurretToApril(s_Swerve, s_Turret, s_Vision, dashboard, m_Operator));
@@ -103,7 +101,6 @@ public class RileysFunkyDriveMode extends CommandOpMode {
         s_Sparky.setDefaultCommand(new RunCommand(() -> s_Sparky.periodic(), s_Sparky));
         s_Vision.setDefaultCommand(new RunCommand(() -> {
             s_Vision.periodic();
-            telemetry.addData("Distance to Target", s_Vision.getGoalDistance());
             }, s_Vision));
 
         zeroGyroButton.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro(), s_Swerve));

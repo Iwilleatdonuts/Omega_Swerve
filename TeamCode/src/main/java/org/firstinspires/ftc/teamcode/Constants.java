@@ -131,7 +131,7 @@ public class Constants {
         public static final String lowerMotor = "lowerShooter";
         public static final String angleServo = "angleShooter";
 
-        public static final int MAX_TRUE_RPM = 3860;
+        public static final int MAX_TRUE_RPM = 4500;
 
         public static final double TICKS_PER_REV = 28;
         public static final double MAX_TICKS_PER_SEC = (MAX_TRUE_RPM * TICKS_PER_REV) / 60;

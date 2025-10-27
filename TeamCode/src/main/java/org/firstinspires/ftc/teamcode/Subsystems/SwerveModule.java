@@ -47,7 +47,7 @@ public class SwerveModule extends SubsystemBase {
 
     private final double kS = 0.05;      // static friction term
     private final double kV = 1/Constants.DriveTrainConstants.MAX_TICKS_PER_SEC;    //ticks per second
-    private final double kA = 0.0;
+    private final double kA = PIDTuning.kF;
 
     public SwerveModule(HardwareMap hardwareMap, Telemetry telemetry, SwerveModuleConstants moduleConstants) {
 

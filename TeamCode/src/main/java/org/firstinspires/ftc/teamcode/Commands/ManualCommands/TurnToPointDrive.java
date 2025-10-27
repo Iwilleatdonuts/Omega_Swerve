@@ -71,11 +71,6 @@ public class TurnToPointDrive extends CommandBase {
 
             rotationOutput = -anglePID.calculate(0, error);
 
-            telemetry.addData("Right x", rightX);
-            telemetry.addData("Right y", rightY);
-            telemetry.addData("Turn ANgle", turnAngle);
-            telemetry.addData("error", error);
-            telemetry.update();
         }
 
         s_Swerve.drive(xVal, yVal, rotationOutput, true, slowMode);

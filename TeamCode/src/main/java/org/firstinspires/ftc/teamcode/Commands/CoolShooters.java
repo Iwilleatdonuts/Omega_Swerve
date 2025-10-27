@@ -62,7 +62,6 @@ public class CoolShooters extends CommandBase {
         s_Shooter.setShooterSpeed(shooterPercent);
 
         telemetry.addData("Shooter Percentage", shooterPercent);
-        telemetry.addData("Shooter Gunna shoob", shootersGunnaShoot);
         telemetry.update();
 
     }

@@ -30,7 +30,7 @@ public class Shooter extends SubsystemBase {
 
     private final FtcDashboard dashboard;
 
-    private final double kS = 0.005;      // static friction term
+    private final double kS = 0.01;      // static friction term
     private final double kV = 1/Constants.ShooterConstants.MAX_TICKS_PER_SEC;    //ticks per second
     private final double kA = 0.0;
 
@@ -40,8 +40,8 @@ public class Shooter extends SubsystemBase {
 
         this.telemetry = telemetry;
 
-        shooterController = new PIDController(0.008, 0, 0);
-//        shooterController = new PIDController(0.0075, 0.0055, 0);
+        shooterController = new PIDController(0.008, 0.0005, 0);
+//        shooterController = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD);
 
         upperShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.upperMotor);
         lowerShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.lowerMotor);
@@ -65,7 +65,7 @@ public class Shooter extends SubsystemBase {
 
         dashboard = FtcDashboard.getInstance();
 
-        shooterFF = new SimpleMotorFeedforward(PIDTuning.kP,1/Constants.ShooterConstants.MAX_TICKS_PER_SEC, 0);
+        shooterFF = new SimpleMotorFeedforward(PIDTuning.kF,1/Constants.ShooterConstants.MAX_TICKS_PER_SEC, 0);
 
     }
 
@@ -83,8 +83,10 @@ public class Shooter extends SubsystemBase {
 
         double output = ff + PID;
 
-        telemetry.addData("Target Velocity:", targetVelocity);
-        telemetry.addData("shooter speed", getLowerVelocity());
+        if(enableTelemetry){
+            telemetry.addData("Target Velocity:", targetVelocity);
+            telemetry.addData("shooter speed", getLowerVelocity());
+        }
 
 
         lowerShooterMotor.setPower(output);
@@ -112,8 +114,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getShooterSpeedFromDistance(double distance) {
-        return 0.00238816 * distance+0.432881;
-//        return 0.00000403057 * Math.pow(distance, 2) + 0.00168635 * distance + 0.459608;
+        return 0.00185564 * distance +0.380296;
     }
 
     public void toggleTelemetry() {
