@@ -11,6 +11,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.Kalman;
+import org.firstinspires.ftc.teamcode.Utilities.KalmanTuning;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
@@ -34,6 +36,15 @@ public class AprilVision extends SubsystemBase {
     private List<AprilTagDetection> detections;
     private Pose3D currentPose;
 
+    private double rawBearing;
+    private double rawDistance;
+
+    private double filteredBearing;
+    private double filteredDistance;
+
+    private final Kalman bearingFilter;
+    private final Kalman distanceFilter;
+
     private final boolean areWeWinners;
 
 
@@ -46,6 +57,9 @@ public class AprilVision extends SubsystemBase {
         this.telemetry = telemetry;
 
         this.areWeWinners = areWeWinners;
+
+        bearingFilter = new Kalman(KalmanTuning.q1, KalmanTuning.r1, 0);
+        distanceFilter = new Kalman(KalmanTuning.q2, KalmanTuning.r2, 0);
 
     }
 
@@ -87,19 +101,11 @@ public class AprilVision extends SubsystemBase {
     }
 
     public double getGoalBearing() {
-        return allianceGoalTag != null ? allianceGoalTag.ftcPose.bearing : 0.0;
-    }
-
-    public double getGoalX() {
-        return allianceGoalTag != null ? allianceGoalTag.ftcPose.x : 0;
-    }
-
-    public double getGoalY() {
-        return allianceGoalTag != null ? allianceGoalTag.ftcPose.y : 0;
+        return allianceGoalTag != null ? filteredBearing : 0.0;
     }
 
     public double getGoalDistance() {
-        return allianceGoalTag != null ? allianceGoalTag.ftcPose.range : 0;
+        return allianceGoalTag != null ? filteredDistance : 0;
     }
 
     @Override
@@ -111,6 +117,8 @@ public class AprilVision extends SubsystemBase {
         latestDetection = null;
         allianceGoalTag = null;
         randomPatternTag = null;
+        rawBearing = 0;
+        rawDistance = 0;
 
         if(!detections.isEmpty()) {
             for (AprilTagDetection tag : detections) {
@@ -124,6 +132,10 @@ public class AprilVision extends SubsystemBase {
                     //find alliance tag
                     if ((areWeWinners && id == 24) || (!areWeWinners && id == 20)) {
                         allianceGoalTag = tag;
+                        rawBearing = allianceGoalTag.ftcPose.bearing;
+                        rawDistance = allianceGoalTag.ftcPose.range;
+                        filteredBearing = bearingFilter.update(rawBearing);
+                        filteredDistance = distanceFilter.update(rawDistance);
                     }
                 } else if (id >= 21 && id <= 23) {
                     randomPatternTag = tag;
@@ -149,6 +161,10 @@ public class AprilVision extends SubsystemBase {
 
             if(allianceGoalTag != null) {
                 packet.put("Tag Skew", allianceGoalTag.ftcPose.yaw);
+                packet.put("Raw Baering", rawBearing);
+                packet.put("Raw Distance", rawDistance);
+                packet.put("Filtered Bearing", filteredBearing);
+                packet.put("Filtered Distance", filteredDistance);
             }
 
             telemetry.addLine("Vision");

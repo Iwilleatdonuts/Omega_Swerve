@@ -21,6 +21,9 @@ public class TurnToPointDrive extends CommandBase {
     private boolean enableAutoRotate;
     private double turnAngle;
 
+    private final SlewRateLimiter xLimiter;
+    private final SlewRateLimiter yLimiter;
+
     public TurnToPointDrive(Telemetry telemetry, Swerve s_Swerve, GamepadEx m_Driver){
 
         this.telemetry = telemetry;
@@ -35,7 +38,18 @@ public class TurnToPointDrive extends CommandBase {
         anglePID = new PIDController(0.0026, 0.01, 0);
 //        anglePID = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kF);
 
+        xLimiter = new SlewRateLimiter(5);
+        yLimiter = new SlewRateLimiter(5);
+
         addRequirements(s_Swerve);
+    }
+
+    @Override
+    public void initialize(){
+
+        xLimiter.reset(0);
+        yLimiter.reset(0);
+
     }
 
     @Override
@@ -51,6 +65,9 @@ public class TurnToPointDrive extends CommandBase {
         double yVal = m_Driver.getLeftY();
 
         slowMode = m_Driver.isDown(GamepadKeys.Button.LEFT_STICK_BUTTON) || m_Driver.isDown(GamepadKeys.Button.RIGHT_STICK_BUTTON);
+
+        double xLimited = xLimiter.calculate(xVal);
+        double yLimited = yLimiter.calculate(yVal);
 
         double rotationOutput = 0;
 
@@ -73,7 +90,7 @@ public class TurnToPointDrive extends CommandBase {
 
         }
 
-        s_Swerve.drive(xVal, yVal, rotationOutput, true, slowMode);
+        s_Swerve.drive(xLimited, yLimited, rotationOutput, true, slowMode);
     }
 
 }

@@ -17,10 +17,8 @@ public class TurretToApril extends CommandBase {
     private final AprilVision s_Vision;
     private final FtcDashboard dashboard;
     private double aprilBearing;
-    private double aprilX;
-    private double aprilY;
 
-    private GamepadEx m_Operator;
+    private final GamepadEx m_Operator;
 
     TelemetryPacket packet = new TelemetryPacket();
 
@@ -40,8 +38,6 @@ public class TurretToApril extends CommandBase {
     public void initialize(){
 
         aprilBearing = s_Vision.getGoalBearing();
-        aprilX = s_Vision.getGoalX();
-        aprilY = s_Vision.getGoalY();
 
     }
 

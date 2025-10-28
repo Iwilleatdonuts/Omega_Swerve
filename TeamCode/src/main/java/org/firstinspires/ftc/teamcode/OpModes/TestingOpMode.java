@@ -92,13 +92,6 @@ public class TestingOpMode extends LinearOpMode {
             if(Math.hypot(m_OperatorOp.getLeftX(), m_OperatorOp.getLeftY()) > 0.9) {
                 s_Turret.setSetpoint(operatorJoystickAngle);
             }
-
-//            if(m_OperatorOp.isDown(GamepadKeys.Button.A)) {
-//                s_Turret.runToSetpoint();
-//            } else {
-//                s_Turret.setSpeed(0);
-//            }
-
             s_Shooter.setShooterSpeed(m_OperatorOp.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 
             double drivePower = m_DriverOp.getLeftY();
