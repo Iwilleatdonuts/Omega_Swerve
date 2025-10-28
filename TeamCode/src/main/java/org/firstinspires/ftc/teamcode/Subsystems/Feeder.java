@@ -21,7 +21,7 @@ public class Feeder extends SubsystemBase {
 
     private boolean enableTelemetry;
 
-    private final FtcDashboard dashboard;
+//    private final FtcDashboard dashboard;
 
     public Feeder(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -37,7 +37,7 @@ public class Feeder extends SubsystemBase {
 
         enableTelemetry = false;
 
-        dashboard = FtcDashboard.getInstance();
+//        dashboard = FtcDashboard.getInstance();
 
     }
 
@@ -61,11 +61,11 @@ public class Feeder extends SubsystemBase {
     @Override
     public void periodic(){
 
-        if(enableTelemetry) {
-            telemetry.addLine("Feeder");
-            telemetry.addData("Feeder Speed", feederServo.getPower());
-            telemetry.addLine();
-        }
+//        if(enableTelemetry) {
+//            telemetry.addLine("Feeder");
+//            telemetry.addData("Feeder Speed", feederServo.getPower());
+//            telemetry.addLine();
+//        }
 
     }
 

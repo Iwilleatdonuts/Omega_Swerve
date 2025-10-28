@@ -46,7 +46,7 @@ public class SmartIntake extends CommandBase {
         if(m_Driver.isDown(GamepadKeys.Button.A)) {
             s_Feeder.openGate();
             s_Feeder.setFeederSpeed(1);
-            s_Intake.setSpeed(0.8);
+            s_Intake.setSpeed(1);
         } else if (m_Driver.isDown(GamepadKeys.Button.B)) {
             s_Feeder.setFeederSpeed(-1);
             s_Feeder.openGate();

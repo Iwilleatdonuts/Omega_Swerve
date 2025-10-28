@@ -17,7 +17,7 @@ public class Intake extends SubsystemBase {
 
     private boolean enableTelemetry;
 
-    private final FtcDashboard dashboard;
+//    private final FtcDashboard dashboard;
 
     public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -31,7 +31,7 @@ public class Intake extends SubsystemBase {
 
         enableTelemetry = false;
 
-        dashboard = FtcDashboard.getInstance();
+//        dashboard = FtcDashboard.getInstance();
 
     }
 
@@ -51,11 +51,11 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic(){
 
-        if(enableTelemetry) {
-            telemetry.addLine("Intake");
-            telemetry.addData("Intake Speed", getSpeed());
-            telemetry.addLine();
-        }
+//        if(enableTelemetry) {
+//            telemetry.addLine("Intake");
+//            telemetry.addData("Intake Speed", getSpeed());
+//            telemetry.addLine();
+//        }
 
     }
 

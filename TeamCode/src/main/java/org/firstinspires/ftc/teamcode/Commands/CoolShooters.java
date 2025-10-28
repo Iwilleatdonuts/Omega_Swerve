@@ -14,6 +14,7 @@ public class CoolShooters extends CommandBase {
     private final AprilVision s_Vision;
 
     private final GamepadEx m_Driver;
+    private final GamepadEx m_Operator;
 
     private boolean shootersGunnaShoot;
 
@@ -21,12 +22,13 @@ public class CoolShooters extends CommandBase {
 
     private final Telemetry telemetry;
 
-    public CoolShooters(Shooter s_Shooter, AprilVision s_Vision, GamepadEx m_Driver, Telemetry telemetry){
+    public CoolShooters(Shooter s_Shooter, AprilVision s_Vision, GamepadEx m_Driver, GamepadEx m_Operator, Telemetry telemetry){
 
         this.s_Shooter = s_Shooter;
         this.s_Vision = s_Vision;
 
         this.m_Driver = m_Driver;
+        this.m_Operator = m_Operator;
 
         this.telemetry = telemetry;
 
@@ -44,6 +46,14 @@ public class CoolShooters extends CommandBase {
     @Override
     public void execute(){
 
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            s_Shooter.incrementSpeedConstant();
+        }
+
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+            s_Shooter.decrementSpeedConstant();
+        }
+
         if(m_Driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
             shootersGunnaShoot = !shootersGunnaShoot;
         }
@@ -52,7 +62,7 @@ public class CoolShooters extends CommandBase {
             if(s_Vision.hasGoalTag()){
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(s_Vision.getGoalDistance());
             } else {
-                shooterPercent = 0.7;
+                shooterPercent = 0.51;
             }
         } else {
 
@@ -62,6 +72,8 @@ public class CoolShooters extends CommandBase {
         s_Shooter.setShooterSpeed(shooterPercent);
 
         telemetry.addData("Shooter Percentage", shooterPercent);
+        telemetry.addData("Shooter Velocity", s_Shooter.getLowerVelocity());
+        telemetry.addData("Shooter Constant", s_Shooter.getShooterConstant());
         telemetry.update();
 
     }

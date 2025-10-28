@@ -40,8 +40,10 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
@@ -93,7 +95,6 @@ public class ConceptAprilTagOptimizeExposure extends LinearOpMode
 
     @Override public void runOpMode()
     {
-        dashboard.startCameraStream(visionPortal, 30);
         // Initialize the Apriltag Detection process
         initAprilTag();
 
@@ -107,6 +108,9 @@ public class ConceptAprilTagOptimizeExposure extends LinearOpMode
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch START to start OpMode");
         telemetry.update();
+
+        dashboard.startCameraStream(visionPortal, 30);
+
         waitForStart();
 
         while (opModeIsActive())
@@ -165,14 +169,21 @@ public class ConceptAprilTagOptimizeExposure extends LinearOpMode
      */
     private void initAprilTag() {
         // Create the AprilTag processor by using a builder.
-        aprilTag = new AprilTagProcessor.Builder().build();
+        aprilTag = new AprilTagProcessor.Builder()
+                .setDrawAxes(false)
+                .setDrawTagOutline(false)
+                .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
+                .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
+                .setLensIntrinsics(552.2287565089085, 549.2233357291731, 330.46847362162896, 207.9732802095237)
+                .build();
 
         // Create the WEBCAM vision portal by using a builder.
         visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "april"))
+                .setCamera(hardwareMap.get(WebcamName.class, Constants.VisionConstants.aprilCameraName))
                 .addProcessor(aprilTag)
-                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .setCameraResolution(new Size(640, 480))
+                .enableLiveView(false)
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .build();
     }
 
@@ -181,7 +192,7 @@ public class ConceptAprilTagOptimizeExposure extends LinearOpMode
         Can only be called AFTER calling initAprilTag();
         Returns true if controls are set.
      */
-    private boolean    setManualExposure(int exposureMS, int gain) {
+    private boolean setManualExposure(int exposureMS, int gain) {
         // Ensure Vision Portal has been setup.
         if (visionPortal == null) {
             return false;
@@ -244,7 +255,7 @@ public class ConceptAprilTagOptimizeExposure extends LinearOpMode
         // Get camera control values unless we are stopping.
         if (!isStopRequested()) {
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-            minExposure = (int)exposureControl.getMinExposure(TimeUnit.MILLISECONDS) + 1;
+            minExposure = (int)exposureControl.getMinExposure(TimeUnit.MILLISECONDS);
             maxExposure = (int)exposureControl.getMaxExposure(TimeUnit.MILLISECONDS);
 
             GainControl gainControl = visionPortal.getCameraControl(GainControl.class);

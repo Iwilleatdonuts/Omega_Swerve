@@ -28,13 +28,15 @@ public class Shooter extends SubsystemBase {
 
     private final PIDController shooterController;
 
-    private final FtcDashboard dashboard;
+//    private final FtcDashboard dashboard;
 
     private final double kS = 0.01;      // static friction term
     private final double kV = 1/Constants.ShooterConstants.MAX_TICKS_PER_SEC;    //ticks per second
     private final double kA = 0.0;
 
     private final SimpleMotorFeedforward shooterFF;
+
+    private double speedConstant;
 
     public Shooter(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -63,9 +65,11 @@ public class Shooter extends SubsystemBase {
 
         angleServo.setPosition(Constants.ShooterConstants.aimerDown);
 
-        dashboard = FtcDashboard.getInstance();
+//        dashboard = FtcDashboard.getInstance();
 
-        shooterFF = new SimpleMotorFeedforward(PIDTuning.kF,1/Constants.ShooterConstants.MAX_TICKS_PER_SEC, 0);
+        shooterFF = new SimpleMotorFeedforward(0.5,1/Constants.ShooterConstants.MAX_TICKS_PER_SEC, 0);
+
+        speedConstant = 0.295;
 
     }
 
@@ -113,8 +117,21 @@ public class Shooter extends SubsystemBase {
         return angleServo.getPosition();
     }
 
+    public void incrementSpeedConstant() {
+        speedConstant += 0.001;
+    }
+
+    public void decrementSpeedConstant() {
+        speedConstant -= 0.001;
+    }
+
+    public double getShooterConstant() {
+        return speedConstant;
+    }
+
     public double getShooterSpeedFromDistance(double distance) {
-        return 0.00185564 * distance +0.380296;
+//        return 0.00185564 * distance +0.380296;
+                return 0.00185564 * distance + speedConstant;
     }
 
     public void toggleTelemetry() {
@@ -123,16 +140,16 @@ public class Shooter extends SubsystemBase {
 
     public void periodic() {
 
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put("Shooter Ticks per second", getLowerVelocity());
-        dashboard.sendTelemetryPacket(packet);
-
-
-        if(enableTelemetry) {
-            telemetry.addLine("Shooter");
-            telemetry.addData("RPM", getAverageVelocity());
-            telemetry.addData("Shooter Angle", getShooterAngle());
-        }
+//        TelemetryPacket packet = new TelemetryPacket();
+//        packet.put("Shooter Ticks per second", getLowerVelocity());
+//        dashboard.sendTelemetryPacket(packet);
+//
+//
+//        if(enableTelemetry) {
+//            telemetry.addLine("Shooter");
+//            telemetry.addData("RPM", getAverageVelocity());
+//            telemetry.addData("Shooter Angle", getShooterAngle());
+//        }
 
     }
 

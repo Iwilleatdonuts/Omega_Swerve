@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -31,6 +32,8 @@ public class Swerve extends SubsystemBase {
     private final Map<String, Object> velocityErrors = new HashMap<>();
     private final Map<String, Object> angleErrors = new HashMap<>();
 
+    private SparkFunOTOS.Pose2D targetPose;
+
     public Swerve(HardwareMap hardwareMap, Telemetry telemetry){
 
         this.telemetry = telemetry;
@@ -54,6 +57,8 @@ public class Swerve extends SubsystemBase {
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         dashboard = FtcDashboard.getInstance();
+
+        targetPose = new SparkFunOTOS.Pose2D(1500, 200, 0);
 
     }
 
@@ -180,6 +185,18 @@ public class Swerve extends SubsystemBase {
         enableTelemetry = !enableTelemetry;
     }
 
+    public void setTargetPose(double newX, double newY, double newH) {
+        targetPose = new SparkFunOTOS.Pose2D(newX, newY, newH);
+    }
+
+    public void setTargetPose(SparkFunOTOS.Pose2D newPose) {
+        targetPose = newPose;
+    }
+
+    public SparkFunOTOS.Pose2D getTargetPose(){
+        return targetPose;
+    }
+
     @Override
     public void periodic(){
 
@@ -195,14 +212,14 @@ public class Swerve extends SubsystemBase {
 
 //        dashboard.sendTelemetryPacket(packet);
 
-        if(enableTelemetry) {
-            telemetry.addLine("Swerve");
-//            telemetry.addData("X Position ", otos.getPose().x);
-//            telemetry.addData("Y Position ", otos.getPose().y);
-            telemetry.addData("Heading ", getHeading());
-//            telemetry.addData("OTOS Heading ", otos.getPose().h);
-            telemetry.addLine();
-        }
+//        if(enableTelemetry) {
+//            telemetry.addLine("Swerve");
+////            telemetry.addData("X Position ", otos.getPose().x);
+////            telemetry.addData("Y Position ", otos.getPose().y);
+//            telemetry.addData("Heading ", getHeading());
+////            telemetry.addData("OTOS Heading ", otos.getPose().h);
+//            telemetry.addLine();
+//        }
     }
 }
 

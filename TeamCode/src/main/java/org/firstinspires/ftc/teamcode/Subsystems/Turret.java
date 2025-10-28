@@ -40,7 +40,8 @@ public class Turret extends SubsystemBase {
         dashboard = FtcDashboard.getInstance();
 
 
-        turretController = new PIDController(0.02, 0.01, 0.0003);
+        turretController = new PIDController(0.02, 0.01, PIDTuning.kD);
+        turretController.setTolerance(5);
 
         setSetpoint(getDegrees());
     }
@@ -112,7 +113,11 @@ public class Turret extends SubsystemBase {
 
     public void runToSetpoint() {
 
-        double output = turretController.calculate(getDegrees(), getSetpoint());
+        double output = 0;
+
+        if(Math.abs(getDegrees() - getSetpoint()) > 1){
+            output = turretController.calculate(getDegrees(), getSetpoint());
+        }
 
         output = Math.max(-1.0, Math.min(1.0, output));
         setSpeed(output);
@@ -126,14 +131,14 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic(){
 
-        if(enableTelemetry) {
-            telemetry.addLine("Turret");
-            telemetry.addData("Turret Raw Position", getRawPosition());
-            telemetry.addData("Setpoint", getSetpoint());
-            telemetry.addData("Turret Degrees", getDegrees());
-            telemetry.addData("Turret Is out of boudns AHHHHHHHH", isOutOfBounds());
-            telemetry.addLine();
-        }
+//        if(enableTelemetry) {
+//            telemetry.addLine("Turret");
+//            telemetry.addData("Turret Raw Position", getRawPosition());
+//            telemetry.addData("Setpoint", getSetpoint());
+//            telemetry.addData("Turret Degrees", getDegrees());
+//            telemetry.addData("Turret Is out of boudns AHHHHHHHH", isOutOfBounds());
+//            telemetry.addLine();
+//        }
 
     }
 

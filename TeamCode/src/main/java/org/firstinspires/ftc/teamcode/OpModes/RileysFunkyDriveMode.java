@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
+import org.firstinspires.ftc.teamcode.Commands.DriveToSwervePoint;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
@@ -42,6 +43,7 @@ public class RileysFunkyDriveMode extends CommandOpMode {
     private GamepadEx m_Operator;
 
     private Button zeroGyroButton;
+    private Button autoDriveButton;
     private boolean shootersGunnaShoot = false;
 
     private double shooterSpeed = 0;
@@ -56,6 +58,7 @@ public class RileysFunkyDriveMode extends CommandOpMode {
         m_Operator = new GamepadEx(gamepad2);
 
         zeroGyroButton = new GamepadButton(m_Driver, GamepadKeys.Button.START);
+        autoDriveButton = new GamepadButton(m_Driver, GamepadKeys.Button.Y);
 
         s_Swerve = new Swerve(hardwareMap, telemetry);
         s_Intake = new Intake(hardwareMap, telemetry);
@@ -64,12 +67,12 @@ public class RileysFunkyDriveMode extends CommandOpMode {
         s_Shooter = new Shooter(hardwareMap, telemetry);
         s_Sparky = new OTOSSensor(hardwareMap, telemetry);
         s_Vision = new AprilVision(hardwareMap, telemetry, true);
-        dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
+//        dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
 
-        s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, s_Swerve, m_Driver));
+        s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, s_Swerve, s_Sparky, m_Driver, m_Operator));
         s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, m_Driver, dashboard));
         s_Turret.setDefaultCommand(new TurretToApril(s_Swerve, s_Turret, s_Vision, dashboard, m_Operator));
-        s_Shooter.setDefaultCommand(new CoolShooters(s_Shooter, s_Vision, m_Driver, telemetry));
+        s_Shooter.setDefaultCommand(new CoolShooters(s_Shooter, s_Vision, m_Driver, m_Operator, telemetry));
 //        s_Shooter.setDefaultCommand(new RunCommand(() -> {
 //
 //            m_Operator.readButtons();
@@ -103,7 +106,11 @@ public class RileysFunkyDriveMode extends CommandOpMode {
             s_Vision.periodic();
             }, s_Vision));
 
-        zeroGyroButton.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro(), s_Swerve));
+        zeroGyroButton.whenPressed(new InstantCommand(() -> {
+            s_Swerve.zeroGyro();
+            s_Sparky.zeroGyro();
+            }, s_Swerve, s_Sparky));
+        autoDriveButton.whenHeld(new DriveToSwervePoint(s_Swerve, s_Sparky));
 
     }
 

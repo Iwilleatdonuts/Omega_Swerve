@@ -39,7 +39,7 @@ public class SwerveModule extends SubsystemBase {
 
     private boolean enableTelemetry;
 
-    private final FtcDashboard dashboard;
+//    private final FtcDashboard dashboard;
 
     private double lastVelocity = 0.0;
 
@@ -47,7 +47,7 @@ public class SwerveModule extends SubsystemBase {
 
     private final double kS = 0.05;      // static friction term
     private final double kV = 1/Constants.DriveTrainConstants.MAX_TICKS_PER_SEC;    //ticks per second
-    private final double kA = PIDTuning.kF;
+    private final double kA = 0;
 
     public SwerveModule(HardwareMap hardwareMap, Telemetry telemetry, SwerveModuleConstants moduleConstants) {
 
@@ -77,7 +77,7 @@ public class SwerveModule extends SubsystemBase {
 
         enableTelemetry = false;
 
-        dashboard = FtcDashboard.getInstance();
+//        dashboard = FtcDashboard.getInstance();
 
     }
 
@@ -184,15 +184,15 @@ public class SwerveModule extends SubsystemBase {
     @Override
     public void periodic(){
 
-        if(enableTelemetry) {
-            telemetry.addLine("Module " + modNumber);
-            telemetry.addData("Raw Angle \t", getDegrees(false));
-            telemetry.addData("Degrees \t", getDegrees(true));
-            telemetry.addData("Angular Error \t", getWrappedError(moduleSetpoint, getDegrees(true)));
-            telemetry.addData("Drive speed \t", drive.getVelocity());
-            telemetry.addData("Velocity Error\t", getVelocityError());
-            telemetry.addLine();
-        }
+//        if(enableTelemetry) {
+//            telemetry.addLine("Module " + modNumber);
+//            telemetry.addData("Raw Angle \t", getDegrees(false));
+//            telemetry.addData("Degrees \t", getDegrees(true));
+//            telemetry.addData("Angular Error \t", getWrappedError(moduleSetpoint, getDegrees(true)));
+//            telemetry.addData("Drive speed \t", drive.getVelocity());
+//            telemetry.addData("Velocity Error\t", getVelocityError());
+//            telemetry.addLine();
+//        }
 
     }
 

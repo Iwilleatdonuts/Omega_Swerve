@@ -67,7 +67,7 @@ public class Constants {
             public static final String driveMotor = "drive2";
             public static final String angleServo = "angle2";
             public static final String feedback = "angleFeedback2";
-            public static final double moduleOffset = 252;
+            public static final double moduleOffset = 76.1455;
 
             public static final double angleKP = 0;
             public static final double angleKI = 0;

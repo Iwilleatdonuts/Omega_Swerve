@@ -23,7 +23,7 @@ public class OTOSSensor extends SubsystemBase {
 
     private boolean enableTelemetry;
 
-    private final FtcDashboard dashboard;
+//    private final FtcDashboard dashboard;
 
     public OTOSSensor(HardwareMap hardwareMap, Telemetry telemetry){
 
@@ -35,7 +35,7 @@ public class OTOSSensor extends SubsystemBase {
 
         enableTelemetry = false;
 
-        dashboard = FtcDashboard.getInstance();
+//        dashboard = FtcDashboard.getInstance();
 
         configureOTOS();
 
@@ -134,24 +134,24 @@ public class OTOSSensor extends SubsystemBase {
     @Override
     public void periodic(){
 
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put("X Pos", getPose().x);
-        packet.put("Y Pos", getPose().y);
-        packet.put("Heading", getHeading());
-        packet.put("OTOS Heading", getHeading());
-
-        dashboard.sendTelemetryPacket(packet);
-
-        if(enableTelemetry){
-            telemetry.addLine("OTOS");
-            telemetry.addData("X Position \t", getPose().x);
-            telemetry.addData("Y Position \t", getPose().y);
-            telemetry.addData("Rotation \t", getHeading());
-            telemetry.addData("X Velocity \t", getVelocity().x);
-            telemetry.addData("Y Velocity \t", getVelocity().y);
-            telemetry.addData("R Velocity \t", getVelocity().h);
-            telemetry.addLine();
-        }
+//        TelemetryPacket packet = new TelemetryPacket();
+//        packet.put("X Pos", getPose().x);
+//        packet.put("Y Pos", getPose().y);
+//        packet.put("Heading", getHeading());
+//        packet.put("OTOS Heading", getHeading());
+//
+//        dashboard.sendTelemetryPacket(packet);
+//
+//        if(enableTelemetry){
+//            telemetry.addLine("OTOS");
+//            telemetry.addData("X Position \t", getPose().x);
+//            telemetry.addData("Y Position \t", getPose().y);
+//            telemetry.addData("Rotation \t", getHeading());
+//            telemetry.addData("X Velocity \t", getVelocity().x);
+//            telemetry.addData("Y Velocity \t", getVelocity().y);
+//            telemetry.addData("R Velocity \t", getVelocity().h);
+//            telemetry.addLine();
+//        }
     }
 
 }
