@@ -5,8 +5,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
+import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 
@@ -14,7 +13,7 @@ public class TurretToApril extends CommandBase {
 
     private final Swerve s_Swerve;
     private final Turret s_Turret;
-    private final AprilVision s_Vision;
+    private final AprilVisionOnTurret s_Vision;
     private final FtcDashboard dashboard;
     private double aprilBearing;
 
@@ -22,7 +21,7 @@ public class TurretToApril extends CommandBase {
 
     TelemetryPacket packet = new TelemetryPacket();
 
-    public TurretToApril(Swerve s_Swerve, Turret s_Turret, AprilVision s_Vision, FtcDashboard dashboard, GamepadEx m_Operator){
+    public TurretToApril(Swerve s_Swerve, Turret s_Turret, AprilVisionOnTurret s_Vision, FtcDashboard dashboard, GamepadEx m_Operator){
 
         this.s_Swerve = s_Swerve;
         this.s_Turret = s_Turret;

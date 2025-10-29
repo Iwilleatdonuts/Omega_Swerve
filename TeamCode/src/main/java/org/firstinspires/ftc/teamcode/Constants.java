@@ -155,12 +155,9 @@ public class Constants {
     public static final class VisionConstants {
 
         public static final String aprilCameraName = "april";
-        public static final Position poseCameraPosition = new Position(DistanceUnit.MM, 0, 0, 0, 0);
-        public static final YawPitchRollAngles poseCameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES, 0, -90, 0, 0);
+        public static final Position poseCameraPosition = new Position(DistanceUnit.MM, 0, 169.56645, 308.34841, 0);
+        public static final YawPitchRollAngles poseCameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES, 0, -70, 0, 0);
 
-        public static final double xOffsetFromTurret = 0.09956333;
-        public static final double yOffsetFromTurret = 0.02633424;
-        public static final double aimingCameraYaw = 0;
 
     }
 }

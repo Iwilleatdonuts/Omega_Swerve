@@ -5,13 +5,13 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
+import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 
 public class CoolShooters extends CommandBase {
 
     private final Shooter s_Shooter;
-    private final AprilVision s_Vision;
+    private final AprilVisionOnTurret s_Vision;
 
     private final GamepadEx m_Driver;
     private final GamepadEx m_Operator;
@@ -22,7 +22,7 @@ public class CoolShooters extends CommandBase {
 
     private final Telemetry telemetry;
 
-    public CoolShooters(Shooter s_Shooter, AprilVision s_Vision, GamepadEx m_Driver, GamepadEx m_Operator, Telemetry telemetry){
+    public CoolShooters(Shooter s_Shooter, AprilVisionOnTurret s_Vision, GamepadEx m_Driver, GamepadEx m_Operator, Telemetry telemetry){
 
         this.s_Shooter = s_Shooter;
         this.s_Vision = s_Vision;

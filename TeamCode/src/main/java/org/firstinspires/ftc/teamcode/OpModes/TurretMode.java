@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
@@ -10,15 +9,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
-import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
-import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
-import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
-import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 
@@ -29,7 +21,7 @@ public class TurretMode extends CommandOpMode {
 
     private Swerve s_Swerve;
     private Turret s_Turret;
-    private AprilVision s_Vision;
+    private AprilVisionOnTurret s_Vision;
 
     private FtcDashboard dashboard;
 
@@ -50,7 +42,7 @@ public class TurretMode extends CommandOpMode {
 
         s_Swerve = new Swerve(hardwareMap, telemetry);
         s_Turret = new Turret(hardwareMap, telemetry);
-        s_Vision = new AprilVision(hardwareMap, telemetry, true);
+        s_Vision = new AprilVisionOnTurret(hardwareMap, telemetry, true);
         dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
 
         s_Vision.toggleTelemetry();

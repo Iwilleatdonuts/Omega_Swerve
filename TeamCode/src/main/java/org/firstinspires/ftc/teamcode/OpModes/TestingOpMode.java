@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
+import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
@@ -35,7 +35,7 @@ public class TestingOpMode extends LinearOpMode {
         Shooter s_Shooter = new Shooter(hardwareMap, telemetry);
         OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telemetry);
 
-        AprilVision s_Vision = new AprilVision(hardwareMap, telemetry, true);
+        AprilVisionOnTurret s_Vision = new AprilVisionOnTurret(hardwareMap, telemetry, true);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
         dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);

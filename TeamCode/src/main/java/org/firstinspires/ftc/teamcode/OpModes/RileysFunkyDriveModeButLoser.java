@@ -15,8 +15,7 @@ import org.firstinspires.ftc.teamcode.Commands.DriveToSwervePoint;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVision;
+import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
@@ -34,7 +33,7 @@ public class RileysFunkyDriveModeButLoser extends CommandOpMode {
     private Feeder s_Feeder;
     private Turret s_Turret;
     private Shooter s_Shooter;
-    private AprilVision s_Vision;
+    private AprilVisionOnTurret s_Vision;
     private OTOSSensor s_Sparky;
 
     private FtcDashboard dashboard;
@@ -66,7 +65,7 @@ public class RileysFunkyDriveModeButLoser extends CommandOpMode {
         s_Turret = new Turret(hardwareMap, telemetry);
         s_Shooter = new Shooter(hardwareMap, telemetry);
         s_Sparky = new OTOSSensor(hardwareMap, telemetry);
-        s_Vision = new AprilVision(hardwareMap, telemetry, false);
+        s_Vision = new AprilVisionOnTurret(hardwareMap, telemetry, false);
 //        dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
 
         s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, s_Swerve, s_Sparky, m_Driver, m_Operator));

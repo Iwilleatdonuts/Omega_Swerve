@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import android.util.Size;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -11,10 +9,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.Kalman;
-import org.firstinspires.ftc.teamcode.Utilities.KalmanTuning;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
@@ -23,7 +19,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class AprilVision extends SubsystemBase {
+public class AprilVisionOnTurret extends SubsystemBase {
 
     private VisionPortal aprilCamera;
     private AprilTagProcessor aprilTagProcessor;
@@ -50,7 +46,7 @@ public class AprilVision extends SubsystemBase {
     private final boolean areWeWinners;
 
 
-    public AprilVision(HardwareMap hardwareMap, Telemetry telemetry, boolean areWeWinners) {
+    public AprilVisionOnTurret(HardwareMap hardwareMap, Telemetry telemetry, boolean areWeWinners) {
 
         configureAprilTagCamera(hardwareMap);
 
@@ -74,7 +70,6 @@ public class AprilVision extends SubsystemBase {
                 .setDrawTagOutline(false)
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
-//                .setCameraPose(Constants.VisionConstants.poseCameraPosition, Constants.VisionConstants.poseCameraOrientation)
                 .setLensIntrinsics(552.2287565089085, 549.2233357291731, 330.46847362162896, 207.9732802095237)
 //                .setLensIntrinsics(282.1860789098276, 254.73573470533123, 163.61678559231228,137.78018368918634)
                 .build();
