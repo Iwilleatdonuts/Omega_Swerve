@@ -3,12 +3,15 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import android.util.Size;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.Kalman;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -19,7 +22,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class AprilVisionOnTurret extends SubsystemBase {
+public class AprilVisionForPose extends SubsystemBase {
 
     private VisionPortal aprilCamera;
     private AprilTagProcessor aprilTagProcessor;
@@ -28,25 +31,18 @@ public class AprilVisionOnTurret extends SubsystemBase {
     private boolean enableTelemetry;
 
     private AprilTagDetection latestDetection;
-    private AprilTagDetection allianceGoalTag;
     private AprilTagDetection randomPatternTag;
 
-//    private final TelemetryPacket packet = new TelemetryPacket();
     private List<AprilTagDetection> detections;
 
-    private double rawBearing;
-    private double rawDistance;
+    private SparkFunOTOS.Pose2D rawPose;
+    private SparkFunOTOS.Pose2D filteredPose;
 
-    private double filteredBearing;
-    private double filteredDistance;
+    private final Kalman xFilter;
+    private final Kalman yFilter;
+    private final Kalman hFilter;
 
-    private final Kalman bearingFilter;
-    private final Kalman distanceFilter;
-
-    private final boolean areWeWinners;
-
-
-    public AprilVisionOnTurret(HardwareMap hardwareMap, Telemetry telemetry, boolean areWeWinners) {
+    public AprilVisionForPose(HardwareMap hardwareMap, Telemetry telemetry) {
 
         configureAprilTagCamera(hardwareMap);
 
@@ -54,12 +50,15 @@ public class AprilVisionOnTurret extends SubsystemBase {
 
         this.telemetry = telemetry;
 
-        this.areWeWinners = areWeWinners;
 //
 //        bearingFilter = new Kalman(KalmanTuning.q1, KalmanTuning.r1, 0);
 //        distanceFilter = new Kalman(KalmanTuning.q2, KalmanTuning.r2, 0);
-        bearingFilter = new Kalman(1.5, 0.75, 0);
-        distanceFilter = new Kalman(0.1, 0.15, 0);
+        xFilter = new Kalman(1.5, 0.75, 0);
+        yFilter = new Kalman(1.5, 0.75, 0);
+        hFilter = new Kalman(1.5, 0.75, 0);
+
+        rawPose = new SparkFunOTOS.Pose2D(0, 0, 0);
+        filteredPose = rawPose;
 
     }
 
@@ -71,6 +70,7 @@ public class AprilVisionOnTurret extends SubsystemBase {
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
                 .setLensIntrinsics(552.2287565089085, 549.2233357291731, 330.46847362162896, 207.9732802095237)
+                .setOutputUnits(DistanceUnit.METER, AngleUnit.DEGREES)
                 .build();
 
         aprilCamera = new VisionPortal.Builder()
@@ -95,22 +95,18 @@ public class AprilVisionOnTurret extends SubsystemBase {
         return latestDetection != null;
     }
 
-    public boolean hasGoalTag() {
-        return allianceGoalTag != null;
+    public SparkFunOTOS.Pose2D getRawPose() {
+        return rawPose;
     }
 
-    public double getGoalBearing() {
-        return allianceGoalTag != null ? rawBearing : 0.0;
+    public SparkFunOTOS.Pose2D getFilteredPose() {
+        return filteredPose;
     }
 
     public double getCameraFPS() {
         return aprilCamera != null ? aprilCamera.getFps(): 0;
     }
 
-
-    public double getGoalDistance() {
-        return allianceGoalTag != null ? rawDistance : 0;
-    }
 
     private void setManualExposure(int exposureMS, int gain) {
         // Ensure Vision Portal has been setup.
@@ -144,14 +140,9 @@ public class AprilVisionOnTurret extends SubsystemBase {
     @Override
     public void periodic() {
 
-//        packet.clearLines();
-
         detections = aprilTagProcessor.getDetections();
         latestDetection = null;
-        allianceGoalTag = null;
         randomPatternTag = null;
-        rawBearing = 0;
-        rawDistance = 0;
 
         if(!detections.isEmpty()) {
             for (AprilTagDetection tag : detections) {
@@ -161,49 +152,29 @@ public class AprilVisionOnTurret extends SubsystemBase {
                 if (id == 20 || id == 24) {
                     latestDetection = tag;
 
-                    //find alliance tag
-                    if ((areWeWinners && id == 24) || (!areWeWinners && id == 20)) {
-                        allianceGoalTag = tag;
-                        rawBearing = allianceGoalTag.ftcPose.bearing;
-                        rawDistance = allianceGoalTag.ftcPose.range;
-                        filteredBearing = bearingFilter.update(rawBearing);
-                        filteredDistance = distanceFilter.update(rawDistance);
-                    }
+                    double rawX = latestDetection.robotPose.getPosition().x;
+                    double rawY = latestDetection.robotPose.getPosition().y;
+                    double rawH = latestDetection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES);
+
+                    rawPose = new SparkFunOTOS.Pose2D(rawX, rawY, rawH);
+
+                    double filteredX = xFilter.update(rawX);
+                    double filteredY = yFilter.update(rawY);
+                    double filteredH = hFilter.update(rawH);
+
+                    filteredPose = new SparkFunOTOS.Pose2D(filteredX, filteredY, filteredH);
+
                 } else if (id >= 21 && id <= 23) {
                     randomPatternTag = tag;
                 }
             }
         }
         telemetry.addData("FPS", getCameraFPS());
-//
-//        if (enableTelemetry) {
-//            packet.clearLines();
-//
-//            if (latestDetection != null) {
-//                packet.put("Tag ID", latestDetection.id);
-//            } else {
-//                packet.addLine("No Localization Tags");
-//            }
-//
-//            if (randomPatternTag != null) {
-//                packet.put("Random Pattern ID", randomPatternTag.id);
-//            }
-//
-//            if(allianceGoalTag != null) {
-//                packet.put("Tag Skew", allianceGoalTag.ftcPose.yaw);
-//                packet.put("Raw Baering", rawBearing);
-//                packet.put("Raw Distance", rawDistance);
-//                packet.put("Filtered Bearing", filteredBearing);
-//                packet.put("Filtered Distance", filteredDistance);
-//            }
-//
-//            telemetry.addLine("Vision");
-//            telemetry.addData("Alliance", areWeWinners ? "Red" : "Blue");
-//            telemetry.addData("Localization Tag", latestDetection != null ? latestDetection.id : "None");
-//            telemetry.addData("Random Pattern ID", randomPatternTag != null ? randomPatternTag.id : "None");
-//        }
-//
-//        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+        telemetry.addData("Robot X", getFilteredPose().x);
+        telemetry.addData("Robot Y", getFilteredPose().y);
+        telemetry.addData("Robot H", getFilteredPose().h);
+        telemetry.update();
     }
+
 
 }

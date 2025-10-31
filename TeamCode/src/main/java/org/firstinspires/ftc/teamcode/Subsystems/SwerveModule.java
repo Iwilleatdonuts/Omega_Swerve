@@ -184,15 +184,15 @@ public class SwerveModule extends SubsystemBase {
     @Override
     public void periodic(){
 
-//        if(enableTelemetry) {
-//            telemetry.addLine("Module " + modNumber);
-//            telemetry.addData("Raw Angle \t", getDegrees(false));
-//            telemetry.addData("Degrees \t", getDegrees(true));
+        if(enableTelemetry) {
+            telemetry.addLine("Module " + modNumber);
+            telemetry.addData("Raw Angle \t", getDegrees(false));
+            telemetry.addData("Degrees \t", getDegrees(true));
 //            telemetry.addData("Angular Error \t", getWrappedError(moduleSetpoint, getDegrees(true)));
 //            telemetry.addData("Drive speed \t", drive.getVelocity());
 //            telemetry.addData("Velocity Error\t", getVelocityError());
 //            telemetry.addLine();
-//        }
+        }
 
     }
 

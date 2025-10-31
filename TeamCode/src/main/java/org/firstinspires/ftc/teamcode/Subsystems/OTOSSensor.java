@@ -46,7 +46,7 @@ public class OTOSSensor extends SubsystemBase {
         telemetry.addLine("OTOS is Ready: " + isReady);
         telemetry.update();
 
-        otos.setLinearUnit(DistanceUnit.MM);
+        otos.setLinearUnit(DistanceUnit.METER);
         otos.setAngularUnit(AngleUnit.DEGREES);
 
         // left and right is - + x
