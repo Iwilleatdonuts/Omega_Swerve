@@ -107,6 +107,10 @@ public class AprilVisionOnTurret extends SubsystemBase {
         return aprilCamera != null ? aprilCamera.getFps(): 0;
     }
 
+    public VisionPortal.CameraState getCameraState() {
+        return aprilCamera!= null ? aprilCamera.getCameraState() : VisionPortal.CameraState.ERROR;
+    }
+
 
     public double getGoalDistance() {
         return allianceGoalTag != null ? rawDistance : 0;
@@ -175,6 +179,7 @@ public class AprilVisionOnTurret extends SubsystemBase {
             }
         }
         telemetry.addData("FPS", getCameraFPS());
+        telemetry.addData("Camera State", getCameraState());
 //
 //        if (enableTelemetry) {
 //            packet.clearLines();

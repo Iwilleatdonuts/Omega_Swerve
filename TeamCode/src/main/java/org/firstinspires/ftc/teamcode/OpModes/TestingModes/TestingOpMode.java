@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes;
+package org.firstinspires.ftc.teamcode.OpModes.TestingModes;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 
-@TeleOp(name = "Test Mode")
+@TeleOp(name = "Test Mode", group = "Testing")
 public class TestingOpMode extends LinearOpMode {
 
     @Override

@@ -113,7 +113,7 @@ public class TurnToPointDrive extends CommandBase {
 
         s_Swerve.drive(xLimited, yLimited, rotationOutput, true, slowMode);
 
-        telemetry.addData("CTL", timer.milliseconds() - timestamp);
+        telemetry.addData("CLT", timer.milliseconds() - timestamp);
     }
 
 }

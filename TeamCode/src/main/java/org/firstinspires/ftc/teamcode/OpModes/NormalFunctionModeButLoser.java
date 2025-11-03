@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
 import org.firstinspires.ftc.teamcode.Commands.DriveToSwervePoint;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
-import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
+import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TeleOpDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
@@ -25,8 +25,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 
 //http://192.168.43.1:8080/dash
 //adb connect 192.168.43.1:5555
-@TeleOp(name = "Ginger Driving Core Sad", group = "Main")
-public class RileysFunkyDriveModeButLoser extends CommandOpMode {
+@TeleOp(name = "Normie Driving Core Sad", group = "Main")
+public class NormalFunctionModeButLoser extends CommandOpMode {
 
     private Swerve s_Swerve;
     private Intake s_Intake;
@@ -61,9 +61,9 @@ public class RileysFunkyDriveModeButLoser extends CommandOpMode {
         s_Turret = new Turret(hardwareMap, telemetry);
         s_Shooter = new Shooter(hardwareMap, telemetry);
         s_Sparky = new OTOSSensor(hardwareMap, telemetry);
-        s_Vision = new AprilVisionOnTurret(hardwareMap, telemetry, false);
+        s_Vision = new AprilVisionOnTurret(hardwareMap, telemetry, true);
 
-        s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, s_Swerve, s_Sparky, m_Driver, m_Operator));
+        s_Swerve.setDefaultCommand(new TeleOpDrive(telemetry, s_Swerve, m_Driver, m_Operator));
         s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, m_Driver, dashboard));
         s_Turret.setDefaultCommand(new TurretToApril(s_Swerve, s_Turret, s_Vision, dashboard, m_Operator));
         s_Shooter.setDefaultCommand(new CoolShooters(s_Shooter, s_Vision, m_Driver, m_Operator, telemetry));

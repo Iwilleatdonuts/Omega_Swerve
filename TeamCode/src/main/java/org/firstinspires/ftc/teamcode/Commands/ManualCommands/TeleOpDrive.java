@@ -3,8 +3,11 @@ package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
 
 public class TeleOpDrive extends CommandBase {
 
@@ -13,38 +16,64 @@ public class TeleOpDrive extends CommandBase {
     private final GamepadEx m_Operator;
 
     private boolean slowMode;
-    private boolean dashboardDriving;
 
-    public TeleOpDrive(Swerve s_Swerve, GamepadEx m_Driver, GamepadEx m_Operator){
+    private final SlewRateLimiter xLimiter;
+    private final SlewRateLimiter yLimiter;
 
+    private final SlewRateLimiter rLimiter;
+
+    private final Telemetry telemetry;
+
+    private final ElapsedTime timer;
+
+    private double timestamp;
+
+    public TeleOpDrive(Telemetry telemetry, Swerve s_Swerve, GamepadEx m_Driver, GamepadEx m_Operator){
+
+        this.telemetry = telemetry;
         this.s_Swerve = s_Swerve;
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
 
         slowMode = false;
-        dashboardDriving = false;
+
+        xLimiter = new SlewRateLimiter(2);
+        yLimiter = new SlewRateLimiter(2);
+        rLimiter = new SlewRateLimiter(5);
+
+
+        timer = new ElapsedTime();
 
         addRequirements(s_Swerve);
     }
 
     @Override
+    public void initialize() {
+
+        xLimiter.reset(0);
+        yLimiter.reset(0);
+        rLimiter.reset(0);
+    }
+
+    @Override
     public void execute(){
 
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)){
-            dashboardDriving = !dashboardDriving;
-        }
+        timestamp = timer.milliseconds();
 
         double xVal = m_Driver.getLeftX();
         double yVal = m_Driver.getLeftY();
+        double rVal = m_Driver.getRightX();
 
-        if(dashboardDriving){
-            xVal = m_Driver.getLeftY();
-            yVal = m_Driver.getLeftX();
-        }
+        double xLimited = xLimiter.calculate(xVal);
+        double yLimited = yLimiter.calculate(yVal);
+        double rLimited = rLimiter.calculate(rVal);
+
 
         slowMode = m_Driver.isDown(GamepadKeys.Button.LEFT_STICK_BUTTON) || m_Driver.isDown(GamepadKeys.Button.RIGHT_STICK_BUTTON);
 
-        s_Swerve.drive(xVal, yVal, m_Driver.getRightX(), true, slowMode);
+        s_Swerve.drive(xLimited, yLimited, rLimited, true, slowMode);
+
+        telemetry.addData("CLT", timer.milliseconds() - timestamp);
 
     }
 
