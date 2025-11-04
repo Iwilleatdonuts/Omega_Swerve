@@ -63,7 +63,7 @@ public class RileysFunkyDriveModeButLoser extends CommandOpMode {
         s_Sparky = new OTOSSensor(hardwareMap, telemetry);
         s_Vision = new AprilVisionOnTurret(hardwareMap, telemetry, false);
 
-        s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, s_Swerve, s_Sparky, m_Driver, m_Operator));
+        s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, dashboard, s_Swerve, s_Sparky, m_Driver, m_Operator));
         s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, m_Driver, dashboard));
         s_Turret.setDefaultCommand(new TurretToApril(s_Swerve, s_Turret, s_Vision, dashboard, m_Operator));
         s_Shooter.setDefaultCommand(new CoolShooters(s_Shooter, s_Vision, m_Driver, m_Operator, telemetry));

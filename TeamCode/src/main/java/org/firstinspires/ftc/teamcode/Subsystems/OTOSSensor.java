@@ -144,9 +144,9 @@ public class OTOSSensor extends SubsystemBase {
 //
 //        if(enableTelemetry){
 //            telemetry.addLine("OTOS");
-//            telemetry.addData("X Position \t", getPose().x);
-//            telemetry.addData("Y Position \t", getPose().y);
-//            telemetry.addData("Rotation \t", getHeading());
+            telemetry.addData("X Position \t", getPose().x);
+            telemetry.addData("Y Position \t", getPose().y);
+            telemetry.addData("Rotation \t", getHeading());
 //            telemetry.addData("X Velocity \t", getVelocity().x);
 //            telemetry.addData("Y Velocity \t", getVelocity().y);
 //            telemetry.addData("R Velocity \t", getVelocity().h);

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -28,9 +30,13 @@ public class TeleOpDrive extends CommandBase {
 
     private double timestamp;
 
-    public TeleOpDrive(Telemetry telemetry, Swerve s_Swerve, GamepadEx m_Driver, GamepadEx m_Operator){
+    private final FtcDashboard dashboard;
+    private final TelemetryPacket packet;
+
+    public TeleOpDrive(Telemetry telemetry, FtcDashboard dashboard, Swerve s_Swerve, GamepadEx m_Driver, GamepadEx m_Operator){
 
         this.telemetry = telemetry;
+        this.dashboard = dashboard;
         this.s_Swerve = s_Swerve;
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
@@ -41,6 +47,7 @@ public class TeleOpDrive extends CommandBase {
         yLimiter = new SlewRateLimiter(2);
         rLimiter = new SlewRateLimiter(5);
 
+        packet = new TelemetryPacket(true);
 
         timer = new ElapsedTime();
 
@@ -53,6 +60,7 @@ public class TeleOpDrive extends CommandBase {
         xLimiter.reset(0);
         yLimiter.reset(0);
         rLimiter.reset(0);
+
     }
 
     @Override
@@ -74,6 +82,9 @@ public class TeleOpDrive extends CommandBase {
         s_Swerve.drive(xLimited, yLimited, rLimited, true, slowMode);
 
         telemetry.addData("CLT", timer.milliseconds() - timestamp);
+
+//        packet.fieldOverlay().strokeCircle(0, 0, 5);
+        dashboard.sendTelemetryPacket(packet);
 
     }
 
