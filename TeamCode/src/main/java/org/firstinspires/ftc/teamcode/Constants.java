@@ -139,8 +139,8 @@ public class Constants {
 //        public static final double MAX_MOTOR_RPM_THEORETICAL = 6000.0;
 //        public static final double MAX_TICKS_PER_SEC = (MAX_MOTOR_RPM_THEORETICAL * TICKS_PER_REV) / 60.0;
 
-        public static final double aimerDown = 0.13;
-        public static final double aimerUp = 0.5;
+        public static final double farAngle = 0;
+        public static final double closeAngle = 1;
 
 
         public static final double smallBig = 0.85;

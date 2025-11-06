@@ -62,6 +62,7 @@ public class RileysFunkyDriveMode extends CommandOpMode {
         s_Shooter = new Shooter(hardwareMap, telemetry);
         s_Sparky = new OTOSSensor(hardwareMap, telemetry);
         s_Vision = new AprilVisionOnTurret(hardwareMap, telemetry, true);
+//        dashboard.startCameraStream(s_Vision.getAprilCamera(), 5);
 
         s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, dashboard, s_Swerve, s_Sparky, m_Driver, m_Operator));
         s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, m_Driver, dashboard));

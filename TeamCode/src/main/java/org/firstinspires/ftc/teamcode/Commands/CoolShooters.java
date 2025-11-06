@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 
@@ -52,6 +53,14 @@ public class CoolShooters extends CommandBase {
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
             s_Shooter.decrementSpeedConstant();
+        }
+
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+            s_Shooter.setShooterAngle(Constants.ShooterConstants.closeAngle);
+        }
+
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+            s_Shooter.setShooterAngle(Constants.ShooterConstants.farAngle);
         }
 
         if(m_Driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){

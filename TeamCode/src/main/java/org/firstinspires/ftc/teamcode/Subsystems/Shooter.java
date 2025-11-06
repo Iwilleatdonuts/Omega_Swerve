@@ -1,15 +1,11 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
@@ -17,7 +13,6 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
-import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 
 public class Shooter extends SubsystemBase {
 
@@ -65,7 +60,7 @@ public class Shooter extends SubsystemBase {
 
         enableTelemetry = false;
 
-        angleServo.setPosition(Constants.ShooterConstants.aimerDown);
+        angleServo.setPosition(Constants.ShooterConstants.closeAngle);
 
 //        dashboard = FtcDashboard.getInstance();
 
