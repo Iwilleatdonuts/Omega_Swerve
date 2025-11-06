@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 
-public class DriveToSwervePoint extends CommandBase {
+public class DriveToPoint extends CommandBase {
 
     private final Swerve s_Swerve;
     private final OTOSSensor s_Sparky;
@@ -18,7 +18,7 @@ public class DriveToSwervePoint extends CommandBase {
     private final PIDController yController;
     private final PIDController angleController;
 
-    public DriveToSwervePoint(Swerve s_Swerve, OTOSSensor s_Sparky){
+    public DriveToPoint(Swerve s_Swerve, OTOSSensor s_Sparky){
 
         this.s_Swerve = s_Swerve;
         this.s_Sparky = s_Sparky;

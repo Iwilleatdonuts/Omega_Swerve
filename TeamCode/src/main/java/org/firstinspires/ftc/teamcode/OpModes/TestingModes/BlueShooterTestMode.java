@@ -10,7 +10,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Commands.DriveToSwervePoint;
+import org.firstinspires.ftc.teamcode.Commands.DriveToPoint;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
@@ -105,7 +105,7 @@ public class BlueShooterTestMode extends CommandOpMode {
         zeroGyroButton.whenPressed(new InstantCommand(() -> {
             s_Swerve.zeroGyro();
         }, s_Swerve, s_Sparky));
-        autoDriveButton.whenHeld(new DriveToSwervePoint(s_Swerve, s_Sparky));
+        autoDriveButton.whenHeld(new DriveToPoint(s_Swerve, s_Sparky));
 
     }
 
