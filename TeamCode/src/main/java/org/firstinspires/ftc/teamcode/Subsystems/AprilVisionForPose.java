@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainCon
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.Kalman;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -24,10 +25,10 @@ import java.util.concurrent.TimeUnit;
 
 public class AprilVisionForPose extends SubsystemBase {
 
+    private final EZTelemetry telem;
+
     private VisionPortal aprilCamera;
     private AprilTagProcessor aprilTagProcessor;
-
-    private final Telemetry telemetry;
     private boolean enableTelemetry;
 
     private AprilTagDetection latestDetection;
@@ -42,17 +43,14 @@ public class AprilVisionForPose extends SubsystemBase {
     private final Kalman yFilter;
     private final Kalman hFilter;
 
-    public AprilVisionForPose(HardwareMap hardwareMap, Telemetry telemetry) {
+    public AprilVisionForPose(HardwareMap hardwareMap, EZTelemetry telem) {
 
         configureAprilTagCamera(hardwareMap);
 
         detections = aprilTagProcessor.getDetections();
 
-        this.telemetry = telemetry;
+        this.telem = telem;
 
-//
-//        bearingFilter = new Kalman(KalmanTuning.q1, KalmanTuning.r1, 0);
-//        distanceFilter = new Kalman(KalmanTuning.q2, KalmanTuning.r2, 0);
         xFilter = new Kalman(1.5, 0.75, 0);
         yFilter = new Kalman(1.5, 0.75, 0);
         hFilter = new Kalman(1.5, 0.75, 0);
@@ -113,13 +111,9 @@ public class AprilVisionForPose extends SubsystemBase {
 //
 //        // Wait for the camera to be open
         if (aprilCamera.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
             while (aprilCamera.getCameraState() != VisionPortal.CameraState.STREAMING) {
                 System.out.println("I am currentl erroring because my silly stream is off");
             }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
         }
 
         if(aprilCamera != null) {
@@ -169,11 +163,10 @@ public class AprilVisionForPose extends SubsystemBase {
                 }
             }
         }
-        telemetry.addData("FPS", getCameraFPS());
-        telemetry.addData("Robot X", getFilteredPose().x);
-        telemetry.addData("Robot Y", getFilteredPose().y);
-        telemetry.addData("Robot H", getFilteredPose().h);
-        telemetry.update();
+        telem.putTelemetry("FPS", getCameraFPS());
+        telem.putTelemetry("Robot X", getFilteredPose().x);
+        telem.putTelemetry("Robot Y", getFilteredPose().y);
+        telem.putTelemetry("Robot H", getFilteredPose().h);
     }
 
 

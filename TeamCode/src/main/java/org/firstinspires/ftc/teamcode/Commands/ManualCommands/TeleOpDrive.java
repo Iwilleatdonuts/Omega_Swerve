@@ -9,10 +9,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
 
 public class TeleOpDrive extends CommandBase {
 
+    private final EZTelemetry telem;
     private final Swerve s_Swerve;
     private final GamepadEx m_Driver;
     private final GamepadEx m_Operator;
@@ -24,19 +26,13 @@ public class TeleOpDrive extends CommandBase {
 
     private final SlewRateLimiter rLimiter;
 
-    private final Telemetry telemetry;
-
     private final ElapsedTime timer;
 
     private double timestamp;
 
-    private final FtcDashboard dashboard;
-    private final TelemetryPacket packet;
+    public TeleOpDrive(EZTelemetry telem, Swerve s_Swerve, GamepadEx m_Driver, GamepadEx m_Operator){
 
-    public TeleOpDrive(Telemetry telemetry, FtcDashboard dashboard, Swerve s_Swerve, GamepadEx m_Driver, GamepadEx m_Operator){
-
-        this.telemetry = telemetry;
-        this.dashboard = dashboard;
+        this.telem = telem;
         this.s_Swerve = s_Swerve;
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
@@ -46,8 +42,6 @@ public class TeleOpDrive extends CommandBase {
         xLimiter = new SlewRateLimiter(2);
         yLimiter = new SlewRateLimiter(2);
         rLimiter = new SlewRateLimiter(5);
-
-        packet = new TelemetryPacket(true);
 
         timer = new ElapsedTime();
 
@@ -81,10 +75,8 @@ public class TeleOpDrive extends CommandBase {
 
         s_Swerve.drive(xLimited, yLimited, rLimited, true, slowMode);
 
-        telemetry.addData("CLT", timer.milliseconds() - timestamp);
 
-//        packet.fieldOverlay().strokeCircle(0, 0, 5);
-        dashboard.sendTelemetryPacket(packet);
+        telem.putTelemetry("CLT", timer.milliseconds() - timestamp);
 
     }
 

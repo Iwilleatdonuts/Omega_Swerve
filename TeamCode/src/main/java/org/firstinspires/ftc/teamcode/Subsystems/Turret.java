@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,26 +7,25 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 
 public class Turret extends SubsystemBase {
 
+    private final EZTelemetry telem;
+
     private final DcMotorEx turretMotor;
-    private final Telemetry telemetry;
 
     private boolean enableTelemetry;
-
-    private final FtcDashboard dashboard;
 
     private double setpoint;
 
     private final PIDController turretController;
 
-    public Turret(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Turret(HardwareMap hardwareMap, EZTelemetry telem) {
 
-        this.telemetry = telemetry;
+        this.telem = telem;
 
         turretMotor = hardwareMap.get(DcMotorEx.class, Constants.TurretConstants.turretMotor);
 
@@ -36,9 +34,6 @@ public class Turret extends SubsystemBase {
         turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         enableTelemetry = false;
-
-        dashboard = FtcDashboard.getInstance();
-
 
         turretController = new PIDController(0.02, 0.01, PIDTuning.kD);
         turretController.setTolerance(5);
@@ -131,14 +126,13 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic(){
 
-//        if(enableTelemetry) {
-//            telemetry.addLine("Turret");
-//            telemetry.addData("Turret Raw Position", getRawPosition());
-//            telemetry.addData("Setpoint", getSetpoint());
-//            telemetry.addData("Turret Degrees", getDegrees());
-//            telemetry.addData("Turret Is out of boudns AHHHHHHHH", isOutOfBounds());
-//            telemetry.addLine();
-//        }
+        if(enableTelemetry) {
+
+            telem.putTelemetry("Turret Angle", getDegrees());
+
+            telem.putDashboard("Turret Angle", getDegrees());
+
+        }
 
     }
 

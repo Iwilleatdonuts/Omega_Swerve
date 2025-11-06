@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
@@ -10,24 +9,21 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
-import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
-import com.arcrobotics.ftclib.kinematics.wpilibkinematics.SwerveModuleState;
-import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 
 public class SwerveModule extends SubsystemBase {
 
+    private final EZTelemetry telem;
     private final int modNumber;
     private final DcMotorEx drive;
     private final CRServoImplEx angle;
     private final AnalogInput moduleHeading;
     private final PIDController angleController;
     private final double moduleOffset;
-    private final Telemetry telemetry;
     private double moduleSetpoint;
 
     private final double velocityFeedforward = 0.1;
@@ -39,8 +35,6 @@ public class SwerveModule extends SubsystemBase {
 
     private boolean enableTelemetry;
 
-//    private final FtcDashboard dashboard;
-
     private double lastVelocity = 0.0;
 
     private double targetVelocityTicksPerSec;
@@ -49,9 +43,9 @@ public class SwerveModule extends SubsystemBase {
     private final double kV = 1/Constants.DriveTrainConstants.MAX_TICKS_PER_SEC;    //ticks per second
     private final double kA = 0;
 
-    public SwerveModule(HardwareMap hardwareMap, Telemetry telemetry, SwerveModuleConstants moduleConstants) {
+    public SwerveModule(HardwareMap hardwareMap, EZTelemetry telem, SwerveModuleConstants moduleConstants) {
 
-        this.telemetry = telemetry;
+        this.telem = telem;
 
         modNumber = moduleConstants.modNumber;
 
@@ -76,8 +70,6 @@ public class SwerveModule extends SubsystemBase {
         moduleSetpoint = getDegrees(true);
 
         enableTelemetry = false;
-
-//        dashboard = FtcDashboard.getInstance();
 
     }
 
@@ -185,13 +177,13 @@ public class SwerveModule extends SubsystemBase {
     public void periodic(){
 
         if(enableTelemetry) {
-            telemetry.addLine("Module " + modNumber);
-            telemetry.addData("Raw Angle \t", getDegrees(false));
-            telemetry.addData("Degrees \t", getDegrees(true));
-//            telemetry.addData("Angular Error \t", getWrappedError(moduleSetpoint, getDegrees(true)));
-//            telemetry.addData("Drive speed \t", drive.getVelocity());
-//            telemetry.addData("Velocity Error\t", getVelocityError());
-//            telemetry.addLine();
+
+            telem.putTelemetry("Module " + modNumber + " Raw Angle", getDegrees(false));
+            telem.putTelemetry("Module " + modNumber + " Degrees", getDegrees(true));
+
+            telem.putDashboard("Module " + modNumber + " Raw Angle", getDegrees(false));
+            telem.putDashboard("Module " + modNumber + " Degrees", getDegrees(true));
+
         }
 
     }

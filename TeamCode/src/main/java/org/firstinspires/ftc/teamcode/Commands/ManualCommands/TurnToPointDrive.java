@@ -12,12 +12,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
 
 public class TurnToPointDrive extends CommandBase {
 
-    private final Telemetry telemetry;
+    private final EZTelemetry telem;
     private final Swerve s_Swerve;
     private final OTOSSensor s_Sparky;
     private final GamepadEx m_Driver;
@@ -36,13 +37,9 @@ public class TurnToPointDrive extends CommandBase {
 
     private double timestamp;
 
-    private final FtcDashboard dashboard;
-    private final TelemetryPacket packet;
+    public TurnToPointDrive(EZTelemetry telem, Swerve s_Swerve, OTOSSensor s_Sparky, GamepadEx m_Driver, GamepadEx m_Operator){
 
-    public TurnToPointDrive(Telemetry telemetry, FtcDashboard dashboard, Swerve s_Swerve, OTOSSensor s_Sparky, GamepadEx m_Driver, GamepadEx m_Operator){
-
-        this.telemetry = telemetry;
-        this.dashboard = dashboard;
+        this.telem = telem;
         this.s_Swerve = s_Swerve;
         this.s_Sparky = s_Sparky;
         this.m_Driver = m_Driver;
@@ -58,8 +55,6 @@ public class TurnToPointDrive extends CommandBase {
 
         xLimiter = new SlewRateLimiter(2);
         yLimiter = new SlewRateLimiter(2);
-
-        packet = new TelemetryPacket(true);
 
         timer = new ElapsedTime();
 
@@ -121,12 +116,7 @@ public class TurnToPointDrive extends CommandBase {
 
         s_Swerve.drive(xLimited, yLimited, rotationOutput, true, slowMode);
 
-        telemetry.addData("CLT", timer.milliseconds() - timestamp);
-
-        packet.clearLines();
-
-        packet.fieldOverlay().strokeCircle(0, 0, 20);
-        dashboard.sendTelemetryPacket(packet);
+        telem.putTelemetry("CLT", timer.milliseconds() - timestamp);
     }
 
 }

@@ -13,19 +13,19 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 public class Feeder extends SubsystemBase {
+
+    private final EZTelemetry telem;
     private final CRServoImplEx feederServo;
     private final ServoImplEx feederGateServo;
-    private final Telemetry telemetry;
 
     private boolean enableTelemetry;
 
-//    private final FtcDashboard dashboard;
+    public Feeder(HardwareMap hardwareMap, EZTelemetry telem) {
 
-    public Feeder(HardwareMap hardwareMap, Telemetry telemetry) {
-
-        this.telemetry = telemetry;
+        this.telem = telem;
 
         feederServo = hardwareMap.get(CRServoImplEx.class, Constants.IntakeConstants.feederServo);
         feederGateServo = hardwareMap.get(ServoImplEx.class, Constants.IntakeConstants.gateServo);
@@ -36,8 +36,6 @@ public class Feeder extends SubsystemBase {
         feederGateServo.setPosition(Constants.IntakeConstants.gateClosed);
 
         enableTelemetry = false;
-
-//        dashboard = FtcDashboard.getInstance();
 
     }
 
@@ -61,11 +59,13 @@ public class Feeder extends SubsystemBase {
     @Override
     public void periodic(){
 
-//        if(enableTelemetry) {
-//            telemetry.addLine("Feeder");
-//            telemetry.addData("Feeder Speed", feederServo.getPower());
-//            telemetry.addLine();
-//        }
+        if(enableTelemetry) {
+
+            telem.putTelemetry("Feeder Speed", feederServo.getPower());
+
+            telem.putDashboard("Feeder Speed", feederServo.getPower());
+
+        }
 
     }
 

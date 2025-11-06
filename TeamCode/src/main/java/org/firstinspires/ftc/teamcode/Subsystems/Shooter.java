@@ -10,22 +10,21 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 
 public class Shooter extends SubsystemBase {
+
+    private final EZTelemetry telem;
 
     private final DcMotorEx upperShooterMotor;
     private final DcMotorEx lowerShooterMotor;
     private final ServoImplEx angleServo;
 
-    private final Telemetry telemetry;
     private boolean enableTelemetry;
 
     private final PIDController shooterController;
-
-//    private final FtcDashboard dashboard;
 
     private final double kS = 0.01;      // static friction term
     private final double kV = 1/Constants.ShooterConstants.MAX_TICKS_PER_SEC;    //ticks per second
@@ -33,11 +32,13 @@ public class Shooter extends SubsystemBase {
 
     private final SimpleMotorFeedforward shooterFF;
 
+    private double targetVelocity;
+
     private double speedConstant;
 
-    public Shooter(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Shooter(HardwareMap hardwareMap, EZTelemetry telem) {
 
-        this.telemetry = telemetry;
+        this.telem = telem;
 
         shooterController = new PIDController(0.008, 0.0005, 0);
 //        shooterController = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD);
@@ -62,48 +63,28 @@ public class Shooter extends SubsystemBase {
 
         angleServo.setPosition(Constants.ShooterConstants.closeAngle);
 
-//        dashboard = FtcDashboard.getInstance();
-
         shooterFF = new SimpleMotorFeedforward(0.5,1/Constants.ShooterConstants.MAX_TICKS_PER_SEC, 0);
 
         speedConstant = 0.295;
+        targetVelocity = 0;
 
     }
 
     //input from 0-1
     public void setShooterSpeed(double speed) {
-//        double output = shooterController.calculate(getLowerVelocity(), speed * Constants.ShooterConstants.maxSpeed);
-////        double output = speed;
-//        output = Math.max(-1.0, Math.min(1.0, output));
-//        upperShooterMotor.setPower(output);
-//        lowerShooterMotor.setPower(output);
-        double targetVelocity = speed * Constants.ShooterConstants.MAX_TICKS_PER_SEC;
+        targetVelocity = speed * Constants.ShooterConstants.MAX_TICKS_PER_SEC;
         double ff = shooterFF.calculate(targetVelocity);
 
-        double PID = shooterController.calculate(getLowerVelocity(), targetVelocity);
+        double PID = shooterController.calculate(getShooterVelocity(), targetVelocity);
 
         double output = ff + PID;
-
-        if(enableTelemetry){
-            telemetry.addData("Target Velocity:", targetVelocity);
-            telemetry.addData("shooter speed", getLowerVelocity());
-        }
-
 
         lowerShooterMotor.setPower(output);
         upperShooterMotor.setPower(output);
     }
 
-    public double getUpperVelocity() {
-        return upperShooterMotor.getVelocity();
-    }
-
-    public double getLowerVelocity() {
+    public double getShooterVelocity() {
         return lowerShooterMotor.getVelocity();
-    }
-
-    public double getAverageVelocity(){
-        return (getUpperVelocity()+getLowerVelocity())/2;
     }
 
     public void setShooterAngle(double degrees) {
@@ -137,16 +118,17 @@ public class Shooter extends SubsystemBase {
 
     public void periodic() {
 
-//        TelemetryPacket packet = new TelemetryPacket();
-//        packet.put("Shooter Ticks per second", getLowerVelocity());
-//        dashboard.sendTelemetryPacket(packet);
+        if(enableTelemetry) {
+
+            telem.putTelemetry("Target Velocity", targetVelocity);
+            telem.putTelemetry("Shooter Velocity", getShooterVelocity());
+            telem.putTelemetry("Shooter Constant", getShooterConstant());
 //
-//
-//        if(enableTelemetry) {
-//            telemetry.addLine("Shooter");
-//            telemetry.addData("RPM", getAverageVelocity());
-//            telemetry.addData("Shooter Angle", getShooterAngle());
-//        }
+            telem.putDashboard("Target Velocity", targetVelocity);
+            telem.putDashboard("Shooter Velocity", getShooterVelocity());
+            telem.putDashboard("Shooter Constant", getShooterConstant());
+
+        }
 
     }
 

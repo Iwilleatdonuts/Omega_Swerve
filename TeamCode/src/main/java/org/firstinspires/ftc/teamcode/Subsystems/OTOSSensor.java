@@ -1,21 +1,16 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 public class OTOSSensor extends SubsystemBase {
 
-    private final Telemetry telemetry;
+    private final EZTelemetry telem;
 
     private final SparkFunOTOS otos;
 
@@ -23,11 +18,9 @@ public class OTOSSensor extends SubsystemBase {
 
     private boolean enableTelemetry;
 
-//    private final FtcDashboard dashboard;
+    public OTOSSensor(HardwareMap hardwareMap, EZTelemetry telem){
 
-    public OTOSSensor(HardwareMap hardwareMap, Telemetry telemetry){
-
-        this.telemetry = telemetry;
+        this.telem = telem;
 
         otos = hardwareMap.get(SparkFunOTOS.class, Constants.DriveTrainConstants.OTOS.sparkfun);
 
@@ -35,16 +28,11 @@ public class OTOSSensor extends SubsystemBase {
 
         enableTelemetry = false;
 
-//        dashboard = FtcDashboard.getInstance();
-
         configureOTOS();
 
     }
 
     public void configureOTOS() {
-
-        telemetry.addLine("OTOS is Ready: " + isReady);
-        telemetry.update();
 
         otos.setLinearUnit(DistanceUnit.METER);
         otos.setAngularUnit(AngleUnit.DEGREES);
@@ -88,8 +76,6 @@ public class OTOSSensor extends SubsystemBase {
         otos.getVersionInfo(hwVersion, fwVersion);
 
         isReady = true;
-        telemetry.addLine("OTOS is Ready: " + isReady);
-        telemetry.update();
 //        telemetry.addLine();
 //        telemetry.addLine(String.format("OTOS Hardware Version: v%d.%d", hwVersion.major, hwVersion.minor));
 //        telemetry.addLine(String.format("OTOS Firmware Version: v%d.%d", fwVersion.major, fwVersion.minor));
@@ -134,24 +120,16 @@ public class OTOSSensor extends SubsystemBase {
     @Override
     public void periodic(){
 
-//        TelemetryPacket packet = new TelemetryPacket();
-//        packet.put("X Pos", getPose().x);
-//        packet.put("Y Pos", getPose().y);
-//        packet.put("Heading", getHeading());
-//        packet.put("OTOS Heading", getHeading());
-//
-//        dashboard.sendTelemetryPacket(packet);
-//
-//        if(enableTelemetry){
-//            telemetry.addLine("OTOS");
-            telemetry.addData("X Position \t", getPose().x);
-            telemetry.addData("Y Position \t", getPose().y);
-            telemetry.addData("Rotation \t", getHeading());
-//            telemetry.addData("X Velocity \t", getVelocity().x);
-//            telemetry.addData("Y Velocity \t", getVelocity().y);
-//            telemetry.addData("R Velocity \t", getVelocity().h);
-//            telemetry.addLine();
-//        }
+        if(enableTelemetry){
+
+            telem.putTelemetry("X Position \t", getPose().x);
+            telem.putTelemetry("Y Position \t", getPose().y);
+            telem.putTelemetry("OTOS Rotation \t", getHeading());
+
+            telem.putDashboard("X Position \t", getPose().x);
+            telem.putDashboard("Y Position \t", getPose().y);
+            telem.putDashboard("OTOS Rotation \t", getHeading());
+        }
     }
 
 }

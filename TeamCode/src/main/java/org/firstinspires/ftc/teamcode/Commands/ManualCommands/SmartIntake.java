@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -14,28 +11,19 @@ public class SmartIntake extends CommandBase {
 
     private final Intake s_Intake;
     private final Feeder s_Feeder;
-    private final FtcDashboard dashboard;
 
     private final GamepadEx m_Driver;
 
-    TelemetryPacket packet = new TelemetryPacket();
-
     double timestamp;
 
-    public SmartIntake(Intake s_Intake, Feeder s_Feeder, GamepadEx m_Driver, FtcDashboard dashboard){
+    public SmartIntake(Intake s_Intake, Feeder s_Feeder, GamepadEx m_Driver){
 
         this.s_Intake = s_Intake;
         this.s_Feeder = s_Feeder;
-        this.dashboard = dashboard;
 
         this.m_Driver = m_Driver;
 
         addRequirements(s_Intake, s_Feeder);
-    }
-
-    @Override
-    public void initialize(){
-        
     }
 
     @Override
@@ -55,18 +43,5 @@ public class SmartIntake extends CommandBase {
             s_Feeder.closeGate();
         }
 
-        dashboard.sendTelemetryPacket(packet);
-
     }
-
-    @Override
-    public void end(boolean interrupted) {
-
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-
 }

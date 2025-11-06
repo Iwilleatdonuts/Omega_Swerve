@@ -17,17 +17,13 @@ public class JoystickTurret extends CommandBase {
 
     private final Swerve s_Swerve;
     private final Turret s_Turret;
-    private final FtcDashboard dashboard;
 
     private final GamepadEx m_Operator;
 
-    TelemetryPacket packet = new TelemetryPacket();
-
-    public JoystickTurret(Swerve s_Swerve, Turret s_Turret, GamepadEx m_Operator, FtcDashboard dashboard){
+    public JoystickTurret(Swerve s_Swerve, Turret s_Turret, GamepadEx m_Operator){
 
         this.s_Swerve = s_Swerve;
         this.s_Turret = s_Turret;
-        this.dashboard = dashboard;
 
         this.m_Operator = m_Operator;
 
@@ -65,15 +61,4 @@ public class JoystickTurret extends CommandBase {
 
         s_Turret.runToSetpoint();
     }
-
-    @Override
-    public void end(boolean interrupted) {
-
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-
 }

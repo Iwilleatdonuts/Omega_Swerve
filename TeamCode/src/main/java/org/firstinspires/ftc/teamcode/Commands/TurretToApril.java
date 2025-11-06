@@ -8,25 +8,22 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 public class TurretToApril extends CommandBase {
 
     private final Swerve s_Swerve;
     private final Turret s_Turret;
     private final AprilVisionOnTurret s_Vision;
-    private final FtcDashboard dashboard;
     private double aprilBearing;
 
     private final GamepadEx m_Operator;
 
-    TelemetryPacket packet = new TelemetryPacket();
-
-    public TurretToApril(Swerve s_Swerve, Turret s_Turret, AprilVisionOnTurret s_Vision, FtcDashboard dashboard, GamepadEx m_Operator){
+    public TurretToApril(Swerve s_Swerve, Turret s_Turret, AprilVisionOnTurret s_Vision, GamepadEx m_Operator){
 
         this.s_Swerve = s_Swerve;
         this.s_Turret = s_Turret;
         this.s_Vision = s_Vision;
-        this.dashboard = dashboard;
 
         this.m_Operator = m_Operator;
 
@@ -67,12 +64,6 @@ public class TurretToApril extends CommandBase {
 
         }
         s_Turret.runToSetpoint();
-
-        packet.put("April tag bearing", aprilBearing);
-        packet.put("actual turret setpoint", s_Turret.getSetpoint());
-        packet.put("turret position", s_Turret.getDegrees());
-        packet.put("turret is out of bounds", s_Turret.isOutOfBounds());
-        dashboard.sendTelemetryPacket(packet);
 
     }
 

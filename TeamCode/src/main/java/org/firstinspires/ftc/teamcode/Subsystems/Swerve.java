@@ -1,32 +1,26 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Swerve extends SubsystemBase {
 
-    private final Telemetry telemetry;
+    private final EZTelemetry telem;
 
     private final SwerveModule mod0, mod1, mod2, mod3;
     private final IMU imu;
 
-//    private final OTOSSensor otos;
-
     private boolean enableTelemetry;
-
-    private final FtcDashboard dashboard;
 
     private final Map<String, Object> motorCurrents = new HashMap<>();
     private final Map<String, Object> velocityErrors = new HashMap<>();
@@ -34,16 +28,15 @@ public class Swerve extends SubsystemBase {
 
     private SparkFunOTOS.Pose2D targetPose;
 
-    public Swerve(HardwareMap hardwareMap, Telemetry telemetry){
+    public Swerve(HardwareMap hardwareMap, EZTelemetry telem){
 
-        this.telemetry = telemetry;
+        this.telem = telem;
 
-        mod0 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod0.modConstants);
-        mod1 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod1.modConstants);
-        mod2 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod2.modConstants);
-        mod3 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod3.modConstants);
+        mod0 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants);
+        mod1 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod1.modConstants);
+        mod2 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod2.modConstants);
+        mod3 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod3.modConstants);
 
-//        otos = new OTOSSensor(hardwareMap, telemetry);
 
         enableTelemetry = false;
 
@@ -51,12 +44,8 @@ public class Swerve extends SubsystemBase {
         RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
-        // Now initialize the IMU with this mounting orientation
-        // This sample expects the IMU to be in a REV Hub and named "imu".
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(orientationOnRobot));
-
-        dashboard = FtcDashboard.getInstance();
 
         targetPose = new SparkFunOTOS.Pose2D(1500, 200, 0);
 
@@ -140,6 +129,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Map<String, Object> getMotorCurrents(){
+        motorCurrents.clear();
         motorCurrents.put("Mod 0 Current: \t", mod0.getMotorCurrent());
         motorCurrents.put("Mod 1 Current: \t", mod1.getMotorCurrent());
         motorCurrents.put("Mod 2 Current: \t", mod2.getMotorCurrent());
@@ -148,6 +138,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Map<String, Object> getVelocityErrors() {
+        velocityErrors.clear();
         velocityErrors.put("Mod 0 Velocity Error: \t", mod0.getVelocityError());
         velocityErrors.put("Mod 1 Velocity Error: \t", mod1.getVelocityError());
         velocityErrors.put("Mod 2 Velocity Error: \t", mod2.getVelocityError());
@@ -156,6 +147,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Map<String, Object> getAngularError() {
+        angleErrors.clear();
         angleErrors.put("Mod 0 Angle Error: \t", mod0.getWrappedError(mod0.getModuleSetpoint(), mod0.getDegrees(true)));
         angleErrors.put("Mod 1 Angle Error: \t", mod1.getWrappedError(mod1.getModuleSetpoint(), mod1.getDegrees(true)));
         angleErrors.put("Mod 2 Angle Error: \t", mod2.getWrappedError(mod2.getModuleSetpoint(), mod2.getDegrees(true)));
@@ -200,26 +192,20 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
 
-//        TelemetryPacket packet = new TelemetryPacket();
+        if(enableTelemetry) {
 
-//        packet.addLine("Module 0 Speed: \t" + mod0.getVelocityError());
-//        packet.addLine("Module 1 Speed: \t" + mod1.getVelocityError());
-//        packet.addLine("Module 2 Speed: \t" +  mod2.getVelocityError());
-//        packet.addLine("Module 3 Speed: \t" + mod3.getVelocityError());
-//        packet.putAll(getMotorCurrents());
-//        packet.putAll(getVelocityErrors());
-//        packet.putAll(getAngularError());
+            telem.putTelemetry("Robot Heading", getHeading());
+            telem.putTelemetry("Target Pose X", getTargetPose().x);
+            telem.putTelemetry("Target Pose Y", getTargetPose().y);
+            telem.putTelemetry("Target Pose H", getTargetPose().h);
 
-//        dashboard.sendTelemetryPacket(packet);
+            telem.putDashboard("Robot Heading", getHeading());
+            telem.putDashboard("Target Pose X", getTargetPose().x);
+            telem.putDashboard("Target Pose Y", getTargetPose().y);
+            telem.putDashboard("Target Pose H", getTargetPose().h);
 
-//        if(enableTelemetry) {
-//            telemetry.addLine("Swerve");
-////            telemetry.addData("X Position ", otos.getPose().x);
-////            telemetry.addData("Y Position ", otos.getPose().y);
-//            telemetry.addData("Heading ", getHeading());
-////            telemetry.addData("OTOS Heading ", otos.getPose().h);
-//            telemetry.addLine();
-//        }
+        }
+
     }
 }
 

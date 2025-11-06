@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.Kalman;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -21,17 +22,14 @@ import java.util.concurrent.TimeUnit;
 
 public class AprilVisionOnTurret extends SubsystemBase {
 
+    private final EZTelemetry telem;
     private VisionPortal aprilCamera;
     private AprilTagProcessor aprilTagProcessor;
-
-    private final Telemetry telemetry;
     private boolean enableTelemetry;
 
     private AprilTagDetection latestDetection;
     private AprilTagDetection allianceGoalTag;
     private AprilTagDetection randomPatternTag;
-
-//    private final TelemetryPacket packet = new TelemetryPacket();
     private List<AprilTagDetection> detections;
 
     private double rawBearing;
@@ -46,13 +44,13 @@ public class AprilVisionOnTurret extends SubsystemBase {
     private final boolean areWeWinners;
 
 
-    public AprilVisionOnTurret(HardwareMap hardwareMap, Telemetry telemetry, boolean areWeWinners) {
+    public AprilVisionOnTurret(HardwareMap hardwareMap, EZTelemetry telem, boolean areWeWinners) {
 
         configureAprilTagCamera(hardwareMap);
 
         detections = aprilTagProcessor.getDetections();
 
-        this.telemetry = telemetry;
+        this.telem = telem;
 
         this.areWeWinners = areWeWinners;
 //
@@ -121,13 +119,9 @@ public class AprilVisionOnTurret extends SubsystemBase {
 //
 //        // Wait for the camera to be open
         if (aprilCamera.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
             while (aprilCamera.getCameraState() != VisionPortal.CameraState.STREAMING) {
                 System.out.println("I am currentl erroring because my silly stream is off");
             }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
         }
 
         if(aprilCamera != null) {
@@ -178,8 +172,11 @@ public class AprilVisionOnTurret extends SubsystemBase {
                 }
             }
         }
-        telemetry.addData("FPS", getCameraFPS());
-        telemetry.addData("Camera State", getCameraState());
+        telem.putTelemetry("FPS", getCameraFPS());
+        telem.putTelemetry("Camera State", getCameraState());
+
+        telem.putDashboard("FPS", getCameraFPS());
+        telem.putDashboard("Camera State", getCameraState());
 //
 //        if (enableTelemetry) {
 //            packet.clearLines();

@@ -9,19 +9,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 public class Intake extends SubsystemBase {
 
+    private final EZTelemetry telem;
+
     private final DcMotorEx intakeMotor;
-    private final Telemetry telemetry;
 
     private boolean enableTelemetry;
 
-//    private final FtcDashboard dashboard;
+    public Intake(HardwareMap hardwareMap, EZTelemetry telem) {
 
-    public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
-
-        this.telemetry = telemetry;
+        this.telem = telem;
 
         intakeMotor = hardwareMap.get(DcMotorEx.class, Constants.IntakeConstants.intakeMotor);
 
@@ -30,8 +30,6 @@ public class Intake extends SubsystemBase {
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         enableTelemetry = false;
-
-//        dashboard = FtcDashboard.getInstance();
 
     }
 
@@ -51,11 +49,12 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic(){
 
-//        if(enableTelemetry) {
-//            telemetry.addLine("Intake");
-//            telemetry.addData("Intake Speed", getSpeed());
-//            telemetry.addLine();
-//        }
+        if(enableTelemetry) {
+
+            telem.putTelemetry("Intake Speed", getSpeed());
+
+            telem.putDashboard("Intake Speed", getSpeed());
+        }
 
     }
 

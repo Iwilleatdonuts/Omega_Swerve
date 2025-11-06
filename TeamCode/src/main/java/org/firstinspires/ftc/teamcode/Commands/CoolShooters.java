@@ -8,8 +8,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 public class CoolShooters extends CommandBase {
+
+    private final EZTelemetry telem;
 
     private final Shooter s_Shooter;
     private final AprilVisionOnTurret s_Vision;
@@ -21,9 +24,7 @@ public class CoolShooters extends CommandBase {
 
     private double shooterPercent;
 
-    private final Telemetry telemetry;
-
-    public CoolShooters(Shooter s_Shooter, AprilVisionOnTurret s_Vision, GamepadEx m_Driver, GamepadEx m_Operator, Telemetry telemetry){
+    public CoolShooters(Shooter s_Shooter, AprilVisionOnTurret s_Vision, GamepadEx m_Driver, GamepadEx m_Operator, EZTelemetry telem){
 
         this.s_Shooter = s_Shooter;
         this.s_Vision = s_Vision;
@@ -31,7 +32,7 @@ public class CoolShooters extends CommandBase {
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
 
-        this.telemetry = telemetry;
+        this.telem = telem;
 
         addRequirements(s_Shooter);
     }
@@ -80,10 +81,9 @@ public class CoolShooters extends CommandBase {
 
         s_Shooter.setShooterSpeed(shooterPercent);
 
-        telemetry.addData("Shooter Percentage", shooterPercent);
-        telemetry.addData("Shooter Velocity", s_Shooter.getLowerVelocity());
-        telemetry.addData("Shooter Constant", s_Shooter.getShooterConstant());
-        telemetry.update();
+        telem.putTelemetry("Shooter Percentage", shooterPercent);
+        telem.putTelemetry("Shooter Velocity", s_Shooter.getShooterVelocity());
+        telem.putTelemetry("Shooter Constant", s_Shooter.getShooterConstant());
 
     }
 
