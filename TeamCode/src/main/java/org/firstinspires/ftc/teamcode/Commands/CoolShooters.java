@@ -24,6 +24,8 @@ public class CoolShooters extends CommandBase {
 
     private double shooterPercent;
 
+    private double shooterAngle;
+
     public CoolShooters(Shooter s_Shooter, AprilVisionOnTurret s_Vision, GamepadEx m_Driver, GamepadEx m_Operator, EZTelemetry telem){
 
         this.s_Shooter = s_Shooter;
@@ -42,6 +44,7 @@ public class CoolShooters extends CommandBase {
 
         shootersGunnaShoot = false;
         shooterPercent = 0;
+        shooterAngle = 1;
 
     }
 
@@ -57,11 +60,11 @@ public class CoolShooters extends CommandBase {
         }
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-            s_Shooter.setShooterAngle(Constants.ShooterConstants.closeAngle);
+            shooterAngle = Constants.ShooterConstants.closeAngle;
         }
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            s_Shooter.setShooterAngle(Constants.ShooterConstants.farAngle);
+            shooterAngle = Constants.ShooterConstants.farAngle;
         }
 
         if(m_Driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
@@ -71,6 +74,7 @@ public class CoolShooters extends CommandBase {
         if(shootersGunnaShoot){
             if(s_Vision.hasGoalTag()){
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(s_Vision.getGoalDistance());
+                shooterAngle = s_Shooter.getShooterAngleFromDistance(s_Vision.getGoalDistance());
             } else {
                 shooterPercent = 0.51;
             }
@@ -79,6 +83,7 @@ public class CoolShooters extends CommandBase {
             shooterPercent = 0;
         }
 
+        s_Shooter.setShooterAngle(shooterAngle);
         s_Shooter.setShooterSpeed(shooterPercent);
 
         telem.putTelemetry("Shooter Percentage", shooterPercent);

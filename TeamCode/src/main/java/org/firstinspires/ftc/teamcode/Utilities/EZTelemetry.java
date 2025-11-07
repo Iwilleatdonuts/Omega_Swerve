@@ -27,7 +27,7 @@ public class EZTelemetry {
     }
 
     public void updateTelemetry() {
-        telemetry.clearAll();
+//        telemetry.clearAll();
         for(Map.Entry<String, Object> entry : telemetryData.entrySet()) {
             telemetry.addData(entry.getKey(), entry.getValue());
         }

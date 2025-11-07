@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 
@@ -26,19 +27,18 @@ public class TestingOpMode extends LinearOpMode {
         GamepadEx m_DriverOp = new GamepadEx(gamepad1);
         GamepadEx m_OperatorOp = new GamepadEx(gamepad2);
 
-        SwerveModule s_Mod0 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod0.modConstants);
-        SwerveModule s_Mod1 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod1.modConstants);
-        SwerveModule s_Mod2 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod2.modConstants);
-        SwerveModule s_Mod3 = new SwerveModule(hardwareMap, telemetry, Constants.DriveTrainConstants.Mod3.modConstants);
-        Intake s_Intake = new Intake(hardwareMap, telemetry);
-        Turret s_Turret = new Turret(hardwareMap, telemetry);
-        Shooter s_Shooter = new Shooter(hardwareMap, telemetry);
-        OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telemetry);
+        EZTelemetry telem = new EZTelemetry(telemetry);
 
-        AprilVisionOnTurret s_Vision = new AprilVisionOnTurret(hardwareMap, telemetry, true);
+        SwerveModule s_Mod0 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants);
+        SwerveModule s_Mod1 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod1.modConstants);
+        SwerveModule s_Mod2 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod2.modConstants);
+        SwerveModule s_Mod3 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod3.modConstants);
+        Intake s_Intake = new Intake(hardwareMap, telem);
+        Turret s_Turret = new Turret(hardwareMap, telem);
+        Shooter s_Shooter = new Shooter(hardwareMap, telem);
+        OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telem);
 
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        dashboard.startCameraStream(s_Vision.getAprilCamera(), 30);
+        AprilVisionOnTurret s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
 
         ElapsedTime runtime = new ElapsedTime();
 
@@ -182,26 +182,9 @@ public class TestingOpMode extends LinearOpMode {
             s_Shooter.periodic();
             s_Vision.periodic();
 
-            if(enableOtherTelemetries){
-                telemetry.addData("Turn Servos", runTurns);
-                telemetry.addData("Left Joystick Angle \t", Math.atan2(-m_DriverOp.getLeftX(), m_DriverOp.getLeftY()));
-                telemetry.addData("Right X \t", m_DriverOp.getRightX());
-                telemetry.addData("Operator Left Joystick \t", operatorJoystickAngle);
-            }
-            if (!enableOtherTelemetries) {
-                telemetry.addLine("Telemetry Off");
-            }
-            telemetry.update();
+            telem.putTelemetry("Telemetry on?", enableOtherTelemetries);
 
-            TelemetryPacket packet = new TelemetryPacket();
-
-            packet.addLine("Module 0 Speed: \t" + s_Mod0.getVelocity());
-            packet.addLine("Module 1 Speed: \t" + s_Mod1.getVelocity());
-            packet.addLine("Module 2 Speed: \t" + s_Mod2.getVelocity());
-            packet.addLine("Module 3 Speed: \t" + s_Mod3.getVelocity());
-
-            dashboard.sendTelemetryPacket(packet);
-
+            telem.updateAll();
 
         }
     }

@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Commands.DriveToPoint;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -21,11 +22,14 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 //http://192.168.43.1:8080/dash
 //adb connect 192.168.43.1:5555
 @TeleOp(name = "Shooter Manual - Blue", group = "Testing")
 public class BlueShooterTestMode extends CommandOpMode {
+
+    private EZTelemetry telem = new EZTelemetry(telemetry);
 
     private Swerve s_Swerve;
     private Intake s_Intake;
@@ -35,8 +39,6 @@ public class BlueShooterTestMode extends CommandOpMode {
     private AprilVisionOnTurret s_Vision;
     private OTOSSensor s_Sparky;
 
-    private FtcDashboard dashboard;
-
     private GamepadEx m_Driver;
     private GamepadEx m_Operator;
 
@@ -45,12 +47,11 @@ public class BlueShooterTestMode extends CommandOpMode {
     private boolean shootersGunnaShoot = false;
 
     private double shooterSpeed = 0;
+    private double shooterAngle = 1;
     private double output = 0;
 
     @Override
     public void initialize() {
-
-        dashboard = FtcDashboard.getInstance();
 
         m_Driver = new GamepadEx(gamepad1);
         m_Operator = new GamepadEx(gamepad2);
@@ -58,22 +59,20 @@ public class BlueShooterTestMode extends CommandOpMode {
         zeroGyroButton = new GamepadButton(m_Driver, GamepadKeys.Button.START);
         autoDriveButton = new GamepadButton(m_Driver, GamepadKeys.Button.Y);
 
-        s_Swerve = new Swerve(hardwareMap, telemetry);
-        s_Intake = new Intake(hardwareMap, telemetry);
-        s_Feeder = new Feeder(hardwareMap, telemetry);
-        s_Turret = new Turret(hardwareMap, telemetry);
-        s_Shooter = new Shooter(hardwareMap, telemetry);
-        s_Sparky = new OTOSSensor(hardwareMap, telemetry);
-        s_Vision = new AprilVisionOnTurret(hardwareMap, telemetry, false);
+        s_Swerve = new Swerve(hardwareMap, telem);
+        s_Intake = new Intake(hardwareMap, telem);
+        s_Feeder = new Feeder(hardwareMap, telem);
+        s_Turret = new Turret(hardwareMap, telem);
+        s_Shooter = new Shooter(hardwareMap, telem);
+        s_Sparky = new OTOSSensor(hardwareMap, telem);
+        s_Vision = new AprilVisionOnTurret(hardwareMap, telem, false);
 
-        s_Swerve.setDefaultCommand(new TurnToPointDrive(telemetry, dashboard, s_Swerve, s_Sparky, m_Driver, m_Operator));
-        s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, m_Driver, dashboard));
-        s_Turret.setDefaultCommand(new TurretToApril(s_Swerve, s_Turret, s_Vision, dashboard, m_Operator));
+        s_Swerve.setDefaultCommand(new TurnToPointDrive(telem, s_Swerve, s_Sparky, m_Driver, m_Operator));
+        s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, s_Shooter, m_Driver));
+        s_Turret.setDefaultCommand(new TurretToApril(s_Swerve, s_Turret, s_Vision, m_Operator));
         s_Shooter.setDefaultCommand(new RunCommand(() -> {
 
-            m_Operator.readButtons();
-
-            if(m_Operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+            if(m_Driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
                 shootersGunnaShoot = !shootersGunnaShoot;
             }
 
@@ -90,12 +89,25 @@ public class BlueShooterTestMode extends CommandOpMode {
                 shooterSpeed -= 0.01;
             }
 
+            if(m_Operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                shooterAngle = Constants.ShooterConstants.closeAngle;
+            }
+
+            if(m_Operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
+                shooterAngle = Constants.ShooterConstants.farAngle;
+            }
+
+            if(s_Vision.hasGoalTag()) {
+                shooterAngle = s_Shooter.getShooterAngleFromDistance(s_Vision.getGoalDistance());
+            }
+
+            s_Shooter.setShooterAngle(shooterAngle);
             s_Shooter.setShooterSpeed(output);
 
-            telemetry.addData("Distance", s_Vision.getGoalDistance());
-            telemetry.addData("Shooter Target Percentage", shooterSpeed);
+            telem.putTelemetry("Distance", s_Vision.getGoalDistance());
+            telem.putTelemetry("Shooter Target Percentage", shooterSpeed);
 
-            telemetry.update();
+            telem.updateTelemetry();
         }, s_Shooter));
         s_Sparky.setDefaultCommand(new RunCommand(() -> s_Sparky.periodic(), s_Sparky));
         s_Vision.setDefaultCommand(new RunCommand(() -> {

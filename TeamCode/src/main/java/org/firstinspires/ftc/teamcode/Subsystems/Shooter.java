@@ -26,10 +26,6 @@ public class Shooter extends SubsystemBase {
 
     private final PIDController shooterController;
 
-    private final double kS = 0.01;      // static friction term
-    private final double kV = 1/Constants.ShooterConstants.MAX_TICKS_PER_SEC;    //ticks per second
-    private final double kA = 0.0;
-
     private final SimpleMotorFeedforward shooterFF;
 
     private double targetVelocity;
@@ -63,16 +59,16 @@ public class Shooter extends SubsystemBase {
 
         angleServo.setPosition(Constants.ShooterConstants.closeAngle);
 
-        shooterFF = new SimpleMotorFeedforward(0.5,1/Constants.ShooterConstants.MAX_TICKS_PER_SEC, 0);
+        shooterFF = new SimpleMotorFeedforward(0.005,1/Constants.ShooterConstants.MAX_TICKS_PER_SEC, 0);
 
-        speedConstant = 0.295;
+        speedConstant = 0.282878;
         targetVelocity = 0;
 
     }
 
     //input from 0-1
     public void setShooterSpeed(double speed) {
-        targetVelocity = speed * Constants.ShooterConstants.MAX_TICKS_PER_SEC;
+        targetVelocity = speed * 2100;
         double ff = shooterFF.calculate(targetVelocity);
 
         double PID = shooterController.calculate(getShooterVelocity(), targetVelocity);
@@ -86,9 +82,13 @@ public class Shooter extends SubsystemBase {
     public double getShooterVelocity() {
         return lowerShooterMotor.getVelocity();
     }
+    public boolean shooterAtSpeed() {
+        return Math.abs(getShooterVelocity() - targetVelocity) < 80;
+    }
 
     public void setShooterAngle(double degrees) {
-        angleServo.setPosition(degrees);
+        double limited = Math.max(Math.min(1, degrees), 0);
+        angleServo.setPosition(limited);
     }
 
     public double getShooterAngle(){
@@ -108,8 +108,12 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getShooterSpeedFromDistance(double distance) {
-//        return 0.00185564 * distance +0.380296;
-                return 0.00185564 * distance + speedConstant;
+        return 0.00287597 * distance + speedConstant; // y=0.00227597x+0.282878
+//        return 0.00270152 * distance + speedConstant;// y = 0.00270152x+0.250462
+    }
+
+    public double getShooterAngleFromDistance(double distance) {
+        return -0.0147059 * distance + 1.47059;
     }
 
     public void toggleTelemetry() {

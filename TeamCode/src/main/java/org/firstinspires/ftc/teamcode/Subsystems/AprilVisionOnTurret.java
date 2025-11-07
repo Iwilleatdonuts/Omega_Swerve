@@ -5,7 +5,6 @@ import android.util.Size;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
@@ -105,8 +104,16 @@ public class AprilVisionOnTurret extends SubsystemBase {
         return aprilCamera != null ? aprilCamera.getFps(): 0;
     }
 
-    public VisionPortal.CameraState getCameraState() {
-        return aprilCamera!= null ? aprilCamera.getCameraState() : VisionPortal.CameraState.ERROR;
+    public boolean isCameraOn() {
+        if(aprilCamera!= null) {
+            if(aprilCamera.getFps() != 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return  false;
+        }
     }
 
 
@@ -173,39 +180,11 @@ public class AprilVisionOnTurret extends SubsystemBase {
             }
         }
         telem.putTelemetry("FPS", getCameraFPS());
-        telem.putTelemetry("Camera State", getCameraState());
+        telem.putTelemetry("Camera State", isCameraOn());
 
         telem.putDashboard("FPS", getCameraFPS());
-        telem.putDashboard("Camera State", getCameraState());
-//
-//        if (enableTelemetry) {
-//            packet.clearLines();
-//
-//            if (latestDetection != null) {
-//                packet.put("Tag ID", latestDetection.id);
-//            } else {
-//                packet.addLine("No Localization Tags");
-//            }
-//
-//            if (randomPatternTag != null) {
-//                packet.put("Random Pattern ID", randomPatternTag.id);
-//            }
-//
-//            if(allianceGoalTag != null) {
-//                packet.put("Tag Skew", allianceGoalTag.ftcPose.yaw);
-//                packet.put("Raw Baering", rawBearing);
-//                packet.put("Raw Distance", rawDistance);
-//                packet.put("Filtered Bearing", filteredBearing);
-//                packet.put("Filtered Distance", filteredDistance);
-//            }
-//
-//            telemetry.addLine("Vision");
-//            telemetry.addData("Alliance", areWeWinners ? "Red" : "Blue");
-//            telemetry.addData("Localization Tag", latestDetection != null ? latestDetection.id : "None");
-//            telemetry.addData("Random Pattern ID", randomPatternTag != null ? randomPatternTag.id : "None");
-//        }
-//
-//        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+        telem.putDashboard("Camera State", isCameraOn());
+
     }
 
 }
