@@ -108,8 +108,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getShooterSpeedFromDistance(double distance) {
-        return 0.00287597 * distance + speedConstant; // y=0.00227597x+0.282878
-//        return 0.00270152 * distance + speedConstant;// y = 0.00270152x+0.250462
+        return (0.00000250216 * distance * distance)+(0.00229859 * distance)+0.285563;
+//        return 0.00268845 * distance +0.2728;
     }
 
     public double getShooterAngleFromDistance(double distance) {

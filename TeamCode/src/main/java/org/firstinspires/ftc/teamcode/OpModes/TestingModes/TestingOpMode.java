@@ -40,6 +40,8 @@ public class TestingOpMode extends LinearOpMode {
 
         AprilVisionOnTurret s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
 
+        telem.enableCameraStrea(s_Vision.getAprilCamera(), 5);
+
         ElapsedTime runtime = new ElapsedTime();
 
         boolean runTurns = false;

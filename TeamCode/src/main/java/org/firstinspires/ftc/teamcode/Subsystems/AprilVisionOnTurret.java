@@ -67,7 +67,8 @@ public class AprilVisionOnTurret extends SubsystemBase {
                 .setDrawTagOutline(false)
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
-                .setLensIntrinsics(552.2287565089085, 549.2233357291731, 330.46847362162896, 207.9732802095237)
+//                .setLensIntrinsics(552.2287565089085, 549.2233357291731, 330.46847362162896, 207.9732802095237)
+                .setLensIntrinsics(518.6159682834744, 527.3280787440463, 337.63288390262926, 211.0873059855458)
                 .build();
 
         aprilCamera = new VisionPortal.Builder()

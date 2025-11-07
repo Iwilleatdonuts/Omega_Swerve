@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,10 @@ public class EZTelemetry {
 
     public void putTelemetry(String key, Object value) {
         telemetryData.put(key, value);
+    }
+
+    public void enableCameraStrea(CameraStreamSource source, double fps) {
+        dashboard.startCameraStream(source, fps);
     }
 
     public void updateTelemetry() {
