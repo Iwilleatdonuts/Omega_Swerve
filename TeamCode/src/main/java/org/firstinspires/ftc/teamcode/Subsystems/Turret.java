@@ -35,7 +35,7 @@ public class Turret extends SubsystemBase {
 
         enableTelemetry = false;
 
-        turretController = new PIDController(0.02, 0.01, PIDTuning.kD);
+        turretController = new PIDController(0.02, 0.01, 0);
         turretController.setTolerance(5);
 
         setSetpoint(getDegrees());

@@ -47,7 +47,7 @@ public class Swerve extends SubsystemBase {
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        targetPose = new SparkFunOTOS.Pose2D(1500, 200, 0);
+        targetPose = new SparkFunOTOS.Pose2D(0, 0, 0);
 
     }
 
