@@ -1,20 +1,15 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
+import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 
 public class TurnToPointDrive extends CommandBase {
 
@@ -50,7 +45,9 @@ public class TurnToPointDrive extends CommandBase {
 
         turnAngle = 0;
 
-        anglePID = new PIDController(0.0026, 0.01, 0);
+        anglePID = new PIDController(0.006, 0.02, 0.00015);
+        anglePID.setIZone(40);
+        anglePID.enableContinuousInput(0, 360);
 //        anglePID = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kF);
 
         xLimiter = new SlewRateLimiter(2);
@@ -105,12 +102,16 @@ public class TurnToPointDrive extends CommandBase {
 
         if(Math.hypot(rightX, rightY) > 0.9 || enableAutoRotate) {
 
-            double robotHeading = s_Swerve.getHeading();
-
-            double error = turnAngle - robotHeading;
-            error = ((error + 180) % 360 + 360) % 360 - 180;
-
-            rotationOutput = -anglePID.calculate(0, error);
+//            double robotHeading = s_Swerve.getHeading();
+//
+//            double error = turnAngle - robotHeading;
+//            error = ((error + 180) % 360 + 360) % 360 - 180;
+//
+//            rotationOutput = -anglePID.calculate(0, error);
+            double currentHeading = s_Sparky.getHeading();
+            if(Math.abs(currentHeading - turnAngle) > 0.5) {
+                rotationOutput = -anglePID.calculate(s_Sparky.getHeading(), turnAngle);
+            }
 
         }
 

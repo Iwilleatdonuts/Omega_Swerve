@@ -10,6 +10,8 @@ public class PIDTuning {
     public static double k2I = 0.0;
     public static double k2D = 0.0;
     public static double kF = 0.0;
+    public static double k1IZone = 0.0;
+    public static double k2IZone = 0.0;
     public static double randomVal0 = 0.0;
     public static double randomVal1 = 0.0;
     public static double randomVal2 = 0.0;

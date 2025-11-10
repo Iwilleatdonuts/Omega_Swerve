@@ -100,7 +100,7 @@ public class Constants {
 
             //Currently the offset is in mm, if the offset seems weird then try setting all units to meters instead of mm
             //also if driving is backwards, change the h to 180
-            public static final SparkFunOTOS.Pose2D sensorOffset = new SparkFunOTOS.Pose2D(0, -140, 0);
+            public static final SparkFunOTOS.Pose2D sensorOffset = new SparkFunOTOS.Pose2D(0, -0.14, 0);
 
         }
     }
