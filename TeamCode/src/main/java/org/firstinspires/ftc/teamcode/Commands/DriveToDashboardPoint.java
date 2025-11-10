@@ -6,6 +6,7 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.HolonomicDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 
@@ -21,6 +22,8 @@ public class DriveToDashboardPoint extends CommandBase {
     private final PIDController xController;
     private final PIDController yController;
     private final PIDController angleController;
+
+    private final HolonomicDriveController holoController;
 
     public DriveToDashboardPoint(Swerve s_Swerve, OTOSSensor s_Sparky, EZTelemetry telem){
 
@@ -43,6 +46,8 @@ public class DriveToDashboardPoint extends CommandBase {
         angleController.setIZone(40);
         angleController.enableContinuousInput(0, 360);
 
+        holoController = new HolonomicDriveController(xController, yController, angleController);
+
         addRequirements(s_Swerve);
     }
 
@@ -58,19 +63,22 @@ public class DriveToDashboardPoint extends CommandBase {
 
         SparkFunOTOS.Pose2D currentPose = s_Sparky.getPose();
         targetPosition = new SparkFunOTOS.Pose2D(PIDTuning.randomVal0, PIDTuning.randomVal1, PIDTuning.randomVal2);
-//        targetPosition = new SparkFunOTOS.Pose2D(1, 0, 0);
 
-        double rotationTarget = targetPosition.h;
-        rotationTarget = (rotationTarget + 360) % 360;
+//        double rotationTarget = targetPosition.h;
+//        rotationTarget = (rotationTarget + 360) % 360;
+//
+//        double xOutput = xController.calculate(currentPose.x, targetPosition.x);
+//        double yOutput = yController.calculate(currentPose.y, targetPosition.y);
+//        double rOutput = 0;
+//        if(Math.abs(s_Sparky.getHeading() - rotationTarget) > 0.5) {
+//            rOutput = -angleController.calculate(s_Sparky.getHeading(), rotationTarget);
+//        }
+//
+//        s_Swerve.drive(xOutput, yOutput, rOutput, true, false);
 
-        double xOutput = xController.calculate(currentPose.x, targetPosition.x);
-        double yOutput = yController.calculate(currentPose.y, targetPosition.y);
-        double rOutput = 0;
-        if(Math.abs(s_Sparky.getHeading() - rotationTarget) > 0.5) {
-            rOutput = -angleController.calculate(s_Sparky.getHeading(), rotationTarget);
-        }
+        double[] outputs = holoController.calculate(currentPose, targetPosition);
 
-        s_Swerve.drive(xOutput, yOutput, rOutput, true, false);
+        s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
 
         telem.putTelemetry("X Target", targetPosition.x);
         telem.putTelemetry("Y Target", targetPosition.y);
