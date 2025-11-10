@@ -38,8 +38,6 @@ public class DriveToDashboardPoint extends CommandBase {
         yController = new PIDController(2.2, 0, 0.05);
 //        xController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
 //        yController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
-        xController.setIZone(PIDTuning.k1IZone);
-        yController.setIZone(PIDTuning.k1IZone);
 
         angleController = new PIDController(0.006, 0.02, 0.00015);
 //        angleController = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);

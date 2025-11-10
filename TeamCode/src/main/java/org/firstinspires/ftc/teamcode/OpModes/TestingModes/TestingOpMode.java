@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.OpModes.TestingModes;
 
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -15,8 +14,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-
-import com.acmerobotics.dashboard.FtcDashboard;
 
 @TeleOp(name = "Test Mode", group = "Testing")
 public class TestingOpMode extends LinearOpMode {

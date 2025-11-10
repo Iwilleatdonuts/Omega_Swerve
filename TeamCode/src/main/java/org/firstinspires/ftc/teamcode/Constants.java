@@ -30,6 +30,9 @@ public class Constants {
         public static final double MAX_MOTOR_RPM = 6000.0;
         public static final double MAX_TICKS_PER_SEC = (MAX_MOTOR_RPM * TICKS_PER_REV) / 60.0;
 
+        public static final double ENCODER_TICKS_PER_AZIMUTH_REVOLUTION = 60;
+        public static final double funnyCouplingRatio = ENCODER_TICKS_PER_AZIMUTH_REVOLUTION / TICKS_PER_REV;
+
         public static final class Mod0 {
 
             public static final String driveMotor = "drive0";
