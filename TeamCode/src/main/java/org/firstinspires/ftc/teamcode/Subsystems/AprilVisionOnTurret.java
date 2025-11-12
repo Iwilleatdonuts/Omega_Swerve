@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import android.util.Size;
 
-import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -19,7 +18,9 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class AprilVisionOnTurret extends SubsystemBase {
+public class AprilVisionOnTurret {
+
+    private final VisionReadings visionReadings;
 
     private final EZTelemetry telem;
     private VisionPortal aprilCamera;
@@ -47,7 +48,9 @@ public class AprilVisionOnTurret extends SubsystemBase {
     private final boolean areWeWinners;
 
 
-    public AprilVisionOnTurret(HardwareMap hardwareMap, EZTelemetry telem, boolean areWeWinners) {
+    public AprilVisionOnTurret(HardwareMap hardwareMap, EZTelemetry telem, boolean areWeWinners, VisionReadings visionReadings) {
+
+        this.visionReadings = visionReadings;
 
         configureAprilTagCamera(hardwareMap);
 
@@ -98,7 +101,7 @@ public class AprilVisionOnTurret extends SubsystemBase {
     }
 
     public boolean hasGoalTag() {
-        return allianceGoalTag != null;
+        return visionReadings.hasGoalTag;
     }
 
     public double getGoalBearing() {
@@ -110,12 +113,7 @@ public class AprilVisionOnTurret extends SubsystemBase {
     }
 
     public double getAdjustedGoalBearing() {
-
-        adjustedBearing = getGoalBearing();
-
-        adjustedBearing += getGoalYaw() * 0.133333333333;
-
-        return adjustedBearing;
+        return visionReadings.adjustedGoalBearing;
     }
 
     public double getCameraFPS() {
@@ -136,7 +134,7 @@ public class AprilVisionOnTurret extends SubsystemBase {
 
 
     public double getGoalDistance() {
-        return allianceGoalTag != null ? rawDistance : 0;
+        return visionReadings.goalDistance;
     }
 
     private void setManualExposure(int exposureMS, int gain) {
@@ -189,6 +187,10 @@ public class AprilVisionOnTurret extends SubsystemBase {
                         filteredBearing = bearingFilter.update(rawBearing);
                         filteredDistance = distanceFilter.update(rawDistance);
                         goalYaw = allianceGoalTag.ftcPose.yaw;
+                        adjustedBearing = getGoalBearing() + (getGoalYaw() * 0.133333333333);
+                        visionReadings.adjustedGoalBearing = adjustedBearing;
+                        visionReadings.goalDistance = rawDistance;
+                        visionReadings.hasGoalTag = hasGoalTag();
                     }
                 } else if (id >= 21 && id <= 23) {
                     randomPatternTag = tag;
@@ -200,6 +202,13 @@ public class AprilVisionOnTurret extends SubsystemBase {
 
         telem.putDashboard("FPS", getCameraFPS());
         telem.putDashboard("Camera State", isCameraOn());
+
+    }
+
+    public static class VisionReadings {
+        public volatile double adjustedGoalBearing = 0.0;
+        public volatile double goalDistance = 0.0;
+        public volatile boolean hasGoalTag = false;
 
     }
 

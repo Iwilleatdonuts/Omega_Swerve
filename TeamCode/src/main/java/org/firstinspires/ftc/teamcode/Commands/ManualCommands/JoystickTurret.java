@@ -1,19 +1,12 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 
-public class JoystickTurret extends CommandBase {
+public class JoystickTurret {
 
     private final Swerve s_Swerve;
     private final Turret s_Turret;
@@ -26,18 +19,14 @@ public class JoystickTurret extends CommandBase {
         this.s_Turret = s_Turret;
 
         this.m_Operator = m_Operator;
-
-        addRequirements(s_Turret);
     }
 
-    @Override
     public void initialize(){
 
         s_Turret.setSetpoint(s_Turret.getDegrees());
 
     }
 
-    @Override
     public void execute(){
 
         double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));

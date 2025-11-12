@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,9 +12,11 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Swerve extends SubsystemBase {
+public class Swerve {
 
     private final EZTelemetry telem;
+
+    private OTOSSensor sparky;
 
     private final SwerveModule mod0, mod1, mod2, mod3;
     private final IMU imu;
@@ -31,6 +32,30 @@ public class Swerve extends SubsystemBase {
     public Swerve(HardwareMap hardwareMap, EZTelemetry telem){
 
         this.telem = telem;
+
+        mod0 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants);
+        mod1 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod1.modConstants);
+        mod2 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod2.modConstants);
+        mod3 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod3.modConstants);
+
+
+        enableTelemetry = false;
+
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+
+        imu = hardwareMap.get(IMU.class, "imu");
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
+
+        targetPose = new SparkFunOTOS.Pose2D(0, 0, 0);
+
+    }
+
+    public Swerve(HardwareMap hardwareMap, EZTelemetry telem, OTOSSensor sparky){
+
+        this.telem = telem;
+        this.sparky = sparky;
 
         mod0 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants);
         mod1 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod1.modConstants);
@@ -162,11 +187,15 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getHeading() {
-        double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        if(sparky == null) {
+            double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
-        rotation = (rotation+360)%360;
+            rotation = (rotation+360)%360;
 
-        return rotation;
+            return rotation;
+        } else {
+            return sparky.getHeading();
+        }
     }
 
     public void zeroGyro() {

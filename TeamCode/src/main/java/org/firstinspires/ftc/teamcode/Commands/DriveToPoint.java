@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
-import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 
-public class DriveToPoint extends CommandBase {
+public class DriveToPoint {
 
     private final Swerve s_Swerve;
     private final OTOSSensor s_Sparky;
@@ -36,17 +34,14 @@ public class DriveToPoint extends CommandBase {
         angleController.setIZone(40);
         angleController.enableContinuousInput(0, 360);
 
-        addRequirements(s_Swerve);
     }
 
-    @Override
     public void initialize(){
         xController.reset();
         yController.reset();
         angleController.reset();
     }
 
-    @Override
     public void execute(){
 
         SparkFunOTOS.Pose2D currentPose = s_Sparky.getPose();

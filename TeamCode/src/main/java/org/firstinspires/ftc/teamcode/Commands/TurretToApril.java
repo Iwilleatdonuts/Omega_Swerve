@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
-import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
-public class TurretToApril extends CommandBase {
+public class TurretToApril {
 
     private final Swerve s_Swerve;
     private final Turret s_Turret;
@@ -26,18 +22,14 @@ public class TurretToApril extends CommandBase {
         this.s_Vision = s_Vision;
 
         this.m_Operator = m_Operator;
-
-        addRequirements(s_Turret);
     }
 
-    @Override
     public void initialize(){
 
         aprilBearing = s_Vision.getAdjustedGoalBearing();
 
     }
 
-    @Override
     public void execute(){
 
         if(s_Vision.hasGoalTag()){
@@ -67,8 +59,7 @@ public class TurretToApril extends CommandBase {
 
     }
 
-    @Override
-    public void end(boolean interrupted) {
+    public void end() {
         s_Turret.setSetpoint(s_Turret.getDegrees());
         s_Turret.setSpeed(0);
     }

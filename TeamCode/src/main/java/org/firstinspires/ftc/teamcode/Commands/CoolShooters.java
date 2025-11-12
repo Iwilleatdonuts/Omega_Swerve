@@ -1,16 +1,14 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
-public class CoolShooters extends CommandBase {
+public class CoolShooters {
 
     private final EZTelemetry telem;
 
@@ -35,11 +33,8 @@ public class CoolShooters extends CommandBase {
         this.m_Operator = m_Operator;
 
         this.telem = telem;
-
-        addRequirements(s_Shooter);
     }
 
-    @Override
     public void initialize(){
 
         shootersGunnaShoot = false;
@@ -48,7 +43,6 @@ public class CoolShooters extends CommandBase {
 
     }
 
-    @Override
     public void execute(){
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
@@ -73,13 +67,14 @@ public class CoolShooters extends CommandBase {
 
         if(shootersGunnaShoot){
             if(s_Vision.hasGoalTag()){
-                shooterPercent = s_Shooter.getShooterSpeedFromDistance(s_Vision.getGoalDistance());
-                shooterAngle = s_Shooter.getShooterAngleFromDistance(s_Vision.getGoalDistance());
+                double distance = s_Vision.getGoalDistance();
+                shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
+                shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
             } else {
-                shooterPercent = 0.51;
+                shooterPercent = 0.61;
+                shooterAngle = Constants.ShooterConstants.farAngle;
             }
         } else {
-
             shooterPercent = 0;
         }
 
@@ -92,7 +87,6 @@ public class CoolShooters extends CommandBase {
 
     }
 
-    @Override
     public void end(boolean interrupted) {
         s_Shooter.setShooterSpeed(0);
     }

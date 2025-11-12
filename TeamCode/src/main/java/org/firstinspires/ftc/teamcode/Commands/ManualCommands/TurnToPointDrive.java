@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
-import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 
-public class TurnToPointDrive extends CommandBase {
+public class TurnToPointDrive {
 
     private final EZTelemetry telem;
     private final Swerve s_Swerve;
@@ -54,11 +53,8 @@ public class TurnToPointDrive extends CommandBase {
         yLimiter = new SlewRateLimiter(2);
 
         timer = new ElapsedTime();
-
-        addRequirements(s_Swerve);
     }
 
-    @Override
     public void initialize(){
 
         xLimiter.reset(0);
@@ -66,7 +62,6 @@ public class TurnToPointDrive extends CommandBase {
 
     }
 
-    @Override
     public void execute(){
 
         timestamp = timer.milliseconds();
@@ -102,12 +97,6 @@ public class TurnToPointDrive extends CommandBase {
 
         if(Math.hypot(rightX, rightY) > 0.9 || enableAutoRotate) {
 
-//            double robotHeading = s_Swerve.getHeading();
-//
-//            double error = turnAngle - robotHeading;
-//            error = ((error + 180) % 360 + 360) % 360 - 180;
-//
-//            rotationOutput = -anglePID.calculate(0, error);
             double currentHeading = s_Sparky.getHeading();
             if(Math.abs(currentHeading - turnAngle) > 0.5) {
                 rotationOutput = -anglePID.calculate(s_Sparky.getHeading(), turnAngle);

@@ -1,18 +1,14 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
 
-public class TeleOpDrive extends CommandBase {
+public class TeleOpDrive {
 
     private final EZTelemetry telem;
     private final Swerve s_Swerve;
@@ -44,11 +40,8 @@ public class TeleOpDrive extends CommandBase {
         rLimiter = new SlewRateLimiter(5);
 
         timer = new ElapsedTime();
-
-        addRequirements(s_Swerve);
     }
 
-    @Override
     public void initialize() {
 
         xLimiter.reset(0);
@@ -57,7 +50,6 @@ public class TeleOpDrive extends CommandBase {
 
     }
 
-    @Override
     public void execute(){
 
         timestamp = timer.milliseconds();

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
-import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
@@ -9,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
-public class SmartIntake extends CommandBase {
+public class SmartIntake {
 
     public final EZTelemetry telem;
 
@@ -29,16 +28,12 @@ public class SmartIntake extends CommandBase {
         this.s_Shooter = s_Shooter;
 
         this.m_Driver = m_Driver;
-
-        addRequirements(s_Intake, s_Feeder);
     }
 
-    @Override
     public void initialize(){
         s_Intake.toggleTelemetry();
     }
 
-    @Override
     public void execute(){
 
         s_Intake.setSpeed(m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));

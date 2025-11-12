@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
@@ -10,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Utilities.HolonomicDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 
-public class DriveToDashboardPoint extends CommandBase {
+public class DriveToDashboardPoint {
 
     private final EZTelemetry telem;
 
@@ -45,18 +44,14 @@ public class DriveToDashboardPoint extends CommandBase {
         angleController.enableContinuousInput(0, 360);
 
         holoController = new HolonomicDriveController(xController, yController, angleController);
-
-        addRequirements(s_Swerve);
     }
 
-    @Override
     public void initialize(){
         xController.reset();
         yController.reset();
         angleController.reset();
     }
 
-    @Override
     public void execute(){
 
         SparkFunOTOS.Pose2D currentPose = s_Sparky.getPose();
