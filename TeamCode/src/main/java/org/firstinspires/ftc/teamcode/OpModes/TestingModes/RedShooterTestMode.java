@@ -38,7 +38,6 @@ public class RedShooterTestMode extends LinearOpMode {
     private Turret s_Turret;
     private Shooter s_Shooter;
     private AprilVisionOnTurret s_Vision;
-    private AprilVisionOnTurret.VisionReadings visionReadings;
     private OTOSSensor s_Sparky;
 
     private GamepadEx m_Driver;
@@ -65,18 +64,16 @@ public class RedShooterTestMode extends LinearOpMode {
         zeroGyroButton = new GamepadButton(m_Driver, GamepadKeys.Button.START);
         autoDriveButton = new GamepadButton(m_Driver, GamepadKeys.Button.Y);
 
-        visionReadings = new AprilVisionOnTurret.VisionReadings();
-
         s_Swerve = new Swerve(hardwareMap, telem);
         s_Intake = new Intake(hardwareMap, telem);
         s_Feeder = new Feeder(hardwareMap, telem);
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
         s_Sparky = new OTOSSensor(hardwareMap, telem);
-        s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true, visionReadings);
+        s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
 
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, m_Driver, m_Operator);
-        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, m_Driver, telem);
+        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Vision, m_Driver, m_Operator, telem);
         turretCommand = new TurretToApril(s_Swerve, s_Turret, s_Vision, m_Operator);
 
         driveCommand.initialize();

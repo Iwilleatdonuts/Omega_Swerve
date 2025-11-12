@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
@@ -20,6 +21,7 @@ public class Shooter {
     private final DcMotorEx upperShooterMotor;
     private final DcMotorEx lowerShooterMotor;
     private final ServoImplEx angleServo;
+    private final LED led;
 
     private boolean enableTelemetry;
 
@@ -41,6 +43,7 @@ public class Shooter {
         upperShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.upperMotor);
         lowerShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.lowerMotor);
         angleServo = hardwareMap.get(ServoImplEx.class, Constants.ShooterConstants.angleServo);
+        led = hardwareMap.get(LED.class, "led");
 
         upperShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         lowerShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -82,6 +85,9 @@ public class Shooter {
         return lowerShooterMotor.getVelocity();
     }
     public boolean shooterAtSpeed() {
+        return Math.abs(getShooterVelocity() - targetVelocity) < 40;
+    }
+    public boolean shooterAtRoughSpeed() {
         return Math.abs(getShooterVelocity() - targetVelocity) < 80;
     }
 
@@ -122,6 +128,10 @@ public class Shooter {
 
     public void toggleTelemetry() {
         enableTelemetry = !enableTelemetry;
+    }
+
+    public void setLed(boolean isEnabled) {
+        led.enable(isEnabled);
     }
 
     public void skadoodle() {

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 
@@ -19,7 +20,8 @@ public class TurnToPointDrive {
     private final GamepadEx m_Operator;
 
     private boolean slowMode;
-    private final PIDController anglePID;
+    private final PIDController staticAnglePID;
+    private final PIDController dynamicAnglePID;
 
     private boolean enableAutoRotate;
     private double turnAngle;
@@ -44,10 +46,15 @@ public class TurnToPointDrive {
 
         turnAngle = 0;
 
-        anglePID = new PIDController(0.006, 0.02, 0.00015);
-        anglePID.setIZone(40);
-        anglePID.enableContinuousInput(0, 360);
-//        anglePID = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kF);
+        staticAnglePID = new PIDController(0.006, 0.02, 0.00015);
+        staticAnglePID.setIZone(40);
+        staticAnglePID.enableContinuousInput(0, 360);
+
+        dynamicAnglePID = new PIDController(0.0025, 0.015, 0.0001);
+//        dynamicAnglePID = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
+        dynamicAnglePID.setIZone(50);
+        dynamicAnglePID.enableContinuousInput(0, 360);
+//        staticAnglePID = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kF);
 
         xLimiter = new SlewRateLimiter(2);
         yLimiter = new SlewRateLimiter(2);
@@ -99,9 +106,12 @@ public class TurnToPointDrive {
 
             double currentHeading = s_Sparky.getHeading();
             if(Math.abs(currentHeading - turnAngle) > 0.5) {
-                rotationOutput = -anglePID.calculate(s_Sparky.getHeading(), turnAngle);
+                if(xLimited != 0 || yLimited != 0) {
+                    rotationOutput = -dynamicAnglePID.calculate(s_Sparky.getHeading(), turnAngle);
+                } else {
+                    rotationOutput = -staticAnglePID.calculate(s_Sparky.getHeading(), turnAngle);
+                }
             }
-
         }
 
         s_Swerve.drive(xLimited, yLimited, rotationOutput, true, slowMode);

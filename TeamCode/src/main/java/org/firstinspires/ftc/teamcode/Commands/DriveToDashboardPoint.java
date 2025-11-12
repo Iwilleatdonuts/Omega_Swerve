@@ -20,7 +20,8 @@ public class DriveToDashboardPoint {
 
     private final PIDController xController;
     private final PIDController yController;
-    private final PIDController angleController;
+    private final PIDController staticAngleController;
+    private final PIDController dynamicAngleController;
 
     private final HolonomicDriveController holoController;
 
@@ -38,18 +39,24 @@ public class DriveToDashboardPoint {
 //        xController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
 //        yController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
 
-        angleController = new PIDController(0.006, 0.02, 0.00015);
+        staticAngleController = new PIDController(0.006, 0.02, 0.00015);
 //        angleController = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);
-        angleController.setIZone(40);
-        angleController.enableContinuousInput(0, 360);
+        staticAngleController.setIZone(40);
+        staticAngleController.enableContinuousInput(0, 360);
 
-        holoController = new HolonomicDriveController(xController, yController, angleController);
+        dynamicAngleController = new PIDController(0.0025, 0.015, 0.0001);
+//        angleController = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);
+        dynamicAngleController.setIZone(40);
+        dynamicAngleController.enableContinuousInput(0, 360);
+
+        holoController = new HolonomicDriveController(xController, yController, staticAngleController, dynamicAngleController);
     }
 
     public void initialize(){
         xController.reset();
         yController.reset();
-        angleController.reset();
+        staticAngleController.reset();
+        dynamicAngleController.reset();
     }
 
     public void execute(){

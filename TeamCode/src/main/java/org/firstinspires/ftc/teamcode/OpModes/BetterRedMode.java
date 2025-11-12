@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
+import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
+import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -17,7 +21,7 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 @TeleOp(name = "Ginger Drive Core", group = "Main")
 public class BetterRedMode extends LinearOpMode {
 
-    private class VisionThread implements  Runnable {
+    private class VisionThread implements Runnable {
         private volatile boolean runVisionThread = true;
         private final AprilVisionOnTurret s_Vision;
         private final long sleepTime;
@@ -64,7 +68,6 @@ public class BetterRedMode extends LinearOpMode {
 
     private AprilVisionOnTurret s_Vision;
     private OTOSSensor s_Sparky;
-    private AprilVisionOnTurret.VisionReadings visionReadings;
 
     private Swerve s_Swerve;
     private Intake s_Intake;
@@ -73,6 +76,9 @@ public class BetterRedMode extends LinearOpMode {
     private Shooter s_Shooter;
 
     private TurnToPointDrive driveCommand;
+    private SmartIntake intakeCommand;
+    private TurretToApril turretCommand;
+    private CoolShooters shooterCommand;
 
     @Override
     public void runOpMode(){
@@ -83,8 +89,7 @@ public class BetterRedMode extends LinearOpMode {
         telem = new EZTelemetry(telemetry);
 
         s_Sparky = new OTOSSensor(hardwareMap, telem);
-        visionReadings = new AprilVisionOnTurret.VisionReadings();
-        s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true, visionReadings);
+        s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
 
         s_Swerve = new Swerve(hardwareMap, telem, s_Sparky);
         s_Intake = new Intake(hardwareMap, telem);
@@ -93,7 +98,14 @@ public class BetterRedMode extends LinearOpMode {
         s_Shooter = new Shooter(hardwareMap, telem);
 
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, driver, operator);
+        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Vision, driver, operator, telem);
+        turretCommand = new TurretToApril(s_Swerve, s_Turret, s_Vision, operator);
+        shooterCommand = new CoolShooters(s_Shooter, s_Vision, driver, operator, telem);
+
         driveCommand.initialize();
+        intakeCommand.initialize();
+        turretCommand.initialize();
+        shooterCommand.initialize();
 
         VisionThread visionRunnable = new VisionThread(s_Vision, 15);
         Thread visionThread = new Thread(visionRunnable, "Vision Thread");
@@ -105,15 +117,23 @@ public class BetterRedMode extends LinearOpMode {
 
             long loopStart = System.nanoTime();
 
-
+            s_Vision.skadoodle();
             driveCommand.execute();
+            intakeCommand.execute();
+            turretCommand.execute();
+            shooterCommand.execute();
 
-            long loopTime = (System.nanoTime() - loopStart) / 1000000;
-            telem.putTelemetry("CLT", loopTime);
+            if(driver.wasJustPressed(GamepadKeys.Button.START)) {
+                s_Swerve.zeroGyro();
+                s_Sparky.zeroGyro();
+            }
+
+//            long loopTime = (System.nanoTime() - loopStart) / 1000000;
+//            telem.putTelemetry("CLT", loopTime);
             telem.updateTelemetry();
 
             long mainThreadSleep = 20 - ((System.nanoTime() - loopStart) / 1000000);
-
+//
             if(mainThreadSleep > 0) {
                 try {
                     Thread.sleep(mainThreadSleep);

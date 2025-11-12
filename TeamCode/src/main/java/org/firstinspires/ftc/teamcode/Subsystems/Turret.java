@@ -116,6 +116,10 @@ public class Turret {
         setSpeed(output);
     }
 
+    public boolean atSetpoint() {
+        return Math.abs(getDegrees() - getSetpoint()) < 1;
+    }
+
     public boolean isOutOfBounds() {
         double currentAngle = getDegrees();
         return currentAngle < Constants.TurretConstants.lowerRotationLimit || currentAngle > Constants.TurretConstants.upperRotationLimit;

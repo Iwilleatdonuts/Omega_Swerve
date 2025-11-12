@@ -15,7 +15,8 @@ public class DriveToPoint {
 
     private final PIDController xController;
     private final PIDController yController;
-    private final PIDController angleController;
+    private final PIDController staticAngleController;
+    private final PIDController dynamicAngleController;
 
     public DriveToPoint(Swerve s_Swerve, OTOSSensor s_Sparky){
 
@@ -29,17 +30,23 @@ public class DriveToPoint {
 //        xController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
 //        yController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
 
-        angleController = new PIDController(0.006, 0.02, 0.00015);
+        staticAngleController = new PIDController(0.006, 0.02, 0.00015);
 //        angleController = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);
-        angleController.setIZone(40);
-        angleController.enableContinuousInput(0, 360);
+        staticAngleController.setIZone(40);
+        staticAngleController.enableContinuousInput(0, 360);
+
+        dynamicAngleController = new PIDController(0.006, 0.02, 0.00015);
+//        angleController = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);
+        dynamicAngleController.setIZone(40);
+        dynamicAngleController.enableContinuousInput(0, 360);
 
     }
 
     public void initialize(){
         xController.reset();
         yController.reset();
-        angleController.reset();
+        staticAngleController.reset();
+        dynamicAngleController.reset();
     }
 
     public void execute(){
@@ -54,7 +61,11 @@ public class DriveToPoint {
         double yOutput = yController.calculate(currentPose.y, targetPosition.y);
         double rOutput = 0;
         if(Math.abs(s_Sparky.getHeading() - rotationTarget) > 0.5) {
-            rOutput = -angleController.calculate(s_Sparky.getHeading(), rotationTarget);
+            if(xOutput != 0 || yOutput != 0) {
+                rOutput = -dynamicAngleController.calculate(s_Sparky.getHeading(), rotationTarget);
+            } else {
+                rOutput = -staticAngleController.calculate(s_Sparky.getHeading(), rotationTarget);
+            }
         }
 
         s_Swerve.drive(xOutput, yOutput, rOutput, true, false);

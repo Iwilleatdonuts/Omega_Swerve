@@ -6,13 +6,15 @@ public class HolonomicDriveController {
     private final PIDController xController;
     private final PIDController yController;
     private final PIDController rController;
+    private final PIDController slowRController;
 
     private final SparkFunOTOS.Pose2D poseTolerance;
 
-    public HolonomicDriveController(PIDController xController, PIDController yController, PIDController rController){
+    public HolonomicDriveController(PIDController xController, PIDController yController, PIDController rController, PIDController slowRController){
         this.xController = xController;
         this.yController = yController;
         this.rController = rController;
+        this.slowRController = slowRController;
         this.poseTolerance = new SparkFunOTOS.Pose2D(0.01, 0.01, 1); // meters + degrees
     }
 
@@ -28,7 +30,14 @@ public class HolonomicDriveController {
 
         double headingError = targetPose.h - currentPose.h;
         headingError = ((headingError + 180) % 360) - 180;
-        double rOutput = rController.calculate(0, headingError);
+
+        double rOutput = 0;
+
+        if(xOutput != 0 || yOutput != 0) {
+            rOutput = slowRController.calculate(0, headingError);
+        } else {
+            rOutput = rController.calculate(0, headingError);
+        }
 
         return new double[]{xOutput, yOutput, rOutput};
     }

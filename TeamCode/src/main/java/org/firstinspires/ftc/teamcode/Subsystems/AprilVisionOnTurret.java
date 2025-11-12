@@ -20,8 +20,6 @@ import java.util.concurrent.TimeUnit;
 
 public class AprilVisionOnTurret {
 
-    private final VisionReadings visionReadings;
-
     private final EZTelemetry telem;
     private VisionPortal aprilCamera;
     private AprilTagProcessor aprilTagProcessor;
@@ -48,9 +46,7 @@ public class AprilVisionOnTurret {
     private final boolean areWeWinners;
 
 
-    public AprilVisionOnTurret(HardwareMap hardwareMap, EZTelemetry telem, boolean areWeWinners, VisionReadings visionReadings) {
-
-        this.visionReadings = visionReadings;
+    public AprilVisionOnTurret(HardwareMap hardwareMap, EZTelemetry telem, boolean areWeWinners) {
 
         configureAprilTagCamera(hardwareMap);
 
@@ -101,7 +97,7 @@ public class AprilVisionOnTurret {
     }
 
     public boolean hasGoalTag() {
-        return visionReadings.hasGoalTag;
+        return allianceGoalTag != null;
     }
 
     public double getGoalBearing() {
@@ -113,7 +109,7 @@ public class AprilVisionOnTurret {
     }
 
     public double getAdjustedGoalBearing() {
-        return visionReadings.adjustedGoalBearing;
+        return allianceGoalTag != null ? adjustedBearing : 0;
     }
 
     public double getCameraFPS() {
@@ -134,7 +130,7 @@ public class AprilVisionOnTurret {
 
 
     public double getGoalDistance() {
-        return visionReadings.goalDistance;
+        return allianceGoalTag != null ? rawDistance : 0;
     }
 
     private void setManualExposure(int exposureMS, int gain) {
@@ -181,16 +177,17 @@ public class AprilVisionOnTurret {
 
                     //find alliance tag
                     if ((areWeWinners && id == 24) || (!areWeWinners && id == 20)) {
-                        allianceGoalTag = tag;
-                        rawBearing = allianceGoalTag.ftcPose.bearing;
-                        rawDistance = allianceGoalTag.ftcPose.range;
-                        filteredBearing = bearingFilter.update(rawBearing);
-                        filteredDistance = distanceFilter.update(rawDistance);
-                        goalYaw = allianceGoalTag.ftcPose.yaw;
-                        adjustedBearing = getGoalBearing() + (getGoalYaw() * 0.133333333333);
-                        visionReadings.adjustedGoalBearing = adjustedBearing;
-                        visionReadings.goalDistance = rawDistance;
-                        visionReadings.hasGoalTag = hasGoalTag();
+                        try{
+                            allianceGoalTag = tag;
+                            rawBearing = allianceGoalTag.ftcPose.bearing;
+                            rawDistance = allianceGoalTag.ftcPose.range;
+                            filteredBearing = bearingFilter.update(rawBearing);
+                            filteredDistance = distanceFilter.update(rawDistance);
+                            goalYaw = allianceGoalTag.ftcPose.yaw;
+                            adjustedBearing = getGoalBearing() + (getGoalYaw() * 0.133333333333);
+                        } catch(Exception ignored) {
+
+                        }
                     }
                 } else if (id >= 21 && id <= 23) {
                     randomPatternTag = tag;
@@ -202,13 +199,6 @@ public class AprilVisionOnTurret {
 
         telem.putDashboard("FPS", getCameraFPS());
         telem.putDashboard("Camera State", isCameraOn());
-
-    }
-
-    public static class VisionReadings {
-        public volatile double adjustedGoalBearing = 0.0;
-        public volatile double goalDistance = 0.0;
-        public volatile boolean hasGoalTag = false;
 
     }
 
