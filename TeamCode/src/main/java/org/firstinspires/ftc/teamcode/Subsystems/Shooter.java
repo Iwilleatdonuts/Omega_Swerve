@@ -108,19 +108,24 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getShooterSpeedFromDistance(double distance) {
-        return (0.00000250216 * distance * distance)+(0.00229859 * distance)+0.285563;
-//        return 0.00268845 * distance +0.2728;
+        if(distance > 76){
+            return 0.000000451637 * distance * distance * distance - 0.000129113 * distance * distance + 0.013132 * distance + 0.0580873;
+        } else if (distance > 44) {
+            return 0.0000492152 * distance * distance - 0.00121422 * distance + 0.317641;
+        } else {
+            return 0.36;
+        }
     }
 
     public double getShooterAngleFromDistance(double distance) {
-        return -0.0147059 * distance + 1.47059;
+        return -0.0216685 * distance + 1.65005;
     }
 
     public void toggleTelemetry() {
         enableTelemetry = !enableTelemetry;
     }
 
-    public void periodic() {
+    public void skadoodle() {
 
         if(enableTelemetry) {
 

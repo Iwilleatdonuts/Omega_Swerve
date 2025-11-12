@@ -130,9 +130,7 @@ public class AprilVisionForPose extends SubsystemBase {
         }
     }
 
-
-    @Override
-    public void periodic() {
+    public void skadoodle() {
 
         detections = aprilTagProcessor.getDetections();
         latestDetection = null;

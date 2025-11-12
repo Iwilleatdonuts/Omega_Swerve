@@ -34,6 +34,10 @@ public class AprilVisionOnTurret extends SubsystemBase {
     private double rawBearing;
     private double rawDistance;
 
+    private double adjustedBearing;
+
+    private double goalYaw;
+
     private double filteredBearing;
     private double filteredDistance;
 
@@ -68,7 +72,7 @@ public class AprilVisionOnTurret extends SubsystemBase {
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
 //                .setLensIntrinsics(552.2287565089085, 549.2233357291731, 330.46847362162896, 207.9732802095237)
-                .setLensIntrinsics(518.6159682834744, 527.3280787440463, 337.63288390262926, 211.0873059855458)
+                .setLensIntrinsics(560.210886526574,568.5837973643032,341.4406064182799,174.0920003890196)
                 .build();
 
         aprilCamera = new VisionPortal.Builder()
@@ -99,6 +103,19 @@ public class AprilVisionOnTurret extends SubsystemBase {
 
     public double getGoalBearing() {
         return allianceGoalTag != null ? rawBearing : 0.0;
+    }
+
+    public double getGoalYaw() {
+        return allianceGoalTag != null ? goalYaw : 0.0;
+    }
+
+    public double getAdjustedGoalBearing() {
+
+        adjustedBearing = getGoalBearing();
+
+        adjustedBearing += getGoalYaw() * 0.133333333333;
+
+        return adjustedBearing;
     }
 
     public double getCameraFPS() {
@@ -146,11 +163,7 @@ public class AprilVisionOnTurret extends SubsystemBase {
         }
     }
 
-
-    @Override
-    public void periodic() {
-
-//        packet.clearLines();
+    public void skadoodle() {
 
         detections = aprilTagProcessor.getDetections();
         latestDetection = null;
@@ -158,6 +171,7 @@ public class AprilVisionOnTurret extends SubsystemBase {
         randomPatternTag = null;
         rawBearing = 0;
         rawDistance = 0;
+        goalYaw = 0;
 
         if(!detections.isEmpty()) {
             for (AprilTagDetection tag : detections) {
@@ -174,6 +188,7 @@ public class AprilVisionOnTurret extends SubsystemBase {
                         rawDistance = allianceGoalTag.ftcPose.range;
                         filteredBearing = bearingFilter.update(rawBearing);
                         filteredDistance = distanceFilter.update(rawDistance);
+                        goalYaw = allianceGoalTag.ftcPose.yaw;
                     }
                 } else if (id >= 21 && id <= 23) {
                     randomPatternTag = tag;

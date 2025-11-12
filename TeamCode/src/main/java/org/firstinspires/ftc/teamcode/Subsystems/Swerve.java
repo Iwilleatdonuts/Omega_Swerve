@@ -189,8 +189,7 @@ public class Swerve extends SubsystemBase {
         return targetPose;
     }
 
-    @Override
-    public void periodic(){
+    public void skadoodle(){
 
         if(enableTelemetry) {
 

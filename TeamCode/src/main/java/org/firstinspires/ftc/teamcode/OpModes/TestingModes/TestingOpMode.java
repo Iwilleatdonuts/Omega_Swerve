@@ -91,6 +91,8 @@ public class TestingOpMode extends LinearOpMode {
             if(Math.hypot(m_OperatorOp.getLeftX(), m_OperatorOp.getLeftY()) > 0.9) {
                 s_Turret.setSetpoint(operatorJoystickAngle);
             }
+
+            s_Turret.runToSetpoint();
             s_Shooter.setShooterSpeed(m_OperatorOp.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 
             double drivePower = m_DriverOp.getLeftY();
@@ -172,14 +174,14 @@ public class TestingOpMode extends LinearOpMode {
                 s_Mod3.setTurnSpeed(0);
             }
 
-            s_Mod0.periodic();
-            s_Mod1.periodic();
-            s_Mod2.periodic();
-            s_Mod3.periodic();
-            s_Intake.periodic();
-            s_Turret.periodic();
-            s_Shooter.periodic();
-            s_Vision.periodic();
+            s_Mod0.skadoodle();
+            s_Mod1.skadoodle();
+            s_Mod2.skadoodle();
+            s_Mod3.skadoodle();
+            s_Intake.skadoodle();
+            s_Turret.skadoodle();
+            s_Shooter.skadoodle();
+            s_Vision.skadoodle();
 
             telem.putTelemetry("Telemetry on?", enableOtherTelemetries);
 

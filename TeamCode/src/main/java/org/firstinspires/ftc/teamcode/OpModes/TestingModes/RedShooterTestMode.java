@@ -68,7 +68,7 @@ public class RedShooterTestMode extends CommandOpMode {
         s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
 
         s_Swerve.setDefaultCommand(new TurnToPointDrive(telem, s_Swerve, s_Sparky, m_Driver, m_Operator));
-        s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, s_Shooter, m_Driver));
+        s_Intake.setDefaultCommand(new SmartIntake(s_Intake, s_Feeder, s_Shooter, m_Driver, telem));
         s_Turret.setDefaultCommand(new TurretToApril(s_Swerve, s_Turret, s_Vision, m_Operator));
         s_Shooter.setDefaultCommand(new RunCommand(() -> {
 
@@ -109,13 +109,14 @@ public class RedShooterTestMode extends CommandOpMode {
 
             telem.updateTelemetry();
         }, s_Shooter));
-        s_Sparky.setDefaultCommand(new RunCommand(() -> s_Sparky.periodic(), s_Sparky));
+        s_Sparky.setDefaultCommand(new RunCommand(() -> s_Sparky.skadoodle(), s_Sparky));
         s_Vision.setDefaultCommand(new RunCommand(() -> {
-            s_Vision.periodic();
+            s_Vision.skadoodle();
         }, s_Vision));
 
         zeroGyroButton.whenPressed(new InstantCommand(() -> {
             s_Swerve.zeroGyro();
+            s_Sparky.zeroGyro();
         }, s_Swerve, s_Sparky));
         autoDriveButton.whenHeld(new DriveToPoint(s_Swerve, s_Sparky));
 

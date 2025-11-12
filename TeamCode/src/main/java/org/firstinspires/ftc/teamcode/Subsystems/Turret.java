@@ -123,8 +123,7 @@ public class Turret extends SubsystemBase {
         return currentAngle < Constants.TurretConstants.lowerRotationLimit || currentAngle > Constants.TurretConstants.upperRotationLimit;
     }
 
-    @Override
-    public void periodic(){
+    public void skadoodle(){
 
         if(enableTelemetry) {
 

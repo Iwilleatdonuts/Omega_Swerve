@@ -33,7 +33,7 @@ public class TurretToApril extends CommandBase {
     @Override
     public void initialize(){
 
-        aprilBearing = s_Vision.getGoalBearing();
+        aprilBearing = s_Vision.getAdjustedGoalBearing();
 
     }
 
@@ -42,7 +42,7 @@ public class TurretToApril extends CommandBase {
 
         if(s_Vision.hasGoalTag()){
 
-            aprilBearing = s_Vision.getGoalBearing();
+            aprilBearing = s_Vision.getAdjustedGoalBearing();
             double bearing = s_Turret.getDegrees() + aprilBearing;
 
             s_Turret.setSetpoint(bearing);

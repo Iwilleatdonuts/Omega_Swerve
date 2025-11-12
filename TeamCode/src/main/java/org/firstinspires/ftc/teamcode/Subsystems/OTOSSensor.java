@@ -61,8 +61,8 @@ public class OTOSSensor extends SubsystemBase {
         // multiple speeds to get an average, then set the linear scalar to the
         // inverse of the error. For example, if you move the robot 100 inches and
         // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
-        otos.setLinearScalar(1.01038810319);
-        otos.setAngularScalar(1.000859071);
+        otos.setLinearScalar(1.03562700333);
+        otos.setAngularScalar(0.99936984179);
 
         otos.calibrateImu();
 
@@ -117,8 +117,7 @@ public class OTOSSensor extends SubsystemBase {
         enableTelemetry = !enableTelemetry;
     }
 
-    @Override
-    public void periodic(){
+    public void skadoodle(){
 
         if(enableTelemetry){
 

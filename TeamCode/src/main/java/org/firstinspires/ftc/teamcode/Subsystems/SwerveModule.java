@@ -173,8 +173,7 @@ public class SwerveModule extends SubsystemBase {
         enableTelemetry = !enableTelemetry;
     }
 
-    @Override
-    public void periodic(){
+    public void skadoodle(){
 
         if(enableTelemetry) {
 

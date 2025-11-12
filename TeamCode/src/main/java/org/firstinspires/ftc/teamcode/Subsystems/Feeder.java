@@ -56,8 +56,7 @@ public class Feeder extends SubsystemBase {
         feederGateServo.setPosition(Constants.IntakeConstants.gateClosed);
     }
 
-    @Override
-    public void periodic(){
+    public void skadoodle(){
 
         if(enableTelemetry) {
 

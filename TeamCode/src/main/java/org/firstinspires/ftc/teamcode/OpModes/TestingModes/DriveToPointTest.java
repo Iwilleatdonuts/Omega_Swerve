@@ -31,7 +31,7 @@ public class DriveToPointTest extends CommandOpMode {
         s_Swerve.setDefaultCommand(new DriveToDashboardPoint(s_Swerve, s_Sparky, telem));
 
         schedule(new RunCommand(() -> {
-            s_Sparky.periodic();
+            s_Sparky.skadoodle();
             telem.updateAll();
         }));
 

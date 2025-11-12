@@ -7,8 +7,11 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 public class SmartIntake extends CommandBase {
+
+    public final EZTelemetry telem;
 
     private final Intake s_Intake;
     private final Feeder s_Feeder;
@@ -18,8 +21,9 @@ public class SmartIntake extends CommandBase {
 
     double timestamp;
 
-    public SmartIntake(Intake s_Intake, Feeder s_Feeder, Shooter s_Shooter, GamepadEx m_Driver){
+    public SmartIntake(Intake s_Intake, Feeder s_Feeder, Shooter s_Shooter, GamepadEx m_Driver, EZTelemetry telem){
 
+        this.telem = telem;
         this.s_Intake = s_Intake;
         this.s_Feeder = s_Feeder;
         this.s_Shooter = s_Shooter;
@@ -27,6 +31,11 @@ public class SmartIntake extends CommandBase {
         this.m_Driver = m_Driver;
 
         addRequirements(s_Intake, s_Feeder);
+    }
+
+    @Override
+    public void initialize(){
+        s_Intake.toggleTelemetry();
     }
 
     @Override
@@ -45,6 +54,8 @@ public class SmartIntake extends CommandBase {
             s_Feeder.setFeederSpeed(0);
             s_Feeder.closeGate();
         }
+
+    s_Intake.skadoodle();
 
     }
 }
