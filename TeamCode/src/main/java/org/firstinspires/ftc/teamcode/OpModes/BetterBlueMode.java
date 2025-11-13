@@ -117,7 +117,6 @@ public class BetterBlueMode extends LinearOpMode {
 
             long loopStart = System.nanoTime();
 
-            s_Vision.skadoodle();
             driveCommand.execute();
             intakeCommand.execute();
             turretCommand.execute();
@@ -128,12 +127,10 @@ public class BetterBlueMode extends LinearOpMode {
                 s_Sparky.zeroGyro();
             }
 
-//            long loopTime = (System.nanoTime() - loopStart) / 1000000;
-//            telem.putTelemetry("CLT", loopTime);
             telem.updateTelemetry();
 
             long mainThreadSleep = 20 - ((System.nanoTime() - loopStart) / 1000000);
-//
+
             if(mainThreadSleep > 0) {
                 try {
                     Thread.sleep(mainThreadSleep);

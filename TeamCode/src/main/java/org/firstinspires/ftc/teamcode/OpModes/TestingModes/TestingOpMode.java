@@ -35,8 +35,6 @@ public class TestingOpMode extends LinearOpMode {
         Shooter s_Shooter = new Shooter(hardwareMap, telem);
         OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telem);
 
-//        AprilVisionOnTurret.VisionReadings visionReadings = new AprilVisionOnTurret.VisionReadings();
-
         AprilVisionOnTurret s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
 
         telem.enableCameraStrea(s_Vision.getAprilCamera(), 5);

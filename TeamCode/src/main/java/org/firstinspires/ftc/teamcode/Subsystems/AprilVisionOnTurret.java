@@ -45,6 +45,7 @@ public class AprilVisionOnTurret {
 
     private final boolean areWeWinners;
 
+    private boolean exposureConfigured = false;
 
     public AprilVisionOnTurret(HardwareMap hardwareMap, EZTelemetry telem, boolean areWeWinners) {
 
@@ -135,13 +136,6 @@ public class AprilVisionOnTurret {
 
     private void setManualExposure(int exposureMS, int gain) {
         // Ensure Vision Portal has been setup.
-//
-//        // Wait for the camera to be open
-        if (aprilCamera.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            while (aprilCamera.getCameraState() != VisionPortal.CameraState.STREAMING) {
-                System.out.println("I am currentl erroring because my silly stream is off");
-            }
-        }
 
         if(aprilCamera != null) {
             ExposureControl exposureControl = aprilCamera.getCameraControl(ExposureControl.class);
@@ -158,6 +152,11 @@ public class AprilVisionOnTurret {
     }
 
     public void skadoodle() {
+
+        if(!exposureConfigured && aprilCamera.getCameraState() == VisionPortal.CameraState.STREAMING) {
+            setManualExposure(0, 50); // example: 10ms exposure, gain 200
+            exposureConfigured = true;
+        }
 
         detections = aprilTagProcessor.getDetections();
         latestDetection = null;
@@ -195,10 +194,10 @@ public class AprilVisionOnTurret {
             }
         }
         telem.putTelemetry("FPS", getCameraFPS());
-        telem.putTelemetry("Camera State", isCameraOn());
+        telem.putTelemetry("Exposure Set", exposureConfigured);
 
         telem.putDashboard("FPS", getCameraFPS());
-        telem.putDashboard("Camera State", isCameraOn());
+        telem.putDashboard("Exposure Set", exposureConfigured);
 
     }
 

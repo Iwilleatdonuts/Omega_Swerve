@@ -119,7 +119,6 @@ public class OTOSSensor {
     public void skadoodle(){
 
         if(enableTelemetry){
-
             telem.putTelemetry("X Position \t", getPose().x);
             telem.putTelemetry("Y Position \t", getPose().y);
             telem.putTelemetry("OTOS Rotation \t", getHeading());

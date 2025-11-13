@@ -40,7 +40,7 @@ public class SmartIntake {
     }
 
     public void initialize(){
-        s_Intake.toggleTelemetry();
+//        s_Intake.toggleTelemetry();
     }
 
     public void execute(){

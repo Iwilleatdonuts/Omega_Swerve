@@ -40,9 +40,6 @@ public class Intake {
         intakeMotor.setPower(speed);
     }
 
-    public double getSpeed() {
-        return intakeMotor.getVelocity();
-    }
 
     public double getIntakeCurrent() {
         return intakeMotor.getCurrent(CurrentUnit.AMPS);
@@ -56,13 +53,8 @@ public class Intake {
     public void skadoodle(){
 
         if(enableTelemetry) {
-
-            telem.putTelemetry("Intake Speed", getSpeed());
             telem.putTelemetry("Intake Current", getIntakeCurrent());
 
-            telem.putTelemetry("Ball Sensor Value", ballSensor .getState());
-
-            telem.putDashboard("Intake Speed", getSpeed());
             telem.putDashboard("Intake Current", getIntakeCurrent());
         }
 
