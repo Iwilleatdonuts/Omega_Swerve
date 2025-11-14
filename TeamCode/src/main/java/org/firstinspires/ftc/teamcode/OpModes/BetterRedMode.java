@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -44,21 +43,14 @@ public class BetterRedMode extends LinearOpMode {
                 return;
             }
 
-            while(runVisionThread && !Thread.currentThread().isInterrupted()) {
-
-                try {
+            try {
+                while(runVisionThread && !Thread.currentThread().isInterrupted()) {
                     s_Vision.skadoodle();
-                } catch (Exception e) {
-                    telem.putTelemetry("Vision Thread say bye bye", " LMAO");
-                    telem.updateTelemetry();
-                }
-
-                try {
                     Thread.sleep(sleepTime);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    break;
                 }
+            } catch (InterruptedException e) {
+                telem.putTelemetry("vision go bye bye", " hahahah");
+                telem.updateTelemetry();
             }
 
         }
@@ -116,6 +108,9 @@ public class BetterRedMode extends LinearOpMode {
         Thread visionThread = new Thread(visionRunnable, "Vision Thread");
         visionThread.start();
 
+        telem.putTelemetry("FPS", s_Vision.getCameraFPS());
+        telem.updateTelemetry();
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -147,15 +142,8 @@ public class BetterRedMode extends LinearOpMode {
                 }
             }
         }
-
-        s_Vision.stopCamera();
+        s_Sparky.disable();
         visionRunnable.stop();
-        visionThread.interrupt();
-        try {
-            visionThread.join(500);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
 
     }
 

@@ -85,10 +85,6 @@ public class AprilVisionOnTurret {
 
     }
 
-    public void stopCamera(){
-        aprilCamera.close();
-    }
-
     public void toggleTelemetry() {
         enableTelemetry = !enableTelemetry;
     }

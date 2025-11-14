@@ -83,6 +83,9 @@ public class RedShooterTestMode extends LinearOpMode {
         intakeCommand.initialize();
         turretCommand.initialize();
 
+        telem.putTelemetry("FPS", s_Vision.getCameraFPS());
+        telem.updateTelemetry();
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -138,7 +141,6 @@ public class RedShooterTestMode extends LinearOpMode {
             telem.updateTelemetry();
 
         }
-
-        s_Vision.stopCamera();
+        s_Sparky.disable();
     }
 }

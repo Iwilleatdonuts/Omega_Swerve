@@ -18,6 +18,8 @@ public class OTOSSensor {
 
     private boolean enableTelemetry;
 
+    private volatile boolean disabled = false;
+
     public OTOSSensor(HardwareMap hardwareMap, EZTelemetry telem){
 
         this.telem = telem;
@@ -30,7 +32,12 @@ public class OTOSSensor {
 
     }
 
+    public void disable() {
+        disabled = true;
+    }
+
     public void configureOTOS(SparkFunOTOS.Pose2D currentPose) {
+        if (disabled) return;
 
         otos.setLinearUnit(DistanceUnit.METER);
         otos.setAngularUnit(AngleUnit.DEGREES);
@@ -66,6 +73,8 @@ public class OTOSSensor {
 
         otos.resetTracking();
 
+        if (disabled) return;
+
         SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(currentPose.x, currentPose.y, currentPose.h);
         otos.setPosition(currentPosition);
 
@@ -80,6 +89,7 @@ public class OTOSSensor {
     }
 
     public Pose2D getPose() {
+        if (disabled) return new Pose2D(0,0,0);
         SparkFunOTOS.Pose2D otosPose = otos.getPosition();
         double heading = otosPose.h;
         heading = (heading + 360) % 360;
@@ -95,6 +105,7 @@ public class OTOSSensor {
     }
 
     public double getHeading() {
+        if (disabled) return 0;
         double rotation = otos.getPosition().h;
 
         rotation = (rotation+360)%360;
@@ -103,23 +114,8 @@ public class OTOSSensor {
     }
 
     public void zeroGyro() {
+        if (disabled) return;
         otos.setPosition(new SparkFunOTOS.Pose2D(otos.getPosition().x, otos.getPosition().y, 0));
-    }
-
-    public void resetPositionTracking() {
-        otos.resetTracking();
-    }
-
-    public SparkFunOTOS.Pose2D getVelocity() {
-        return otos.getVelocity();
-    }
-
-    public SparkFunOTOS.Pose2D getPoseSTD() {
-        return otos.getPositionStdDev();
-    }
-
-    public SparkFunOTOS.Pose2D getVelocitySTD() {
-        return otos.getVelocityStdDev();
     }
 
     public void toggleTelemetry() {
@@ -128,7 +124,7 @@ public class OTOSSensor {
 
     public void skadoodle(){
 
-        if(enableTelemetry){
+        if (disabled || !enableTelemetry) return;
             telem.putTelemetry("X Position \t", getPose().x());
             telem.putTelemetry("Y Position \t", getPose().y());
             telem.putTelemetry("OTOS Rotation \t", getHeading());
@@ -136,7 +132,7 @@ public class OTOSSensor {
             telem.putDashboard("X Position \t", getPose().x());
             telem.putDashboard("Y Position \t", getPose().y());
             telem.putDashboard("OTOS Rotation \t", getHeading());
-        }
+
     }
 
 }

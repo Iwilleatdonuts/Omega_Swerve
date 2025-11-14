@@ -40,21 +40,14 @@ public class RedCloseDumpAuto extends LinearOpMode {
                 return;
             }
 
-            while(runVisionThread && !Thread.currentThread().isInterrupted()) {
-
-                try {
+            try {
+                while(runVisionThread && !Thread.currentThread().isInterrupted()) {
                     s_Vision.skadoodle();
-                } catch (Exception e) {
-                    telem.putTelemetry("Vision Thread say bye bye", " LMAO");
-                    telem.updateTelemetry();
-                }
-
-                try {
                     Thread.sleep(sleepTime);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    break;
                 }
+            } catch (InterruptedException e) {
+                telem.putTelemetry("vision go bye bye", " hahahah");
+                telem.updateTelemetry();
             }
 
         }
@@ -65,10 +58,10 @@ public class RedCloseDumpAuto extends LinearOpMode {
     private AprilVisionOnTurret s_Vision;
     private OTOSSensor s_Sparky;
     private Swerve s_Swerve;
-    private Turret s_Turret;
-    private Shooter s_Shooter;
-    private Intake s_Intake;
-    private Feeder s_Feeder;
+//    private Turret s_Turret;
+//    private Shooter s_Shooter;
+//    private Intake s_Intake;
+//    private Feeder s_Feeder;
 
     private DriveToAutoPoint driveCommand;
     private AutoTurret turretCommand;
@@ -85,16 +78,16 @@ public class RedCloseDumpAuto extends LinearOpMode {
         s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
         s_Sparky = new OTOSSensor(hardwareMap, telem);
         s_Swerve = new Swerve(hardwareMap, telem);
-        s_Shooter = new Shooter(hardwareMap, telem);
-        s_Turret = new Turret(hardwareMap, telem);
-        s_Intake = new Intake(hardwareMap, telem);
-        s_Feeder = new Feeder(hardwareMap, telem);
+//        s_Shooter = new Shooter(hardwareMap, telem);
+//        s_Turret = new Turret(hardwareMap, telem);
+//        s_Intake = new Intake(hardwareMap, telem);
+//        s_Feeder = new Feeder(hardwareMap, telem);
 
         s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.closeStart));
         s_Sparky.toggleTelemetry();
 
         driveCommand = new DriveToAutoPoint(s_Swerve, s_Sparky, telem);
-        turretCommand = new AutoTurret(s_Turret, s_Vision);
+//        turretCommand = new AutoTurret(s_Turret, s_Vision);
 
         phase = 0;
 
@@ -206,15 +199,7 @@ public class RedCloseDumpAuto extends LinearOpMode {
 
         }
 
-        s_Vision.stopCamera();
-
         visionRunnable.stop();
-        visionThread.interrupt();
-        try {
-            visionThread.join(500);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
 
     }
 }

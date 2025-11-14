@@ -47,6 +47,9 @@ public class TestingOpMode extends LinearOpMode {
         boolean runTurns = false;
         boolean enableOtherTelemetries = false;
 
+        telem.putTelemetry("FPS", s_Vision.getCameraFPS());
+        telem.updateTelemetry();
+
         waitForStart();
         runtime.reset();
 
@@ -191,7 +194,6 @@ public class TestingOpMode extends LinearOpMode {
             telem.updateAll();
 
         }
-
-        s_Vision.stopCamera();
+        s_Sparky.disable();
     }
 }

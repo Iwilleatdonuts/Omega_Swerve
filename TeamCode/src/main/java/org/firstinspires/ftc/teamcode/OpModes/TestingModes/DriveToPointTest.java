@@ -46,5 +46,6 @@ public class DriveToPointTest extends LinearOpMode {
 
             telem.updateAll();
         }
+        s_Sparky.disable();
     }
 }
