@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -72,6 +73,8 @@ public class RedShooterTestMode extends LinearOpMode {
         s_Sparky = new OTOSSensor(hardwareMap, telem);
         s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
 
+        s_Sparky.configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
+
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, m_Driver, m_Operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Vision, m_Driver, m_Operator, telem);
         turretCommand = new TurretToApril(s_Swerve, s_Turret, s_Vision, m_Operator);
@@ -135,5 +138,7 @@ public class RedShooterTestMode extends LinearOpMode {
             telem.updateTelemetry();
 
         }
+
+        s_Vision.stopCamera();
     }
 }

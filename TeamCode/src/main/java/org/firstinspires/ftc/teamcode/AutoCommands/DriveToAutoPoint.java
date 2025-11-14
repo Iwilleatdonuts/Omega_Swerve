@@ -1,16 +1,13 @@
-package org.firstinspires.ftc.teamcode.Commands;
-
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+package org.firstinspires.ftc.teamcode.AutoCommands;
 
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.HolonomicDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
-import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
 
-public class DriveToDashboardPoint {
+public class DriveToAutoPoint {
 
     private final EZTelemetry telem;
 
@@ -26,14 +23,14 @@ public class DriveToDashboardPoint {
 
     private final HolonomicDriveController holoController;
 
-    public DriveToDashboardPoint(Swerve s_Swerve, OTOSSensor s_Sparky, EZTelemetry telem){
+    public DriveToAutoPoint(Swerve s_Swerve, OTOSSensor s_Sparky, EZTelemetry telem){
 
         this.telem = telem;
 
+        targetPosition = new Pose2D(s_Sparky.getPose().x(), s_Sparky.getPose().y(), s_Sparky.getHeading());
+
         this.s_Swerve = s_Swerve;
         this.s_Sparky = s_Sparky;
-
-        targetPosition = s_Swerve.getTargetPose();
 
         xController = new PIDController(2.2, 0, 0.05);
         yController = new PIDController(2.2, 0, 0.05);
@@ -53,29 +50,17 @@ public class DriveToDashboardPoint {
         holoController = new HolonomicDriveController(xController, yController, staticAngleController, dynamicAngleController);
     }
 
-    public void initialize(){
+    public void initialize(Pose2D pose){
         xController.reset();
         yController.reset();
         staticAngleController.reset();
         dynamicAngleController.reset();
+        targetPosition = pose;
     }
 
     public void execute(){
 
         Pose2D currentPose = s_Sparky.getPose();
-        targetPosition = new Pose2D(PIDTuning.randomVal0, PIDTuning.randomVal1, PIDTuning.randomVal2);
-
-//        double rotationTarget = targetPosition.h;
-//        rotationTarget = (rotationTarget + 360) % 360;
-//
-//        double xOutput = xController.calculate(currentPose.x, targetPosition.x);
-//        double yOutput = yController.calculate(currentPose.y, targetPosition.y);
-//        double rOutput = 0;
-//        if(Math.abs(s_Sparky.getHeading() - rotationTarget) > 0.5) {
-//            rOutput = -angleController.calculate(s_Sparky.getHeading(), rotationTarget);
-//        }
-//
-//        s_Swerve.drive(xOutput, yOutput, rOutput, true, false);
 
         double[] outputs = holoController.calculate(currentPose, targetPosition);
 
@@ -85,6 +70,22 @@ public class DriveToDashboardPoint {
         telem.putTelemetry("Y Target", targetPosition.y());
         telem.putTelemetry("H Target", targetPosition.r());
 
+    }
+
+    public boolean isAtSetpoint(){
+        double xError = Math.abs(s_Sparky.getPose().x() - targetPosition.x());
+        double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
+        double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
+
+        return xError < 0.02 && yError < 0.02 && rError < 0.5;
+    }
+
+    public boolean isAtRoughSetpoint(){
+        double xError = Math.abs(s_Sparky.getPose().x() - targetPosition.x());
+        double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
+        double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
+
+        return xError < 0.1 && yError < 0.1 && rError < 2;
     }
 
 }

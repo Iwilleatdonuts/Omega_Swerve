@@ -1,42 +1,39 @@
 package org.firstinspires.ftc.teamcode.Utilities;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-
 public class HolonomicDriveController {
     private final PIDController xController;
     private final PIDController yController;
     private final PIDController rController;
     private final PIDController slowRController;
 
-    private final SparkFunOTOS.Pose2D poseTolerance;
+    private final Pose2D poseTolerance;
 
     public HolonomicDriveController(PIDController xController, PIDController yController, PIDController rController, PIDController slowRController){
         this.xController = xController;
         this.yController = yController;
         this.rController = rController;
         this.slowRController = slowRController;
-        this.poseTolerance = new SparkFunOTOS.Pose2D(0.01, 0.01, 1); // meters + degrees
+        this.poseTolerance = new Pose2D(0.01, 0.01, 1); // meters + degrees
     }
 
-    public boolean atSetpoint(SparkFunOTOS.Pose2D currentPose, SparkFunOTOS.Pose2D targetPose){
-        return Math.abs(currentPose.x - targetPose.x) < poseTolerance.x &&
-                Math.abs(currentPose.y - targetPose.y) < poseTolerance.y &&
-                Math.abs(currentPose.h - targetPose.h) < poseTolerance.h;
+    public boolean atSetpoint(Pose2D currentPose, Pose2D targetPose){
+        return Math.abs(currentPose.x() - targetPose.x()) < poseTolerance.x() &&
+                Math.abs(currentPose.y() - targetPose.y()) < poseTolerance.y() &&
+                Math.abs(currentPose.r() - targetPose.r()) < poseTolerance.r();
     }
 
-    public double[] calculate(SparkFunOTOS.Pose2D currentPose, SparkFunOTOS.Pose2D targetPose){
-        double xOutput = xController.calculate(currentPose.x, targetPose.x);
-        double yOutput = yController.calculate(currentPose.y, targetPose.y);
+    public double[] calculate(Pose2D currentPose, Pose2D targetPose){
+        double xOutput = xController.calculate(currentPose.x(), targetPose.x());
+        double yOutput = yController.calculate(currentPose.y(), targetPose.y());
 
-        double headingError = targetPose.h - currentPose.h;
-        headingError = ((headingError + 180) % 360) - 180;
+        double headingError = targetPose.r() - currentPose.r();
 
         double rOutput = 0;
 
         if(xOutput != 0 || yOutput != 0) {
-            rOutput = slowRController.calculate(0, headingError);
+            rOutput = -slowRController.calculate(0, headingError);
         } else {
-            rOutput = rController.calculate(0, headingError);
+            rOutput = -rController.calculate(0, headingError);
         }
 
         return new double[]{xOutput, yOutput, rOutput};

@@ -85,6 +85,10 @@ public class AprilVisionOnTurret {
 
     }
 
+    public void stopCamera(){
+        aprilCamera.close();
+    }
+
     public void toggleTelemetry() {
         enableTelemetry = !enableTelemetry;
     }
@@ -153,10 +157,10 @@ public class AprilVisionOnTurret {
 
     public void skadoodle() {
 
-        if(!exposureConfigured && aprilCamera.getCameraState() == VisionPortal.CameraState.STREAMING) {
-            setManualExposure(0, 50); // example: 10ms exposure, gain 200
-            exposureConfigured = true;
-        }
+//        if(!exposureConfigured && aprilCamera.getCameraState() == VisionPortal.CameraState.STREAMING) {
+//            setManualExposure(0, 0); // example: 10ms exposure, gain 200
+//            exposureConfigured = true;
+//        }
 
         detections = aprilTagProcessor.getDetections();
         latestDetection = null;
@@ -183,7 +187,7 @@ public class AprilVisionOnTurret {
                             filteredBearing = bearingFilter.update(rawBearing);
                             filteredDistance = distanceFilter.update(rawDistance);
                             goalYaw = allianceGoalTag.ftcPose.yaw;
-                            adjustedBearing = getGoalBearing() + (getGoalYaw() * 0.133333333333);
+                            adjustedBearing = getGoalBearing() + (getGoalYaw() * 0.05);
                         } catch(Exception ignored) {
 
                         }

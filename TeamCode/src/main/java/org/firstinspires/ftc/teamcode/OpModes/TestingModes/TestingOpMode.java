@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes.TestingModes;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -34,6 +35,8 @@ public class TestingOpMode extends LinearOpMode {
         Turret s_Turret = new Turret(hardwareMap, telem);
         Shooter s_Shooter = new Shooter(hardwareMap, telem);
         OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telem);
+
+        s_Sparky.configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
 
         AprilVisionOnTurret s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
 
@@ -188,5 +191,7 @@ public class TestingOpMode extends LinearOpMode {
             telem.updateAll();
 
         }
+
+        s_Vision.stopCamera();
     }
 }

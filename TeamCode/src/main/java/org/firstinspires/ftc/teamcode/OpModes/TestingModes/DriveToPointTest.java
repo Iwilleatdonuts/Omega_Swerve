@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes.TestingModes;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.RunCommand;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -29,6 +30,7 @@ public class DriveToPointTest extends LinearOpMode {
         s_Sparky = new OTOSSensor(hardwareMap, telem);
 
         s_Sparky.toggleTelemetry();
+        s_Sparky.configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
 
         driveCommand = new DriveToDashboardPoint(s_Swerve, s_Sparky, telem);
 

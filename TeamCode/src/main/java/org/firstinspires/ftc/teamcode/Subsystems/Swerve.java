@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class Swerve {
     private final Map<String, Object> velocityErrors = new HashMap<>();
     private final Map<String, Object> angleErrors = new HashMap<>();
 
-    private SparkFunOTOS.Pose2D targetPose;
+    private Pose2D targetPose;
 
     public Swerve(HardwareMap hardwareMap, EZTelemetry telem){
 
@@ -48,7 +48,7 @@ public class Swerve {
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        targetPose = new SparkFunOTOS.Pose2D(0, 0, 0);
+        targetPose = new Pose2D(0, 0, 0);
 
     }
 
@@ -72,7 +72,7 @@ public class Swerve {
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        targetPose = new SparkFunOTOS.Pose2D(0, 0, 0);
+        targetPose = new Pose2D(0, 0, 0);
 
     }
 
@@ -207,14 +207,14 @@ public class Swerve {
     }
 
     public void setTargetPose(double newX, double newY, double newH) {
-        targetPose = new SparkFunOTOS.Pose2D(newX, newY, newH);
+        targetPose = new Pose2D(newX, newY, newH);
     }
 
-    public void setTargetPose(SparkFunOTOS.Pose2D newPose) {
+    public void setTargetPose(Pose2D newPose) {
         targetPose = newPose;
     }
 
-    public SparkFunOTOS.Pose2D getTargetPose(){
+    public Pose2D getTargetPose(){
         return targetPose;
     }
 
@@ -223,14 +223,14 @@ public class Swerve {
         if(enableTelemetry) {
 
             telem.putTelemetry("Robot Heading", getHeading());
-            telem.putTelemetry("Target Pose X", getTargetPose().x);
-            telem.putTelemetry("Target Pose Y", getTargetPose().y);
-            telem.putTelemetry("Target Pose H", getTargetPose().h);
+            telem.putTelemetry("Target Pose X", getTargetPose().x());
+            telem.putTelemetry("Target Pose Y", getTargetPose().y());
+            telem.putTelemetry("Target Pose H", getTargetPose().r());
 
             telem.putDashboard("Robot Heading", getHeading());
-            telem.putDashboard("Target Pose X", getTargetPose().x);
-            telem.putDashboard("Target Pose Y", getTargetPose().y);
-            telem.putDashboard("Target Pose H", getTargetPose().h);
+            telem.putDashboard("Target Pose X", getTargetPose().x());
+            telem.putDashboard("Target Pose Y", getTargetPose().y());
+            telem.putDashboard("Target Pose H", getTargetPose().r());
 
         }
 

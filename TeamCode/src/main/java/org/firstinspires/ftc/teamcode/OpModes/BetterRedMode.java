@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -97,6 +99,9 @@ public class BetterRedMode extends LinearOpMode {
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
 
+        s_Sparky.toggleTelemetry();
+        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.gateLineupTeleop));
+
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Vision, driver, operator, telem);
         turretCommand = new TurretToApril(s_Swerve, s_Turret, s_Vision, operator);
@@ -116,6 +121,8 @@ public class BetterRedMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             long loopStart = System.nanoTime();
+
+            s_Sparky.skadoodle();
 
             driveCommand.execute();
             intakeCommand.execute();
@@ -141,6 +148,7 @@ public class BetterRedMode extends LinearOpMode {
             }
         }
 
+        s_Vision.stopCamera();
         visionRunnable.stop();
         visionThread.interrupt();
         try {

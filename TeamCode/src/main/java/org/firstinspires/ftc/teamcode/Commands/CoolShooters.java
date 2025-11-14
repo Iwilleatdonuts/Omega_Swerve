@@ -66,7 +66,6 @@ public class CoolShooters {
         }
 
         if(shootersGunnaShoot){
-            s_Shooter.setLed(s_Shooter.shooterAtRoughSpeed());
             if(s_Vision.hasGoalTag()){
                 double distance = s_Vision.getGoalDistance();
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);

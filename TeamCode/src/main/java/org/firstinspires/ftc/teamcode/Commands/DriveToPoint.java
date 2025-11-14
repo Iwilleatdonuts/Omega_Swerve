@@ -1,17 +1,16 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
+import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
 
 public class DriveToPoint {
 
     private final Swerve s_Swerve;
     private final OTOSSensor s_Sparky;
 
-    private SparkFunOTOS.Pose2D targetPosition;
+    private Pose2D targetPosition;
 
     private final PIDController xController;
     private final PIDController yController;
@@ -51,14 +50,13 @@ public class DriveToPoint {
 
     public void execute(){
 
-        SparkFunOTOS.Pose2D currentPose = s_Sparky.getPose();
+        Pose2D currentPose = s_Sparky.getPose();
         targetPosition = s_Swerve.getTargetPose();
 
-        double rotationTarget = targetPosition.h;
-        rotationTarget = (rotationTarget + 360) % 360;
+        double rotationTarget = targetPosition.r();
 
-        double xOutput = xController.calculate(currentPose.x, targetPosition.x);
-        double yOutput = yController.calculate(currentPose.y, targetPosition.y);
+        double xOutput = xController.calculate(currentPose.x(), targetPosition.x());
+        double yOutput = yController.calculate(currentPose.y(), targetPosition.y());
         double rOutput = 0;
         if(Math.abs(s_Sparky.getHeading() - rotationTarget) > 0.5) {
             if(xOutput != 0 || yOutput != 0) {

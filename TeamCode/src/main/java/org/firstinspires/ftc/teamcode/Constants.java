@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class Constants {
@@ -161,6 +162,38 @@ public class Constants {
         public static final Position poseCameraPosition = new Position(DistanceUnit.MM, 0, 169.56645, 308.34841, 0);
         public static final YawPitchRollAngles poseCameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES, 0, -70, 0, 0);
 
+
+    }
+
+    public static final class AutoConstants {
+
+        public static final class RedConstants {
+            public static final Pose2D closeStart = new Pose2D(1.2, 1.18, 270);
+            public static final Pose2D closeShot = new  Pose2D(0.9, 0.9, 270);
+            public static final Pose2D closeBallLineup = new Pose2D(0.66376, 0.31681, 270);
+            public static final Pose2D mediumBallLineup = new Pose2D(0.66376, -0.30519, 270);
+            public static final Pose2D farBallLineup = new Pose2D(0.66376, -0.88619, 270);
+            public static final Pose2D closeBallPickup = new Pose2D(1.28558, 0.31681, 270);
+            public static final Pose2D mediumBallPickup = new Pose2D(1.28558, -0.30519, 270);
+            public static final Pose2D farBallPickup = new Pose2D(1.28558, -0.88619, 270);
+            public static final Pose2D gateLineup = new Pose2D(1.25, 0, 180);
+            public static final Pose2D gateLineupTeleop = new Pose2D(0, 1.25, 270);
+
+        }
+
+        public static final class BlueConstants {
+            public static final Pose2D closeStart = new Pose2D(-1.275, 1.227, 90);
+            public static final Pose2D closeShot = new Pose2D(-0.9, 0.9, 90);
+            public static final Pose2D closeBallLineup = new Pose2D(-0.66376, 0.31681, 90);
+            public static final Pose2D mediumBallLineup = new Pose2D(-0.66376, -0.30519, 90);
+            public static final Pose2D farBallLineup = new Pose2D(-0.66376, -0.88619, 90);
+            public static final Pose2D closeBallPickup = new Pose2D(-1.28558, 0.31681, 90);
+            public static final Pose2D mediumBallPickup = new Pose2D(-1.28558, -0.30519, 90);
+            public static final Pose2D farBallPickup = new Pose2D(-1.28558, -0.88619, 90);
+            public static final Pose2D gateLineup = new Pose2D(-1.25, 0, 180);
+            public static final Pose2D gateLineupTeleop = new Pose2D(0, 1.25, 90);
+
+        }
 
     }
 }

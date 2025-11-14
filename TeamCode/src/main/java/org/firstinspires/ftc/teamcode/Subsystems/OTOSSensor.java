@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
 
 public class OTOSSensor {
 
@@ -27,11 +28,9 @@ public class OTOSSensor {
 
         enableTelemetry = false;
 
-        configureOTOS();
-
     }
 
-    public void configureOTOS() {
+    public void configureOTOS(SparkFunOTOS.Pose2D currentPose) {
 
         otos.setLinearUnit(DistanceUnit.METER);
         otos.setAngularUnit(AngleUnit.DEGREES);
@@ -67,7 +66,7 @@ public class OTOSSensor {
 
         otos.resetTracking();
 
-        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
+        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(currentPose.x, currentPose.y, currentPose.h);
         otos.setPosition(currentPosition);
 
         SparkFunOTOS.Version hwVersion = new SparkFunOTOS.Version();
@@ -80,8 +79,19 @@ public class OTOSSensor {
 //        telemetry.addLine(String.format("OTOS Firmware Version: v%d.%d", fwVersion.major, fwVersion.minor));
     }
 
-    public SparkFunOTOS.Pose2D getPose() {
-        return otos.getPosition();
+    public Pose2D getPose() {
+        SparkFunOTOS.Pose2D otosPose = otos.getPosition();
+        double heading = otosPose.h;
+        heading = (heading + 360) % 360;
+        return new Pose2D(otosPose.x, otosPose.y, heading);
+    }
+
+    public SparkFunOTOS.Pose2D normiePoseToSparkyPose(Pose2D normiePose) {
+        double heading = normiePose.r();
+        if(heading > 180) {
+            heading-=360;
+        }
+        return new SparkFunOTOS.Pose2D(normiePose.x(), normiePose.y(), heading);
     }
 
     public double getHeading() {
@@ -119,12 +129,12 @@ public class OTOSSensor {
     public void skadoodle(){
 
         if(enableTelemetry){
-            telem.putTelemetry("X Position \t", getPose().x);
-            telem.putTelemetry("Y Position \t", getPose().y);
+            telem.putTelemetry("X Position \t", getPose().x());
+            telem.putTelemetry("Y Position \t", getPose().y());
             telem.putTelemetry("OTOS Rotation \t", getHeading());
 
-            telem.putDashboard("X Position \t", getPose().x);
-            telem.putDashboard("Y Position \t", getPose().y);
+            telem.putDashboard("X Position \t", getPose().x());
+            telem.putDashboard("Y Position \t", getPose().y());
             telem.putDashboard("OTOS Rotation \t", getHeading());
         }
     }

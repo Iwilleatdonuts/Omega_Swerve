@@ -47,8 +47,6 @@ public class SmartIntake {
 
         s_Intake.setSpeed(m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
-        s_Shooter.setLed(false);
-
          if (m_Operator.isDown(GamepadKeys.Button.A)){
             s_Feeder.openGate();
             s_Feeder.setFeederSpeed(1);

@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -97,6 +98,9 @@ public class BetterBlueMode extends LinearOpMode {
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
 
+        s_Sparky.toggleTelemetry();
+        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.gateLineupTeleop));
+
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Vision, driver, operator, telem);
         turretCommand = new TurretToApril(s_Swerve, s_Turret, s_Vision, operator);
@@ -141,6 +145,7 @@ public class BetterBlueMode extends LinearOpMode {
             }
         }
 
+        s_Vision.stopCamera();
         visionRunnable.stop();
         visionThread.interrupt();
         try {
