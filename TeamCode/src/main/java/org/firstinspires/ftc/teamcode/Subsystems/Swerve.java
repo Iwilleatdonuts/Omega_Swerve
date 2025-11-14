@@ -76,6 +76,21 @@ public class Swerve {
 
     }
 
+    public void stop(){
+        mod0.setDrivePower(0);
+        mod1.setDrivePower(0);
+        mod2.setDrivePower(0);
+        mod3.setDrivePower(0);
+        mod0.setModuleSetpoint(mod0.getDegrees(true));
+        mod1.setModuleSetpoint(mod1.getDegrees(true));
+        mod2.setModuleSetpoint(mod2.getDegrees(true));
+        mod3.setModuleSetpoint(mod3.getDegrees(true));
+        mod0.setTurnSpeed(0);
+        mod1.setTurnSpeed(0);
+        mod2.setTurnSpeed(0);
+        mod3.setTurnSpeed(0);
+    }
+
     public void drive(double xVal, double yVal, double rVal, boolean fieldRelative, boolean slowMode){
 
         if (Math.abs(xVal) < 0.03) {xVal = 0;}

@@ -85,7 +85,7 @@ public class DriveToAutoPoint {
         double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
         double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
 
-        return xError < 0.1 && yError < 0.1 && rError < 2;
+        return xError < 0.1 && yError < 0.1 && rError < 10;
     }
 
 }
