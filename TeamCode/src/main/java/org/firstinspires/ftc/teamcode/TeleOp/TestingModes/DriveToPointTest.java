@@ -45,6 +45,7 @@ public class DriveToPointTest extends LinearOpMode {
             driveCommand.execute();
 
             s_Sparky.skadoodle();
+            s_Swerve.skadoodle();
 
             telem.updateAll();
         }

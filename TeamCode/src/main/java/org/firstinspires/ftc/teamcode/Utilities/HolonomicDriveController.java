@@ -30,10 +30,12 @@ public class HolonomicDriveController {
 
         double rOutput = 0;
 
-        if(xOutput > 0.1 || yOutput > 0.1) {
+        if(headingError < 5) {
             rOutput = -slowRController.calculate(0, headingError);
+            rController.reset();
         } else {
             rOutput = -rController.calculate(0, headingError);
+            slowRController.reset();
         }
 
         return new double[]{xOutput, yOutput, rOutput};

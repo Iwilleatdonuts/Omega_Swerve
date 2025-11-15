@@ -149,10 +149,17 @@ public class Swerve {
         double mod2Angle = normalizeModuleAngle(Math.toDegrees(Math.atan2(yBackComponent, xLeftComponent)));
         double mod3Angle = normalizeModuleAngle(Math.toDegrees(Math.atan2(yBackComponent, xRightComponent)));
 
-        mod0.setDrivePower(mod0Speed);
-        mod1.setDrivePower(mod1Speed);
-        mod2.setDrivePower(mod2Speed);
-        mod3.setDrivePower(mod3Speed);
+        if(!(mod0.isWithinDegrees(45) && mod1.isWithinDegrees(45) && mod2.isWithinDegrees(45) && mod3.isWithinDegrees(45))){
+            mod0Speed*=0.8;
+            mod1Speed*=0.8;
+            mod2Speed*=0.8;
+            mod3Speed*=0.8;
+        }
+            mod0.setDrivePower(mod0Speed);
+            mod1.setDrivePower(mod1Speed);
+            mod2.setDrivePower(mod2Speed);
+            mod3.setDrivePower(mod3Speed);
+
 
         if (xVal != 0 || yVal != 0 || rVal != 0) {
             mod0.setModuleSetpoint(mod0Angle);
@@ -192,6 +199,15 @@ public class Swerve {
         angleErrors.put("Mod 1 Angle Error: \t", mod1.getWrappedError(mod1.getModuleSetpoint(), mod1.getDegrees(true)));
         angleErrors.put("Mod 2 Angle Error: \t", mod2.getWrappedError(mod2.getModuleSetpoint(), mod2.getDegrees(true)));
         angleErrors.put("Mod 3 Angle Error: \t", mod3.getWrappedError(mod3.getModuleSetpoint(), mod3.getDegrees(true)));
+        return angleErrors;
+    }
+
+    public Map<String, Object> getSetpoints() {
+        angleErrors.clear();
+        angleErrors.put("Mod 0 Setpoint: \t", mod0.getModuleSetpoint());
+        angleErrors.put("Mod 1 Setpoint: \t", mod1.getModuleSetpoint());
+        angleErrors.put("Mod 2 Setpoint: \t", mod2.getModuleSetpoint());
+        angleErrors.put("Mod 3 Setpoint: \t", mod3.getModuleSetpoint());
         return angleErrors;
     }
 

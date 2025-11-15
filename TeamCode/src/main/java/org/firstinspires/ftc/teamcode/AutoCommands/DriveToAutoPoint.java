@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.HolonomicDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
+import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
 
 public class DriveToAutoPoint {
@@ -43,7 +44,7 @@ public class DriveToAutoPoint {
         staticAngleController.enableContinuousInput(0, 360);
 
         dynamicAngleController = new PIDController(0.0025, 0.015, 0.0001);
-//        angleController = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);
+//        dynamicAngleController = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);
         dynamicAngleController.setIZone(40);
         dynamicAngleController.enableContinuousInput(0, 360);
 
@@ -77,7 +78,7 @@ public class DriveToAutoPoint {
         double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
         double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
 
-        return xError < 0.02 && yError < 0.02 && rError < 0.5;
+        return xError < 0.02 && yError < 0.02 && rError < 3;
     }
 
     public boolean isAtRoughSetpoint(){

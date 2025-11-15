@@ -39,6 +39,8 @@ public class DriveToDashboardPoint {
         yController = new PIDController(2.2, 0, 0.05);
 //        xController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
 //        yController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
+        xController.setIZone(0.5);
+        yController.setIZone(0.5);
 
         staticAngleController = new PIDController(0.006, 0.02, 0.00015);
 //        angleController = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);
@@ -65,25 +67,13 @@ public class DriveToDashboardPoint {
         Pose2D currentPose = s_Sparky.getPose();
         targetPosition = new Pose2D(PIDTuning.randomVal0, PIDTuning.randomVal1, PIDTuning.randomVal2);
 
-//        double rotationTarget = targetPosition.h;
-//        rotationTarget = (rotationTarget + 360) % 360;
-//
-//        double xOutput = xController.calculate(currentPose.x, targetPosition.x);
-//        double yOutput = yController.calculate(currentPose.y, targetPosition.y);
-//        double rOutput = 0;
-//        if(Math.abs(s_Sparky.getHeading() - rotationTarget) > 0.5) {
-//            rOutput = -angleController.calculate(s_Sparky.getHeading(), rotationTarget);
-//        }
-//
-//        s_Swerve.drive(xOutput, yOutput, rOutput, true, false);
-
         double[] outputs = holoController.calculate(currentPose, targetPosition);
 
         s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
 
-        telem.putTelemetry("X Target", targetPosition.x());
-        telem.putTelemetry("Y Target", targetPosition.y());
-        telem.putTelemetry("H Target", targetPosition.r());
+//        telem.putTelemetry("X Target", targetPosition.x());
+//        telem.putTelemetry("Y Target", targetPosition.y());
+//        telem.putTelemetry("H Target", targetPosition.r());
 
     }
 

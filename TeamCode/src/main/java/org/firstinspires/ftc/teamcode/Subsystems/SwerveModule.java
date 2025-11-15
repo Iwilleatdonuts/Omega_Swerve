@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
+import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class SwerveModule {
@@ -59,7 +60,7 @@ public class SwerveModule {
         angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
         angleController = new PIDController(Constants.DriveTrainConstants.angleKP, Constants.DriveTrainConstants.angleKI, Constants.DriveTrainConstants.angleKD);
-//        angleController = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD);
+//        angleController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
         angleController.enableContinuousInput(0, 360);
         angleController.setIZone(30);
 

@@ -13,7 +13,7 @@ public class Constants {
 
     public static final class DriveTrainConstants {
 
-        public static final double angleKP = 0.009;//0.0042
+        public static final double angleKP = 0.009;//0.009
         public static final double angleKI = 0.004;
         public static final double angleKD = 0;
 
