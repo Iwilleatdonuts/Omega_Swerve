@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
@@ -16,8 +17,8 @@ public class TurnToPointDrive {
     private final EZTelemetry telem;
     private final Swerve s_Swerve;
     private final OTOSSensor s_Sparky;
-    private final GamepadEx m_Driver;
-    private final GamepadEx m_Operator;
+    private final OmegaController m_Driver;
+    private final OmegaController m_Operator;
 
     private boolean slowMode;
     private final PIDController staticAnglePID;
@@ -33,7 +34,7 @@ public class TurnToPointDrive {
 
     private double timestamp;
 
-    public TurnToPointDrive(EZTelemetry telem, Swerve s_Swerve, OTOSSensor s_Sparky, GamepadEx m_Driver, GamepadEx m_Operator){
+    public TurnToPointDrive(EZTelemetry telem, Swerve s_Swerve, OTOSSensor s_Sparky, OmegaController m_Driver, OmegaController m_Operator){
 
         this.telem = telem;
         this.s_Swerve = s_Swerve;

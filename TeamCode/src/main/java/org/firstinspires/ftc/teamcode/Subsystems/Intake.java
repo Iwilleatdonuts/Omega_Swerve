@@ -3,21 +3,22 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.MathUtil;
 
 public class Intake {
 
     private final EZTelemetry telem;
 
     private final DcMotorEx intakeMotor;
-    private final DigitalChannel ballSensor;
 
     private boolean enableTelemetry;
+
+    private double targetSpeed;
 
     public Intake(HardwareMap hardwareMap, EZTelemetry telem) {
 
@@ -29,11 +30,14 @@ public class Intake {
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        ballSensor = hardwareMap.get(DigitalChannel.class, "ballSensor");
-        ballSensor.setMode(DigitalChannel.Mode.INPUT);
-
         enableTelemetry = false;
 
+        targetSpeed = 0;
+
+    }
+
+    public void setTargetSpeed(double target) {
+        targetSpeed = MathUtil.clamp(target, -1, 1);
     }
 
     public void setSpeed(double speed) {

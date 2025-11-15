@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
 
@@ -12,8 +13,8 @@ public class TeleOpDrive {
 
     private final EZTelemetry telem;
     private final Swerve s_Swerve;
-    private final GamepadEx m_Driver;
-    private final GamepadEx m_Operator;
+    private final OmegaController m_Driver;
+    private final OmegaController m_Operator;
 
     private boolean slowMode;
 
@@ -26,7 +27,7 @@ public class TeleOpDrive {
 
     private double timestamp;
 
-    public TeleOpDrive(EZTelemetry telem, Swerve s_Swerve, GamepadEx m_Driver, GamepadEx m_Operator){
+    public TeleOpDrive(EZTelemetry telem, Swerve s_Swerve, OmegaController m_Driver, OmegaController m_Operator){
 
         this.telem = telem;
         this.s_Swerve = s_Swerve;

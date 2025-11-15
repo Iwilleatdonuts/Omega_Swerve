@@ -5,15 +5,16 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
 
 public class JoystickTurret {
 
     private final Swerve s_Swerve;
     private final Turret s_Turret;
 
-    private final GamepadEx m_Operator;
+    private final OmegaController m_Operator;
 
-    public JoystickTurret(Swerve s_Swerve, Turret s_Turret, GamepadEx m_Operator){
+    public JoystickTurret(Swerve s_Swerve, Turret s_Turret, OmegaController m_Operator){
 
         this.s_Swerve = s_Swerve;
         this.s_Turret = s_Turret;

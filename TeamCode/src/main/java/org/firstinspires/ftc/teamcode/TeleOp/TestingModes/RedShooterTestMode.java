@@ -1,18 +1,12 @@
-package org.firstinspires.ftc.teamcode.OpModes.TestingModes;
+package org.firstinspires.ftc.teamcode.TeleOp.TestingModes;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.button.Button;
-import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Commands.DriveToPoint;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
@@ -24,6 +18,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.Utilities.Controller.GamepadButton;
+import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 //http://192.168.43.1:8080/dash
@@ -41,8 +37,8 @@ public class RedShooterTestMode extends LinearOpMode {
     private AprilVisionOnTurret s_Vision;
     private OTOSSensor s_Sparky;
 
-    private GamepadEx m_Driver;
-    private GamepadEx m_Operator;
+    private OmegaController m_Driver;
+    private OmegaController m_Operator;
 
     private TurnToPointDrive driveCommand;
     private SmartIntake intakeCommand;
@@ -59,8 +55,8 @@ public class RedShooterTestMode extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        m_Driver = new GamepadEx(gamepad1);
-        m_Operator = new GamepadEx(gamepad2);
+        m_Driver = new OmegaController(gamepad1);
+        m_Operator = new OmegaController(gamepad2);
 
         zeroGyroButton = new GamepadButton(m_Driver, GamepadKeys.Button.START);
         autoDriveButton = new GamepadButton(m_Driver, GamepadKeys.Button.Y);

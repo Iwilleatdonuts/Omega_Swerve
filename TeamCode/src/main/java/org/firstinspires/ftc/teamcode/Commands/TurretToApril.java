@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
 
 public class TurretToApril {
 
@@ -13,9 +14,9 @@ public class TurretToApril {
     private final AprilVisionOnTurret s_Vision;
     private double aprilBearing;
 
-    private final GamepadEx m_Operator;
+    private final OmegaController m_Operator;
 
-    public TurretToApril(Swerve s_Swerve, Turret s_Turret, AprilVisionOnTurret s_Vision, GamepadEx m_Operator){
+    public TurretToApril(Swerve s_Swerve, Turret s_Turret, AprilVisionOnTurret s_Vision, OmegaController m_Operator){
 
         this.s_Swerve = s_Swerve;
         this.s_Turret = s_Turret;

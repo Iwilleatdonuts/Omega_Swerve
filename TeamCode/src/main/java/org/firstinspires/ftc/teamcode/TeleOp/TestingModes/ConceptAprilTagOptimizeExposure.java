@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.OpModes.TestingModes;
+package org.firstinspires.ftc.teamcode.TeleOp.TestingModes;
 
 import android.util.Size;
 

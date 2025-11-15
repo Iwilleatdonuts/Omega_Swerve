@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 public class SmartIntake {
@@ -21,12 +22,12 @@ public class SmartIntake {
 
     private final AprilVisionOnTurret s_Vision;
 
-    private final GamepadEx m_Driver;
-    private final GamepadEx m_Operator;
+    private final OmegaController m_Driver;
+    private final OmegaController m_Operator;
 
     double timestamp;
 
-    public SmartIntake(Intake s_Intake, Feeder s_Feeder, Shooter s_Shooter, Turret s_Turret, AprilVisionOnTurret s_Vision, GamepadEx m_Driver, GamepadEx m_Operator, EZTelemetry telem){
+    public SmartIntake(Intake s_Intake, Feeder s_Feeder, Shooter s_Shooter, Turret s_Turret, AprilVisionOnTurret s_Vision, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem){
 
         this.telem = telem;
         this.s_Intake = s_Intake;
@@ -46,6 +47,10 @@ public class SmartIntake {
     public void execute(){
 
         s_Intake.setSpeed(m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
+
+        if(s_Intake.getIntakeCurrent() > 8 && m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
+            m_Driver.setRumble(2000);
+        }
 
          if (m_Operator.isDown(GamepadKeys.Button.A)){
             s_Feeder.openGate();

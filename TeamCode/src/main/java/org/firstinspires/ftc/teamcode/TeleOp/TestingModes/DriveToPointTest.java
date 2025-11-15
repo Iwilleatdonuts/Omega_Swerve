@@ -1,7 +1,5 @@
-package org.firstinspires.ftc.teamcode.OpModes.TestingModes;
+package org.firstinspires.ftc.teamcode.TeleOp.TestingModes;
 
-import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.RunCommand;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;

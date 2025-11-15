@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 @TeleOp(name = "Ginger Drive Core", group = "Main")
@@ -57,8 +58,8 @@ public class BetterRedMode extends LinearOpMode {
     }
 
     private EZTelemetry telem;
-    private GamepadEx driver;
-    private GamepadEx operator;
+    private OmegaController driver;
+    private OmegaController operator;
 
     private AprilVisionOnTurret s_Vision;
     private OTOSSensor s_Sparky;
@@ -77,8 +78,8 @@ public class BetterRedMode extends LinearOpMode {
     @Override
     public void runOpMode(){
 
-        driver = new GamepadEx(gamepad1);
-        operator = new GamepadEx(gamepad2);
+        driver = new OmegaController(gamepad1);
+        operator = new OmegaController(gamepad2);
 
         telem = new EZTelemetry(telemetry);
 

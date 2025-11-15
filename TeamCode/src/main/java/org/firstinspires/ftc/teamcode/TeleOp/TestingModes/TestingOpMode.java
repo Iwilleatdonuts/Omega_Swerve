@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.TestingModes;
+package org.firstinspires.ftc.teamcode.TeleOp.TestingModes;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 @TeleOp(name = "Test Mode", group = "Testing")
@@ -22,8 +23,8 @@ public class TestingOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        GamepadEx m_DriverOp = new GamepadEx(gamepad1);
-        GamepadEx m_OperatorOp = new GamepadEx(gamepad2);
+        OmegaController m_DriverOp = new OmegaController(gamepad1);
+        OmegaController m_OperatorOp = new OmegaController(gamepad2);
 
         EZTelemetry telem = new EZTelemetry(telemetry);
 
