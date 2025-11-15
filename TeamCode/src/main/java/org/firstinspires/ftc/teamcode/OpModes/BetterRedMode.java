@@ -113,6 +113,10 @@ public class BetterRedMode extends LinearOpMode {
 
         waitForStart();
 
+        if(isStopRequested()) {
+            s_Sparky.disable();
+        }
+
         while (opModeIsActive()) {
 
             long loopStart = System.nanoTime();

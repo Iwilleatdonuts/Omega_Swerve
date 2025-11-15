@@ -88,6 +88,10 @@ public class BlueShooterTestMode extends LinearOpMode {
 
         waitForStart();
 
+        if(isStopRequested()) {
+            s_Sparky.disable();
+        }
+
         while (opModeIsActive()) {
 
             s_Sparky.skadoodle();

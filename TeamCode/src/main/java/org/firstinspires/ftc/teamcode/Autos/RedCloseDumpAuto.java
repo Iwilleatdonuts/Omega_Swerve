@@ -18,40 +18,6 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 @Autonomous(name = "Red Close Dump")
 public class RedCloseDumpAuto extends LinearOpMode {
 
-//    private class VisionThread implements Runnable {
-//        private volatile boolean runVisionThread = true;
-//        private final AprilVisionOnTurret s_Vision;
-//        private final long sleepTime;
-//
-//        public VisionThread(AprilVisionOnTurret s_Vision, long sleepTime) {
-//            this.s_Vision = s_Vision;
-//            this.sleepTime = sleepTime;
-//        }
-//
-//        public void stop() {
-//            runVisionThread = false;
-//        }
-//
-//        @Override
-//        public void run(){
-//
-//            if(s_Vision == null){
-//                return;
-//            }
-//
-//            try {
-//                while(runVisionThread && !Thread.currentThread().isInterrupted()) {
-//                    s_Vision.skadoodle();
-//                    Thread.sleep(sleepTime);
-//                }
-//            } catch (InterruptedException e) {
-//                telem.putTelemetry("vision go bye bye", " hahahah");
-//                telem.updateTelemetry();
-//            }
-//
-//        }
-//    }
-
     private EZTelemetry telem;
 
     private AprilVisionOnTurret s_Vision;
@@ -90,18 +56,16 @@ public class RedCloseDumpAuto extends LinearOpMode {
 
         phase = 0;
 
-//        VisionThread visionRunnable = new VisionThread(s_Vision, 15);
-//        Thread visionThread = new Thread(visionRunnable, "Vision Thread");
-//        visionThread.start();
-
         telem.putTelemetry("FPS", s_Vision.getCameraFPS());
         telem.updateTelemetry();
 
         waitForStart();
 
-        while(opModeIsActive()){
+        if(isStopRequested()){
+            s_Sparky.disable();
+        }
 
-//            long loopStart = System.nanoTime();
+        while(opModeIsActive()){
 
             telem.putTelemetry("Phase", phase);
             s_Sparky.skadoodle();
@@ -348,21 +312,9 @@ public class RedCloseDumpAuto extends LinearOpMode {
                     break;
             }
 
-
-//            long mainThreadSleep = 20 - ((System.nanoTime() - loopStart) / 1000000);
-//
-//            if(mainThreadSleep > 0) {
-//                try {
-//                    Thread.sleep(mainThreadSleep);
-//                } catch (InterruptedException ie) {
-//                    Thread.currentThread().interrupt();
-//                    break;
-//                }
-//            }
-
         }
 
-//        visionRunnable.stop();
+        s_Sparky.disable();
 
     }
 }

@@ -51,6 +51,10 @@ public class TestingOpMode extends LinearOpMode {
         telem.updateTelemetry();
 
         waitForStart();
+
+        if(isStopRequested()) {
+            s_Sparky.disable();
+        }
         runtime.reset();
 
 

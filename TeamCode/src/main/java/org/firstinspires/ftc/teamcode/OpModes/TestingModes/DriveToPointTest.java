@@ -38,6 +38,10 @@ public class DriveToPointTest extends LinearOpMode {
 
         waitForStart();
 
+        if(isStopRequested()) {
+            s_Sparky.disable();
+        }
+
         while(opModeIsActive()){
 
             driveCommand.execute();
