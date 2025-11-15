@@ -122,8 +122,6 @@ public class BetterRedMode extends LinearOpMode {
 
             long loopStart = System.nanoTime();
 
-            s_Sparky.skadoodle();
-
             driveCommand.execute();
             intakeCommand.execute();
             turretCommand.execute();

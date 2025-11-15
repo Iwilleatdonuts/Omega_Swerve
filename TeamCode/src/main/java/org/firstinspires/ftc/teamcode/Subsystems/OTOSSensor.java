@@ -124,14 +124,17 @@ public class OTOSSensor {
 
     public void skadoodle(){
 
-        if (disabled || !enableTelemetry) return;
-            telem.putTelemetry("X Position \t", getPose().x());
-            telem.putTelemetry("Y Position \t", getPose().y());
-            telem.putTelemetry("OTOS Rotation \t", getHeading());
+        if (disabled || !enableTelemetry) {
+            return;
+        }
 
-            telem.putDashboard("X Position \t", getPose().x());
-            telem.putDashboard("Y Position \t", getPose().y());
-            telem.putDashboard("OTOS Rotation \t", getHeading());
+        telem.putTelemetry("X Position \t", getPose().x());
+        telem.putTelemetry("Y Position \t", getPose().y());
+        telem.putTelemetry("OTOS Rotation \t", getHeading());
+
+        telem.putDashboard("X Position \t", getPose().x());
+        telem.putDashboard("Y Position \t", getPose().y());
+        telem.putDashboard("OTOS Rotation \t", getHeading());
 
     }
 
