@@ -54,16 +54,12 @@ public class AutoCloseShot {
 
         xController = new PIDController(2.2, 0, 0.05);
         yController = new PIDController(2.2, 0, 0.05);
-//        xController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
-//        yController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
 
         staticAngleController = new PIDController(0.006, 0.02, 0.00015);
-//        angleController = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);
         staticAngleController.setIZone(40);
         staticAngleController.enableContinuousInput(0, 360);
 
         dynamicAngleController = new PIDController(0.0025, 0.015, 0.0001);
-//        dynamicAngleController = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);
         dynamicAngleController.setIZone(40);
         dynamicAngleController.enableContinuousInput(0, 360);
 
@@ -160,6 +156,11 @@ public class AutoCloseShot {
 
     public boolean isFinished() {
         return isFinished;
+    }
+
+    public boolean runCommand() {
+        execute();
+        return isFinished();
     }
 
 }

@@ -40,8 +40,6 @@ public class AutoGate {
 
         this.telem = telem;
 
-       targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.gateLineup : Constants.AutoConstants.BlueConstants.gateLineup;
-
         this.s_Swerve = s_Swerve;
         this.s_Sparky = s_Sparky;
 
@@ -61,6 +59,11 @@ public class AutoGate {
 
     public void reset(boolean teleopNext){
         goingToTeleop = teleopNext;
+        if(goingToTeleop) {
+            targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.gateLineupTeleop : Constants.AutoConstants.BlueConstants.gateLineupTeleop;
+        } else {
+            targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.gateLineup : Constants.AutoConstants.BlueConstants.gateLineup;
+        }
         isFinished = false;
         phase = 0;
         xController.reset();
@@ -104,7 +107,7 @@ public class AutoGate {
 
                 s_Swerve.drive(0.2, 0, 0, true, false);
 
-                if(System.nanoTime() - timestamp > 1e9) {
+                if(System.nanoTime() - timestamp > 1e9 || goingToTeleop) {
                     s_Swerve.stop();
                     isFinished = true;
                 }
@@ -133,4 +136,8 @@ public class AutoGate {
         return isFinished;
     }
 
+    public boolean runCommand() {
+        execute();
+        return isFinished();
+    }
 }

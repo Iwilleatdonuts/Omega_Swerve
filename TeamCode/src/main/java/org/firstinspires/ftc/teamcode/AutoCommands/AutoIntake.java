@@ -174,4 +174,9 @@ public class AutoIntake {
         }
     }
 
+    public boolean runCommand() {
+        execute();
+        return isFinished();
+    }
+
 }
