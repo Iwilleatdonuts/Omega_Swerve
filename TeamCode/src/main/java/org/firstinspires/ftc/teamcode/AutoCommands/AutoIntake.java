@@ -84,9 +84,9 @@ public class AutoIntake {
 
         switch(phase) {
             case 0:
-                if(areWeWinners && currentPose.x() > 0.9) {
+                if(areWeWinners && currentPose.x() > 0.6) {
                     s_Swerve.drive(-0.8, 0, 0, true, false);
-                } else if (!areWeWinners && currentPose.x() < -0.9) {
+                } else if (!areWeWinners && currentPose.x() < -0.6) {
                     s_Swerve.drive(0.8, 0, 0, true, false);
                 } else {
                     xController.reset();

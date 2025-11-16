@@ -82,14 +82,14 @@ public class AutoCloseShot {
     public void execute(){
 
         Pose2D currentPose = s_Sparky.getPose();
+        double currentHeading = s_Sparky.getHeading();
         s_Shooter.setShooterSpeed(0.36);
-        s_Feeder.closeGate();
 
         telem.putTelemetry("Phase", phase);
-        telem.updateTelemetry();
 
         switch(phase) {
             case 0:
+                s_Feeder.closeGate();
                 if(areWeWinners && currentPose.x() > 1.21) {
                     s_Swerve.drive(-0.8, 0, 0, true, false);
                 } else if (!areWeWinners && currentPose.x() < -1.21) {
@@ -106,7 +106,20 @@ public class AutoCloseShot {
 
                 double[] outputs = holoController.calculate(currentPose, targetPosition);
 
+//                double headingError = Math.abs(targetPosition.r() - currentPose.r());
+//
+//                double rOutput = 0;
+//
+//                if(headingError < 5) {
+//                    rOutput = -dynamicAngleController.calculate(currentPose.r(), targetPosition.r());
+//                    staticAngleController.reset();
+//                } else {
+//                    rOutput = -staticAngleController.calculate(currentHeading, targetPosition.r());
+//                    dynamicAngleController.reset();
+//                }
                 s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
+//                telem.putTelemetry("R Setpoint", targetPosition.r());
+//                telem.putTelemetry("R pose}", currentHeading);
 
                 if(isAtRoughSetpoint() && s_Shooter.shooterAtSpeed()) {
                     timestamp = System.nanoTime();

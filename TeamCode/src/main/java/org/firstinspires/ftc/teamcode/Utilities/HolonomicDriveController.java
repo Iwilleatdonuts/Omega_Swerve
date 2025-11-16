@@ -26,15 +26,15 @@ public class HolonomicDriveController {
         double xOutput = xController.calculate(currentPose.x(), targetPose.x());
         double yOutput = yController.calculate(currentPose.y(), targetPose.y());
 
-        double headingError = targetPose.r() - currentPose.r();
+        double headingError = Math.abs(targetPose.r() - currentPose.r());
 
         double rOutput = 0;
 
         if(headingError < 5) {
-            rOutput = -slowRController.calculate(0, headingError);
+            rOutput = -slowRController.calculate(currentPose.r(), targetPose.r());
             rController.reset();
         } else {
-            rOutput = -rController.calculate(0, headingError);
+            rOutput = -rController.calculate(currentPose.r(), targetPose.r());
             slowRController.reset();
         }
 

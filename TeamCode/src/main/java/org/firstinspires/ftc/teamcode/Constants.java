@@ -168,30 +168,24 @@ public class Constants {
     public static final class AutoConstants {
 
         public static final class RedConstants {
-            public static final Pose2D closeStart = new Pose2D(1.2, 1.18, 270);
+            public static final Pose2D closeStart = new Pose2D(1.21548, 1.19616, 270);
             public static final Pose2D closeShot = new  Pose2D(0.9, 0.9, 270);
             public static final Pose2D closeBallLineup = new Pose2D(0.66376, 0.31681, 270);
             public static final Pose2D mediumBallLineup = new Pose2D(0.66376, -0.30519, 270);
             public static final Pose2D farBallLineup = new Pose2D(0.66376, -0.88619, 270);
-            public static final Pose2D closeBallPickup = new Pose2D(1.28558, 0.31681, 270);
-            public static final Pose2D mediumBallPickup = new Pose2D(1.28558, -0.30519, 270);
-            public static final Pose2D farBallPickup = new Pose2D(1.28558, -0.88619, 270);
-            public static final Pose2D gateLineup = new Pose2D(1.25, 0, 180);
-            public static final Pose2D gateLineupTeleop = new Pose2D(0, 1.25, 270);
+            public static final Pose2D gateLineup = new Pose2D(1.17791, 0.13632, 180);
+            public static final Pose2D gateLineupTeleop = new Pose2D(-0.13632, 1.17791, 270);
 
         }
 
         public static final class BlueConstants {
-            public static final Pose2D closeStart = new Pose2D(-1.275, 1.227, 90);
+            public static final Pose2D closeStart = new Pose2D(-1.21548, -1.19616, 90);
             public static final Pose2D closeShot = new Pose2D(-0.9, 0.9, 90);
             public static final Pose2D closeBallLineup = new Pose2D(-0.66376, 0.31681, 90);
             public static final Pose2D mediumBallLineup = new Pose2D(-0.66376, -0.30519, 90);
             public static final Pose2D farBallLineup = new Pose2D(-0.66376, -0.88619, 90);
-            public static final Pose2D closeBallPickup = new Pose2D(-1.28558, 0.31681, 90);
-            public static final Pose2D mediumBallPickup = new Pose2D(-1.28558, -0.30519, 90);
-            public static final Pose2D farBallPickup = new Pose2D(-1.28558, -0.88619, 90);
-            public static final Pose2D gateLineup = new Pose2D(-1.25, 0, 180);
-            public static final Pose2D gateLineupTeleop = new Pose2D(0, 1.25, 90);
+            public static final Pose2D gateLineup = new Pose2D(-1.17791, 0.13632, 180);
+            public static final Pose2D gateLineupTeleop = new Pose2D(0.13632, 1.17791, 90);
 
         }
 

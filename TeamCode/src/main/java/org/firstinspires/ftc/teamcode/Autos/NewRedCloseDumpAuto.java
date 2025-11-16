@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCloseShot;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurret;
 import org.firstinspires.ftc.teamcode.Constants;
@@ -31,6 +32,7 @@ public class NewRedCloseDumpAuto extends LinearOpMode {
 
     private AutoCloseShot autoShootCommand;
     private AutoIntake intakeCommand;
+    private AutoGate gateCommand;
     private AutoTurret turretCommand;
 
     private int phase;
@@ -55,6 +57,7 @@ public class NewRedCloseDumpAuto extends LinearOpMode {
 
         autoShootCommand = new AutoCloseShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Sparky, telem, true);
         intakeCommand = new AutoIntake(s_Swerve, s_Intake, s_Sparky, telem, true, 1);
+        gateCommand = new AutoGate(s_Swerve, s_Sparky, telem, true);
         turretCommand = new AutoTurret(s_Turret, s_Vision);
 
         phase = 0;
@@ -64,7 +67,7 @@ public class NewRedCloseDumpAuto extends LinearOpMode {
 
         waitForStart();
 
-        if (isStopRequested()) {
+        if(isStopRequested()){
             s_Sparky.disable();
         }
 
@@ -72,9 +75,9 @@ public class NewRedCloseDumpAuto extends LinearOpMode {
 
             s_Sparky.skadoodle();
             s_Vision.skadoodle();
-
             turretCommand.execute();
             s_Shooter.setShooterSpeed(0.36);
+            telem.updateAll();
 
             switch (phase) {
                 case 0:
@@ -133,8 +136,12 @@ public class NewRedCloseDumpAuto extends LinearOpMode {
 
             }
 
-            s_Sparky.disable();
-
         }
+
+        s_Sparky.disable();
+    }
+
+    public enum AutoStates{
+
     }
 }
