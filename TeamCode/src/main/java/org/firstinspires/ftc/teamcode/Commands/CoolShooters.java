@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
+import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
@@ -14,8 +15,7 @@ public class CoolShooters {
     private final EZTelemetry telem;
 
     private final Shooter s_Shooter;
-    private final AprilVisionOnTurret s_Vision;
-
+    private final Limelight s_Lime;
     private final OmegaController m_Driver;
     private final OmegaController m_Operator;
 
@@ -25,10 +25,10 @@ public class CoolShooters {
 
     private double shooterAngle;
 
-    public CoolShooters(Shooter s_Shooter, AprilVisionOnTurret s_Vision, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem){
+    public CoolShooters(Shooter s_Shooter, Limelight s_Lime, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem){
 
         this.s_Shooter = s_Shooter;
-        this.s_Vision = s_Vision;
+        this.s_Lime = s_Lime;
 
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
@@ -67,13 +67,13 @@ public class CoolShooters {
         }
 
         if(shootersGunnaShoot){
-            if(s_Vision.hasGoalTag()){
-                double distance = s_Vision.getGoalDistance();
+            if(s_Lime.isValidReaing()){
+                double distance = s_Lime.getGoalDistance();
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
                 shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
             } else if(shooterPercent == 0) {
-                shooterPercent = 0.51;
-                shooterAngle = Constants.ShooterConstants.farAngle;
+                shooterPercent = 0.36;
+                shooterAngle = Constants.ShooterConstants.closeAngle;
             }
         } else {
             shooterPercent = 0;

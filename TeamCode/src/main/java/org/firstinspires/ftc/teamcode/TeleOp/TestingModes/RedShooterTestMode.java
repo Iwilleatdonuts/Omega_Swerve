@@ -7,6 +7,7 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
@@ -34,7 +36,7 @@ public class RedShooterTestMode extends LinearOpMode {
     private Feeder s_Feeder;
     private Turret s_Turret;
     private Shooter s_Shooter;
-    private AprilVisionOnTurret s_Vision;
+    private Limelight s_Lime;
     private OTOSSensor s_Sparky;
 
     private OmegaController m_Driver;
@@ -42,7 +44,7 @@ public class RedShooterTestMode extends LinearOpMode {
 
     private TurnToPointDrive driveCommand;
     private SmartIntake intakeCommand;
-    private TurretToApril turretCommand;
+    private LimeTurret turretCommand;
 
     private Button zeroGyroButton;
     private Button autoDriveButton;
@@ -67,19 +69,19 @@ public class RedShooterTestMode extends LinearOpMode {
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
         s_Sparky = new OTOSSensor(hardwareMap, telem);
-        s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
+        s_Lime = new Limelight(hardwareMap, telem, true);
 
         s_Sparky.configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
 
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, m_Driver, m_Operator);
-        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Vision, m_Driver, m_Operator, telem);
-        turretCommand = new TurretToApril(s_Swerve, s_Turret, s_Vision, m_Operator);
+        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, m_Driver, m_Operator, telem);
+        turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, m_Operator);
 
         driveCommand.initialize();
         intakeCommand.initialize();
         turretCommand.initialize();
 
-        telem.putTelemetry("FPS", s_Vision.getCameraFPS());
+        telem.putTelemetry("FPS", s_Lime.getLimeStatus().getFps());
         telem.updateTelemetry();
 
         waitForStart();
@@ -91,7 +93,7 @@ public class RedShooterTestMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             s_Sparky.skadoodle();
-            s_Vision.skadoodle();
+            s_Lime.skadoodle();
 
             driveCommand.execute();
             intakeCommand.execute();
@@ -122,8 +124,8 @@ public class RedShooterTestMode extends LinearOpMode {
                 shooterAngle = Constants.ShooterConstants.farAngle;
             }
 
-            if (s_Vision.hasGoalTag()) {
-                shooterAngle = s_Shooter.getShooterAngleFromDistance(s_Vision.getGoalDistance());
+            if (s_Lime.isValidReaing()) {
+                shooterAngle = s_Shooter.getShooterAngleFromDistance(s_Lime.getGoalDistance());
             }
 
             s_Shooter.setShooterAngle(shooterAngle);
@@ -135,7 +137,7 @@ public class RedShooterTestMode extends LinearOpMode {
                 s_Swerve.zeroGyro();
             }
 
-            telem.putTelemetry("Distance", s_Vision.getGoalDistance());
+            telem.putTelemetry("Distance", s_Lime.getGoalDistance());
             telem.putTelemetry("Shooter Target Percentage", shooterSpeed);
 
             telem.updateTelemetry();

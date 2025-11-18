@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
@@ -20,21 +21,20 @@ public class SmartIntake {
     private final Shooter s_Shooter;
     private final Turret s_Turret;
 
-    private final AprilVisionOnTurret s_Vision;
-
+    private final Limelight s_Lime;
     private final OmegaController m_Driver;
     private final OmegaController m_Operator;
 
     double timestamp;
 
-    public SmartIntake(Intake s_Intake, Feeder s_Feeder, Shooter s_Shooter, Turret s_Turret, AprilVisionOnTurret s_Vision, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem){
+    public SmartIntake(Intake s_Intake, Feeder s_Feeder, Shooter s_Shooter, Turret s_Turret, Limelight s_Lime, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem){
 
         this.telem = telem;
         this.s_Intake = s_Intake;
         this.s_Feeder = s_Feeder;
         this.s_Shooter = s_Shooter;
         this.s_Turret = s_Turret;
-        this.s_Vision = s_Vision;
+        this.s_Lime = s_Lime;
 
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
@@ -57,7 +57,7 @@ public class SmartIntake {
             s_Feeder.setFeederSpeed(1);
             s_Intake.setSpeed(1);
         } else if (m_Driver.isDown(GamepadKeys.Button.A)) {
-            if((s_Vision.hasGoalTag() && s_Shooter.shooterAtSpeed()) || s_Vision.getGoalDistance() < 50) {
+            if((s_Lime.isValidReaing() && s_Shooter.shooterAtSpeed()) || s_Lime.getGoalDistance() < 50) {
                 s_Feeder.openGate();
                 s_Feeder.setFeederSpeed(1);
                 s_Intake.setSpeed(1);

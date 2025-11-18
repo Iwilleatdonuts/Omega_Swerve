@@ -50,11 +50,15 @@ public class Limelight {
     }
 
     public double getGoalBearing () {
-        return latestResult.isValid() ? latestResult.getTx() : 0;
+        return isValidReaing() ? latestResult.getTx() : 0;
     }
 
-    public double getAdjustedGoalBearing() {
-        return getGoalBearing();
+    public double getGoalDistance() {
+        return isValidReaing() ? (0.31092234) / Math.tan(Math.toRadians(latestResult.getTy() + 20)) : 0;
+    }
+
+    public boolean isValidReaing() {
+        return latestResult.isValid();
     }
 
     public void toggleTelemetry() {
@@ -66,7 +70,8 @@ public class Limelight {
         latestResult = getLatestResult();
 
         if(enableTelemetry) {
-            telem.putTelemetry("Tag Bearing: ", latestResult.getTx());
+            telem.putTelemetry("Tag Bearing: ", getGoalBearing());
+            telem.putTelemetry("Tag Distance: ", getGoalDistance());
         }
 
     }
