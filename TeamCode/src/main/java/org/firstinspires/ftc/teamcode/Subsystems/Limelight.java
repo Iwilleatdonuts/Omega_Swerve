@@ -47,6 +47,14 @@ public class Limelight {
         return lime.getLatestResult();
     }
 
+    public double getGoalBearing () {
+        return latestResult != null ? latestResult.getTx() : 0;
+    }
+
+    public double getAdjustedGoalBearing() {
+        return getGoalBearing();
+    }
+
     public void toggleTelemetry() {
         enableTelemetry = !enableTelemetry;
     }
