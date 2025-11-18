@@ -33,7 +33,7 @@ public class LimeTurret {
     public void execute(){
 
         aprilBearing = s_Lime.getAdjustedGoalBearing();
-        double bearing = s_Turret.getDegrees() + aprilBearing;
+        double bearing = s_Turret.getDegrees() - aprilBearing;
 
         s_Turret.setSetpoint(bearing);
 

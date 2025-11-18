@@ -27,6 +27,8 @@ public class Limelight {
 
         lime.pipelineSwitch(areWeWinners? 0 : 1);
 
+        latestResult = lime.getLatestResult();
+
         startLime();
 
     }
@@ -48,7 +50,7 @@ public class Limelight {
     }
 
     public double getGoalBearing () {
-        return latestResult != null ? latestResult.getTx() : 0;
+        return latestResult.isValid() ? latestResult.getTx() : 0;
     }
 
     public double getAdjustedGoalBearing() {

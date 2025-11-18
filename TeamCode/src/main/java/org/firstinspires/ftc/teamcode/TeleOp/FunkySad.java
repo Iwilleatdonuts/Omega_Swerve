@@ -8,9 +8,7 @@ import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
 import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
-import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
@@ -21,8 +19,42 @@ import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
-@TeleOp(name = "Ginger Drive Core But Green", group = "Main")
-public class BetterRedModeButLime extends LinearOpMode {
+@TeleOp(name = "Ginger Drive Core Sad", group = "Main")
+public class FunkySad extends LinearOpMode {
+
+    private class VisionThread implements Runnable {
+        private volatile boolean runVisionThread = true;
+        private final Limelight s_Lime;
+        private final long sleepTime;
+
+        public VisionThread(Limelight s_Lime, long sleepTime) {
+            this.s_Lime = s_Lime;
+            this.sleepTime = sleepTime;
+        }
+
+        public void stop() {
+            runVisionThread = false;
+        }
+
+        @Override
+        public void run(){
+
+            if(s_Lime == null){
+                return;
+            }
+
+            try {
+                while(runVisionThread && !Thread.currentThread().isInterrupted()) {
+                    s_Lime.skadoodle();
+                    Thread.sleep(sleepTime);
+                }
+            } catch (InterruptedException e) {
+                telem.putTelemetry("vision go bye bye", " hahahah");
+                telem.updateTelemetry();
+            }
+
+        }
+    }
 
     private EZTelemetry telem;
     private OmegaController driver;
@@ -51,7 +83,9 @@ public class BetterRedModeButLime extends LinearOpMode {
         telem = new EZTelemetry(telemetry);
 
         s_Sparky = new OTOSSensor(hardwareMap, telem);
-        s_Lime = new Limelight(hardwareMap, telem, true);
+        s_Lime = new Limelight(hardwareMap, telem, false);
+
+        s_Lime.startLime();
 
         s_Swerve = new Swerve(hardwareMap, telem, s_Sparky);
         s_Intake = new Intake(hardwareMap, telem);
@@ -60,7 +94,7 @@ public class BetterRedModeButLime extends LinearOpMode {
         s_Shooter = new Shooter(hardwareMap, telem);
 
         s_Sparky.toggleTelemetry();
-        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.gateLineupTeleop));
+        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.gateLineupTeleop));
 
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, driver, operator);
 //        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Vision, driver, operator, telem);
@@ -72,12 +106,18 @@ public class BetterRedModeButLime extends LinearOpMode {
         turretCommand.initialize();
 //        shooterCommand.initialize();
 
-        s_Lime.startLime();
+        VisionThread visionRunnable = new VisionThread(s_Lime, 15);
+        Thread visionThread = new Thread(visionRunnable, "Vision Thread");
+        visionThread.start();
+
+//        telem.putTelemetry("FPS", s_Vision.getCameraFPS());
+//        telem.updateTelemetry();
 
         waitForStart();
 
         if(isStopRequested()) {
             s_Sparky.disable();
+            s_Lime.stopLime();
         }
 
         while (opModeIsActive()) {
@@ -85,7 +125,9 @@ public class BetterRedModeButLime extends LinearOpMode {
             long loopStart = System.nanoTime();
 
             driveCommand.execute();
+//            intakeCommand.execute();
             turretCommand.execute();
+//            shooterCommand.execute();
 
             if(driver.wasJustPressed(GamepadKeys.Button.START)) {
                 s_Swerve.zeroGyro();
@@ -93,10 +135,21 @@ public class BetterRedModeButLime extends LinearOpMode {
             }
 
             telem.updateTelemetry();
-        }
 
+            long mainThreadSleep = 20 - ((System.nanoTime() - loopStart) / 1000000);
+
+            if(mainThreadSleep > 0) {
+                try {
+                    Thread.sleep(mainThreadSleep);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
         s_Sparky.disable();
         s_Lime.stopLime();
+        visionRunnable.stop();
 
     }
 
