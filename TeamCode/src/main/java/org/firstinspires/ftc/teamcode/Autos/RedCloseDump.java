@@ -15,15 +15,19 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.Utilities.AutoManager;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
-@Autonomous(name = "Blue Close Dump")
-public class BlueCloseDumpAuto extends LinearOpMode {
+import java.util.Arrays;
+import java.util.List;
+
+@Autonomous(name = "Red Close Dump")
+public class RedCloseDump extends LinearOpMode {
 
     @Override
     public void runOpMode() {
 
-        boolean areWeWinners = false;
+        boolean areWeWinners = true;
 
         EZTelemetry telem = new EZTelemetry(telemetry);
 
@@ -45,6 +49,29 @@ public class BlueCloseDumpAuto extends LinearOpMode {
 
         int phase = 0;
 
+        List<AutoManager> autoCommands = Arrays.asList(
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
+                () -> {intakeCommand.reset(1); return true;},
+                intakeCommand::runCommand,
+                () -> {gateCommand.reset(false); return true;},
+                gateCommand::runCommand,
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
+                () -> {intakeCommand.reset(2); return true;},
+                intakeCommand::runCommand,
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
+                () -> {intakeCommand.reset(3); return true;},
+                intakeCommand::runCommand,
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
+                () -> {gateCommand.reset(true); return true;},
+                gateCommand::runCommand
+
+
+        );
+
         telem.putTelemetry("FPS", s_Vision.getCameraFPS());
         telem.updateTelemetry();
 
@@ -61,71 +88,13 @@ public class BlueCloseDumpAuto extends LinearOpMode {
             turretCommand.execute();
             telem.updateAll();
 
-            switch (phase) {
-                case 0:
-                    autoShootCommand.reset();
+            if(phase < autoCommands.size()) {
+                boolean isFinished = autoCommands.get(phase).run();
+                if(isFinished) {
                     phase++;
-                    break;
-                case 1:
-                    autoShootCommand.execute();
-                    if (autoShootCommand.isFinished()) {
-                        intakeCommand.reset(1);
-                        phase++;
-                    }
-                    break;
-                case 2:
-                    intakeCommand.execute();
-                    if(intakeCommand.isFinished()){
-                        gateCommand.reset(false);
-                        phase++;
-                    }
-                    break;
-                case 3:
-                    gateCommand.execute();
-                    if(gateCommand.isFinished()){
-                        autoShootCommand.reset();
-                        phase++;
-                    }
-                    break;
-                case 4:
-                    autoShootCommand.execute();
-                    if (autoShootCommand.isFinished()) {
-                        intakeCommand.reset(2);
-                        phase++;
-                    }
-                    break;
-                case 5:
-                    intakeCommand.execute();
-                    if(intakeCommand.isFinished()){
-                        autoShootCommand.reset();
-                        phase++;
-                    }
-                    break;
-                case 6:
-                    autoShootCommand.execute();
-                    if (autoShootCommand.isFinished()) {
-                        intakeCommand.reset(3);
-                        phase++;
-                    }
-                    break;
-                case 7:
-                    intakeCommand.execute();
-                    if(intakeCommand.isFinished()){
-                        autoShootCommand.reset();
-                        phase++;
-                    }
-                    break;
-                case 8:
-                    autoShootCommand.execute();
-                    if (autoShootCommand.isFinished()) {
-                        gateCommand.reset(true);
-                        phase++;
-                    }
-                    break;
-                case 9:
-                    gateCommand.execute();
-                    break;
+                }
             }
+
         }
 
         s_Sparky.disable();
