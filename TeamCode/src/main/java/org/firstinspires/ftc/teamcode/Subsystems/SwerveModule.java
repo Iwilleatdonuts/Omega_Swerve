@@ -12,45 +12,47 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
-import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class SwerveModule {
 
     private final EZTelemetry telem;
     private final int modNumber;
+
     private final DcMotorEx drive;
     private final CRServoImplEx angle;
     private final AnalogInput moduleHeading;
     private final PIDController angleController;
+
     private final double moduleOffset;
-    private double moduleSetpoint;
+    private final double headingMaxVoltage;
 
-    private final double velocityFeedforward = 0.1;
-
-    //Idk if this is how ur supposed to make a swervy drive but I'm gonna
-    // put a boolean to tell the module when it is backwards and so the
-    // drive motor should be backwards because im rly smart definitely yes yes i can spell
-    private boolean isModuleBackwards;
-
-    private boolean enableTelemetry;
+    private boolean isModuleBackwards = false;
+    private boolean enableTelemetry = false;
 
     private double lastVelocity = 0.0;
-
     private double targetVelocityTicksPerSec;
 
-    private final double kS = 0.05;      // static friction term
-    private final double kV = 1/Constants.DriveTrainConstants.MAX_TICKS_PER_SEC;    //ticks per second
-    private final double kA = 0;
+    private static final double kS = 0.05;
+    private static final double kA = 0.0;
+    private static final double kV = 1.0 / Constants.DriveTrainConstants.MAX_TICKS_PER_SEC;
+
+    private final String keyRaw, keyDeg;
+
+    private double moduleSetpoint;
 
     public SwerveModule(HardwareMap hardwareMap, EZTelemetry telem, SwerveModuleConstants moduleConstants) {
 
         this.telem = telem;
-
-        modNumber = moduleConstants.modNumber;
+        this.modNumber = moduleConstants.modNumber;
 
         drive = hardwareMap.get(DcMotorEx.class, moduleConstants.driveMotor);
         angle = hardwareMap.get(CRServoImplEx.class, moduleConstants.angleServo);
+
+        moduleHeading = hardwareMap.get(AnalogInput.class, moduleConstants.feedback);
+        this.headingMaxVoltage = moduleHeading.getMaxVoltage(); // cache permanently
+
+        moduleOffset = moduleConstants.moduleOffset;
 
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -59,132 +61,140 @@ public class SwerveModule {
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
         angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
-        angleController = new PIDController(Constants.DriveTrainConstants.angleKP, Constants.DriveTrainConstants.angleKI, Constants.DriveTrainConstants.angleKD);
-//        angleController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
+        angleController = new PIDController(
+                Constants.DriveTrainConstants.angleKP,
+                Constants.DriveTrainConstants.angleKI,
+                Constants.DriveTrainConstants.angleKD
+        );
         angleController.enableContinuousInput(0, 360);
         angleController.setIZone(30);
 
-        moduleHeading = hardwareMap.get(AnalogInput.class, moduleConstants.feedback);
-        moduleOffset = moduleConstants.moduleOffset;
-
         moduleSetpoint = getDegrees(true);
 
-        enableTelemetry = false;
+        keyRaw = "Module " + modNumber + " Raw Angle";
+        keyDeg = "Module " + modNumber + " Degrees";
+    }
 
+    private static double clamp(double x) {
+        return (x < -1.0) ? -1.0 : (x > 1.0 ? 1.0 : x);
     }
 
     public void setDrivePower(double power) {
 
-        double targetMotorRpm = Constants.DriveTrainConstants.MAX_MOTOR_RPM * power;
-        targetVelocityTicksPerSec = (targetMotorRpm * Constants.DriveTrainConstants.TICKS_PER_REV) / 60.0;
+        targetVelocityTicksPerSec =
+                power * Constants.DriveTrainConstants.MAX_MOTOR_RPM *
+                        Constants.DriveTrainConstants.TICKS_PER_REV / 60.0;
 
-        if (isModuleBackwards) targetVelocityTicksPerSec *= -1;
+        if (isModuleBackwards) {
+            targetVelocityTicksPerSec = -targetVelocityTicksPerSec;
+        }
 
         double currentVelocity = drive.getVelocity();
-
-        double acceleration = (currentVelocity - lastVelocity) / 0.02; // ~20ms loop
+        double acceleration = (currentVelocity - lastVelocity) * 50;  // 1/0.02 = 50
         lastVelocity = currentVelocity;
 
-        double ff = kS * Math.signum(targetVelocityTicksPerSec)
-                + kV * targetVelocityTicksPerSec
-                + kA * acceleration;
+        double ff =
+                (kS * Math.signum(targetVelocityTicksPerSec)) +
+                        (kV * targetVelocityTicksPerSec) +
+                        (kA * acceleration);
 
-        ff = Math.max(-1.0, Math.min(1.0, ff));
-
-        drive.setPower(ff);
+        drive.setPower(clamp(ff));
     }
 
     public double getVelocity() {
         return drive.getVelocity();
     }
 
-    public double getVelocityError() {
-        return Math.abs(drive.getVelocity() - getVelocityTarget());
-    }
-
     public double getVelocityTarget() {
         return targetVelocityTicksPerSec;
     }
 
-    //take a value from -1 to 1
+    public double getVelocityError() {
+        return Math.abs(drive.getVelocity() - targetVelocityTicksPerSec);
+    }
+
+    private double fastWrap360(double x) {
+        x %= 360.0;
+        return (x < 0) ? x + 360 : x;
+    }
+
+    private double fastWrap180(double x) {
+        x = fastWrap360(x);
+        return (x > 180) ? x - 360 : x;
+    }
+
+    public double getRawAngle() {
+        return moduleHeading.getVoltage();
+    }
+
     public void setTurnSpeed(double speed) {
 
         angle.setPower(speed * 0.5);
 
     }
 
-    public double getRawAngle() {
-        return moduleHeading.getVoltage();
-    }
-    public double getDegrees(boolean withOffset) {
+    public double getDegrees(boolean applyOffset) {
+        double rawDeg = (moduleHeading.getVoltage() / headingMaxVoltage) * 360.0;
 
-        double rawAngle = (getRawAngle() / moduleHeading.getMaxVoltage()) * 360;
+        if (!applyOffset) return rawDeg;
 
-        double realAngle = rawAngle - moduleOffset;
-
-        realAngle = (realAngle + 360) % 360;
-
-        double realRealAngle = (360 - realAngle) % 360;
-
-        return withOffset ? realRealAngle : rawAngle;
+        double foo = fastWrap360(360.0 - (rawDeg - moduleOffset));
+        return foo;
     }
 
     public double getWrappedError(double setpoint, double measurement) {
-        double error = setpoint - measurement;
-        error = ((error + 180) % 360 + 360) % 360 - 180;
-        return error;
+        return fastWrap180(setpoint - measurement);
+    }
+
+    public void setModuleSetpoint(double setpoint) {
+
+        double error = Math.abs(getWrappedError(setpoint, getDegrees(true)));
+
+        if (error > 90.0) {
+            moduleSetpoint = fastWrap360(setpoint + 180.0);
+            isModuleBackwards = true;
+        } else {
+            moduleSetpoint = fastWrap360(setpoint);
+            isModuleBackwards = false;
+        }
     }
 
     public double getModuleSetpoint() {
         return moduleSetpoint;
     }
 
-    public void setModuleSetpoint(double setpoint) {
+    public void setModulePosition() {
 
-        double newSetpoint = setpoint;
+        double measurement = getDegrees(true);
+        double output = angleController.calculate(measurement, moduleSetpoint);
 
-        double error = Math.abs(getWrappedError(newSetpoint, getDegrees(true)));
-
-        if(error > 90){
-            newSetpoint  = (newSetpoint + 180) % 360;
-            isModuleBackwards = true;
-        } else {
-            isModuleBackwards = false;
-        }
-
-        moduleSetpoint = newSetpoint;
+        angle.setPower(0.5 * clamp(output));  // half scaling kept
     }
 
-    public void setModulePosition() {
-        double servoOutput = angleController.calculate(getDegrees(true), getModuleSetpoint());
-        servoOutput = Math.max(-1, Math.min(1, servoOutput));
-        setTurnSpeed(servoOutput);
+    public boolean isWithinDegrees(double degrees) {
+        return Math.abs(getWrappedError(moduleSetpoint, getDegrees(true))) < degrees;
     }
 
     public double getMotorCurrent() {
         return drive.getCurrent(CurrentUnit.AMPS);
     }
 
-    public boolean isWithinDegrees(double degrees) {
-        return Math.abs(getDegrees(true) - getModuleSetpoint()) < degrees;
-    }
-
     public void toggleTelemetry() {
         enableTelemetry = !enableTelemetry;
     }
 
-    public void skadoodle(){
+    public void skadoodle() {
 
-        if(enableTelemetry) {
+        if (!enableTelemetry) return;
 
-            telem.putTelemetry("Module " + modNumber + " Raw Angle", getDegrees(false));
-            telem.putTelemetry("Module " + modNumber + " Degrees", getDegrees(true));
+        double raw = getDegrees(false);
+        double deg = getDegrees(true);
 
-            telem.putDashboard("Module " + modNumber + " Raw Angle", getDegrees(false));
-            telem.putDashboard("Module " + modNumber + " Degrees", getDegrees(true));
+        telem.putTelemetry(keyRaw, raw);
+        telem.putTelemetry(keyDeg, deg);
 
-        }
-
+        telem.putDashboard(keyRaw, raw);
+        telem.putDashboard(keyDeg, deg);
     }
 
 }

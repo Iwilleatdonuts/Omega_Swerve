@@ -6,223 +6,155 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry; // kept for constructor compatibility
 import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Swerve {
 
+    @SuppressWarnings("unused")
     private final EZTelemetry telem;
 
     private OTOSSensor sparky;
 
-    private final SwerveModule mod0, mod1, mod2, mod3;
+    private final SwerveModule[] mods = new SwerveModule[4];
     private final IMU imu;
+    private Pose2D targetPose;
+
+    private final double[] speeds = new double[4];
+    private final double[] angles = new double[4];
 
     private boolean enableTelemetry;
 
-    private final Map<String, Object> motorCurrents = new HashMap<>();
-    private final Map<String, Object> velocityErrors = new HashMap<>();
-    private final Map<String, Object> angleErrors = new HashMap<>();
-
-    private Pose2D targetPose;
-
     public Swerve(HardwareMap hardwareMap, EZTelemetry telem){
-
         this.telem = telem;
 
-        mod0 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants);
-        mod1 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod1.modConstants);
-        mod2 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod2.modConstants);
-        mod3 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod3.modConstants);
+        mods[0] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants);
+        mods[1] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod1.modConstants);
+        mods[2] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod2.modConstants);
+        mods[3] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod3.modConstants);
 
-
-        enableTelemetry = false;
-
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        RevHubOrientationOnRobot.LogoFacingDirection logo = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection usb = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logo, usb);
 
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        targetPose = new Pose2D(0, 0, 0);
+        targetPose = new Pose2D(0,0,0);
 
+        enableTelemetry = false;
     }
 
     public Swerve(HardwareMap hardwareMap, EZTelemetry telem, OTOSSensor sparky){
-
         this.telem = telem;
         this.sparky = sparky;
 
-        mod0 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants);
-        mod1 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod1.modConstants);
-        mod2 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod2.modConstants);
-        mod3 = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod3.modConstants);
+        mods[0] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants);
+        mods[1] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod1.modConstants);
+        mods[2] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod2.modConstants);
+        mods[3] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod3.modConstants);
 
-
-        enableTelemetry = false;
-
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        RevHubOrientationOnRobot.LogoFacingDirection logo = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection usb = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logo, usb);
 
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        targetPose = new Pose2D(0, 0, 0);
+        targetPose = new Pose2D(0,0,0);
 
+        enableTelemetry = false;
     }
 
     public void stop(){
-        mod0.setDrivePower(0);
-        mod1.setDrivePower(0);
-        mod2.setDrivePower(0);
-        mod3.setDrivePower(0);
-        mod0.setModuleSetpoint(mod0.getDegrees(true));
-        mod1.setModuleSetpoint(mod1.getDegrees(true));
-        mod2.setModuleSetpoint(mod2.getDegrees(true));
-        mod3.setModuleSetpoint(mod3.getDegrees(true));
-        mod0.setTurnSpeed(0);
-        mod1.setTurnSpeed(0);
-        mod2.setTurnSpeed(0);
-        mod3.setTurnSpeed(0);
+        for (int i = 0; i < 4; i++) {
+            mods[i].setDrivePower(0);
+            mods[i].setModuleSetpoint(mods[i].getDegrees(true));
+            mods[i].setTurnSpeed(0);
+        }
     }
 
     public void drive(double xVal, double yVal, double rVal, boolean fieldRelative, boolean slowMode){
 
-        if (Math.abs(xVal) < 0.03) {xVal = 0;}
-        if (Math.abs(yVal) < 0.03) {yVal = 0;}
-        if (Math.abs(rVal) < 0.03) {rVal = 0;}
+        if (Math.abs(xVal) < 0.03) xVal = 0;
+        if (Math.abs(yVal) < 0.03) yVal = 0;
+        if (Math.abs(rVal) < 0.03) rVal = 0;
 
         double x = yVal;
         double y = -xVal;
 
-        double xValPlaceholder = x;
-        double yValPlaceholder = y;
+        if (fieldRelative) {
+            double headingRad = Math.toRadians(getHeading());
+            double cos = Math.cos(headingRad);
+            double sien = Math.sin(headingRad);
+            double xTemp = x;
+            double yTemp = y;
 
-        if(fieldRelative){
-            double robotHeading = Math.toRadians(getHeading());
-            double cosHeading = Math.cos(robotHeading);
-            double sinHeading = Math.sin(robotHeading);
-
-            x = xValPlaceholder * cosHeading + yValPlaceholder * sinHeading;
-            y = -xValPlaceholder * sinHeading + yValPlaceholder * cosHeading;
+            x = xTemp * cos + yTemp * sien;
+            y = -xTemp * sien + yTemp * cos;
         }
 
         double r = -rVal;
 
-        double rotationXComponent = r * (Constants.DriveTrainConstants.trackWidth / Constants.DriveTrainConstants.moduleHypotenuse);
-        double rotationYComponent = r * (Constants.DriveTrainConstants.wheelbase / Constants.DriveTrainConstants.moduleHypotenuse);
+        final double rotX = r * (Constants.DriveTrainConstants.trackWidth / Constants.DriveTrainConstants.moduleHypotenuse);
+        final double rotY = r * (Constants.DriveTrainConstants.wheelbase / Constants.DriveTrainConstants.moduleHypotenuse);
 
-        double xLeftComponent = x - rotationXComponent;
-        double xRightComponent = x + rotationXComponent;
-        double yBackComponent = y - rotationYComponent;
-        double yFrontComponent = y + rotationYComponent;
+        final double xLeft = x - rotX;
+        final double xRight = x + rotX;
+        final double yBack = y - rotY;
+        final double yFront = y + rotY;
 
-        double mod0Speed = Math.hypot(xLeftComponent, yFrontComponent);
-        double mod1Speed = Math.hypot(xRightComponent, yFrontComponent);
-        double mod2Speed = Math.hypot(xLeftComponent, yBackComponent);
-        double mod3Speed = Math.hypot(xRightComponent, yBackComponent);
+        double mod0Speed = Math.hypot(xLeft, yFront);
+        double mod1Speed = Math.hypot(xRight, yFront);
+        double mod2Speed = Math.hypot(xLeft, yBack);
+        double mod3Speed = Math.hypot(xRight, yBack);
 
-        double max = Math.max(Math.max(mod0Speed, mod1Speed), Math.max(mod2Speed, mod3Speed));
+        double max = mod0Speed;
+        if (mod1Speed > max) max = mod1Speed;
+        if (mod2Speed > max) max = mod2Speed;
+        if (mod3Speed > max) max = mod3Speed;
 
         if (max > 1.0) {
-            double optimized = 1.0 / max;  // division is supposedly slower than multiplication, gonna optimize here
-            mod0Speed *= optimized;
-            mod1Speed *= optimized;
-            mod2Speed *= optimized;
-            mod3Speed *= optimized;
+            double inv = 1.0 / max;
+            mod0Speed *= inv; mod1Speed *= inv; mod2Speed *= inv; mod3Speed *= inv;
         }
 
-        if(slowMode) {
-            mod0Speed *= 0.3;
-            mod1Speed *= 0.3;
-            mod2Speed *= 0.3;
-            mod3Speed *= 0.3;
+        if (slowMode) {
+            mod0Speed *= 0.3; mod1Speed *= 0.3; mod2Speed *= 0.3; mod3Speed *= 0.3;
         }
 
-        double mod0Angle = normalizeModuleAngle(Math.toDegrees(Math.atan2(yFrontComponent, xLeftComponent)));
-        double mod1Angle = normalizeModuleAngle(Math.toDegrees(Math.atan2(yFrontComponent, xRightComponent)));
-        double mod2Angle = normalizeModuleAngle(Math.toDegrees(Math.atan2(yBackComponent, xLeftComponent)));
-        double mod3Angle = normalizeModuleAngle(Math.toDegrees(Math.atan2(yBackComponent, xRightComponent)));
+        double a0 = Math.toDegrees(Math.atan2(yFront, xLeft));
+        if (a0 < 0) a0 += 360.0;
+        double a1 = Math.toDegrees(Math.atan2(yFront, xRight));
+        if (a1 < 0) a1 += 360.0;
+        double a2 = Math.toDegrees(Math.atan2(yBack, xLeft));
+        if (a2 < 0) a2 += 360.0;
+        double a3 = Math.toDegrees(Math.atan2(yBack, xRight));
+        if (a3 < 0) a3 += 360.0;
 
-        if(!(mod0.isWithinDegrees(45) && mod1.isWithinDegrees(45) && mod2.isWithinDegrees(45) && mod3.isWithinDegrees(45))){
-            mod0Speed*=0.8;
-            mod1Speed*=0.8;
-            mod2Speed*=0.8;
-            mod3Speed*=0.8;
-        }
-            mod0.setDrivePower(mod0Speed);
-            mod1.setDrivePower(mod1Speed);
-            mod2.setDrivePower(mod2Speed);
-            mod3.setDrivePower(mod3Speed);
-
+        mods[0].setDrivePower(mod0Speed);
+        mods[1].setDrivePower(mod1Speed);
+        mods[2].setDrivePower(mod2Speed);
+        mods[3].setDrivePower(mod3Speed);
 
         if (xVal != 0 || yVal != 0 || rVal != 0) {
-            mod0.setModuleSetpoint(mod0Angle);
-            mod1.setModuleSetpoint(mod1Angle);
-            mod2.setModuleSetpoint(mod2Angle);
-            mod3.setModuleSetpoint(mod3Angle);
+            mods[0].setModuleSetpoint(a0);
+            mods[1].setModuleSetpoint(a1);
+            mods[2].setModuleSetpoint(a2);
+            mods[3].setModuleSetpoint(a3);
         }
 
-        mod0.setModulePosition();
-        mod1.setModulePosition();
-        mod2.setModulePosition();
-        mod3.setModulePosition();
-
-    }
-
-    public Map<String, Object> getMotorCurrents(){
-        motorCurrents.clear();
-        motorCurrents.put("Mod 0 Current: \t", mod0.getMotorCurrent());
-        motorCurrents.put("Mod 1 Current: \t", mod1.getMotorCurrent());
-        motorCurrents.put("Mod 2 Current: \t", mod2.getMotorCurrent());
-        motorCurrents.put("Mod 3 Current: \t", mod3.getMotorCurrent());
-        return motorCurrents;
-    }
-
-    public Map<String, Object> getVelocityErrors() {
-        velocityErrors.clear();
-        velocityErrors.put("Mod 0 Velocity Error: \t", mod0.getVelocityError());
-        velocityErrors.put("Mod 1 Velocity Error: \t", mod1.getVelocityError());
-        velocityErrors.put("Mod 2 Velocity Error: \t", mod2.getVelocityError());
-        velocityErrors.put("Mod 3 Velocity Error: \t", mod3.getVelocityError());
-        return velocityErrors;
-    }
-
-    public Map<String, Object> getAngularError() {
-        angleErrors.clear();
-        angleErrors.put("Mod 0 Angle Error: \t", mod0.getWrappedError(mod0.getModuleSetpoint(), mod0.getDegrees(true)));
-        angleErrors.put("Mod 1 Angle Error: \t", mod1.getWrappedError(mod1.getModuleSetpoint(), mod1.getDegrees(true)));
-        angleErrors.put("Mod 2 Angle Error: \t", mod2.getWrappedError(mod2.getModuleSetpoint(), mod2.getDegrees(true)));
-        angleErrors.put("Mod 3 Angle Error: \t", mod3.getWrappedError(mod3.getModuleSetpoint(), mod3.getDegrees(true)));
-        return angleErrors;
-    }
-
-    public Map<String, Object> getSetpoints() {
-        angleErrors.clear();
-        angleErrors.put("Mod 0 Setpoint: \t", mod0.getModuleSetpoint());
-        angleErrors.put("Mod 1 Setpoint: \t", mod1.getModuleSetpoint());
-        angleErrors.put("Mod 2 Setpoint: \t", mod2.getModuleSetpoint());
-        angleErrors.put("Mod 3 Setpoint: \t", mod3.getModuleSetpoint());
-        return angleErrors;
-    }
-
-    private double normalizeModuleAngle(double angle) {
-        angle %= 360;
-        if (angle < 0) angle += 360;
-        return angle;
+        mods[0].setModulePosition();
+        mods[1].setModulePosition();
+        mods[2].setModulePosition();
+        mods[3].setModulePosition();
     }
 
     public double getHeading() {
-        if(sparky == null) {
+        if (sparky == null) {
             double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-
-            rotation = (rotation+360)%360;
-
+            rotation += 360.0;
+            rotation %= 360.0;
             return rotation;
         } else {
             return sparky.getHeading();
@@ -233,10 +165,6 @@ public class Swerve {
         imu.resetYaw();
     }
 
-    public void toggleTelemetry() {
-        enableTelemetry = !enableTelemetry;
-    }
-
     public void setTargetPose(double newX, double newY, double newH) {
         targetPose = new Pose2D(newX, newY, newH);
     }
@@ -245,8 +173,12 @@ public class Swerve {
         targetPose = newPose;
     }
 
-    public Pose2D getTargetPose(){
+    public Pose2D getTargetPose() {
         return targetPose;
+    }
+
+    public void toggleTelemetry() {
+        enableTelemetry = !enableTelemetry;
     }
 
     public void skadoodle(){
@@ -267,4 +199,3 @@ public class Swerve {
 
     }
 }
-
