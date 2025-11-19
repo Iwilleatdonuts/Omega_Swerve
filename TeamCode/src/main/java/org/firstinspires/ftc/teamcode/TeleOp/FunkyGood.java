@@ -97,14 +97,14 @@ public class FunkyGood extends LinearOpMode {
         s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.gateLineupTeleop));
 
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, driver, operator);
-//        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Vision, driver, operator, telem);
+        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
         turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, operator);
-//        shooterCommand = new CoolShooters(s_Shooter, s_Vision, driver, operator, telem);
+        shooterCommand = new CoolShooters(s_Shooter, s_Lime, driver, operator, telem);
 
         driveCommand.initialize();
-//        intakeCommand.initialize();
+        intakeCommand.initialize();
         turretCommand.initialize();
-//        shooterCommand.initialize();
+        shooterCommand.initialize();
 
         VisionThread visionRunnable = new VisionThread(s_Lime, 15);
         Thread visionThread = new Thread(visionRunnable, "Vision Thread");
@@ -125,9 +125,9 @@ public class FunkyGood extends LinearOpMode {
             long loopStart = System.nanoTime();
 
             driveCommand.execute();
-//            intakeCommand.execute();
+            intakeCommand.execute();
             turretCommand.execute();
-//            shooterCommand.execute();
+            shooterCommand.execute();
 
             if(driver.wasJustPressed(GamepadKeys.Button.START)) {
                 s_Swerve.zeroGyro();
