@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
+import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
 public class SwerveModule {
 

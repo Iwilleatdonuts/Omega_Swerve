@@ -6,7 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class Constants {
@@ -168,24 +168,24 @@ public class Constants {
     public static final class AutoConstants {
 
         public static final class RedConstants {
-            public static final Pose2D closeStart = new Pose2D(1.21548, 1.19616, 270);
-            public static final Pose2D closeShot = new  Pose2D(0.9, 0.9, 270);
-            public static final Pose2D closeBallLineup = new Pose2D(0.66376, 0.31681, 270);
-            public static final Pose2D mediumBallLineup = new Pose2D(0.66376, -0.30519, 270);
-            public static final Pose2D farBallLineup = new Pose2D(0.66376, -0.88619, 270);
-            public static final Pose2D gateLineup = new Pose2D(1.17791, 0.13632, 180);
-            public static final Pose2D gateLineupTeleop = new Pose2D(-0.13632, 1.17791, 270);
+            public static final OmegaPose2D closeStart = new OmegaPose2D(1.21548, 1.19616, 270);
+            public static final OmegaPose2D closeShot = new OmegaPose2D(0.9, 0.9, 270);
+            public static final OmegaPose2D closeBallLineup = new OmegaPose2D(0.66376, 0.31681, 270);
+            public static final OmegaPose2D mediumBallLineup = new OmegaPose2D(0.66376, -0.30519, 270);
+            public static final OmegaPose2D farBallLineup = new OmegaPose2D(0.66376, -0.88619, 270);
+            public static final OmegaPose2D gateLineup = new OmegaPose2D(1.17791, 0.13632, 180);
+            public static final OmegaPose2D gateLineupTeleop = new OmegaPose2D(-0.13632, 1.17791, 270);
 
         }
 
         public static final class BlueConstants {
-            public static final Pose2D closeStart = new Pose2D(-1.21548, -1.19616, 90);
-            public static final Pose2D closeShot = new Pose2D(-0.9, 0.9, 90);
-            public static final Pose2D closeBallLineup = new Pose2D(-0.66376, 0.31681, 90);
-            public static final Pose2D mediumBallLineup = new Pose2D(-0.66376, -0.30519, 90);
-            public static final Pose2D farBallLineup = new Pose2D(-0.66376, -0.88619, 90);
-            public static final Pose2D gateLineup = new Pose2D(-1.17791, 0.13632, 180);
-            public static final Pose2D gateLineupTeleop = new Pose2D(0.13632, 1.17791, 90);
+            public static final OmegaPose2D closeStart = new OmegaPose2D(-1.21548, -1.19616, 90);
+            public static final OmegaPose2D closeShot = new OmegaPose2D(-0.9, 0.9, 90);
+            public static final OmegaPose2D closeBallLineup = new OmegaPose2D(-0.66376, 0.31681, 90);
+            public static final OmegaPose2D mediumBallLineup = new OmegaPose2D(-0.66376, -0.30519, 90);
+            public static final OmegaPose2D farBallLineup = new OmegaPose2D(-0.66376, -0.88619, 90);
+            public static final OmegaPose2D gateLineup = new OmegaPose2D(-1.17791, 0.13632, 180);
+            public static final OmegaPose2D gateLineupTeleop = new OmegaPose2D(0.13632, 1.17791, 90);
 
         }
 

@@ -6,7 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
 public class OTOSSensor {
 
@@ -88,15 +88,15 @@ public class OTOSSensor {
 //        telemetry.addLine(String.format("OTOS Firmware Version: v%d.%d", fwVersion.major, fwVersion.minor));
     }
 
-    public Pose2D getPose() {
-        if (disabled) return new Pose2D(0,0,0);
+    public OmegaPose2D getPose() {
+        if (disabled) return new OmegaPose2D(0,0,0);
         SparkFunOTOS.Pose2D otosPose = otos.getPosition();
         double heading = otosPose.h;
         heading = (heading + 360) % 360;
-        return new Pose2D(otosPose.x, otosPose.y, heading);
+        return new OmegaPose2D(otosPose.x, otosPose.y, heading);
     }
 
-    public SparkFunOTOS.Pose2D normiePoseToSparkyPose(Pose2D normiePose) {
+    public SparkFunOTOS.Pose2D normiePoseToSparkyPose(OmegaPose2D normiePose) {
         double heading = normiePose.r();
         if(heading > 180) {
             heading-=360;

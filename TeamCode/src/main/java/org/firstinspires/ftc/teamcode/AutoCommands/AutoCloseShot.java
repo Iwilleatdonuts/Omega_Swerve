@@ -7,9 +7,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-import org.firstinspires.ftc.teamcode.Utilities.HolonomicDriveController;
-import org.firstinspires.ftc.teamcode.Utilities.PIDController;
-import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
+import org.firstinspires.ftc.teamcode.Utilities.math.controller.HolonomicDriveController;
+import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
 public class AutoCloseShot {
 
@@ -21,14 +21,14 @@ public class AutoCloseShot {
     private final Feeder s_Feeder;
     private final OTOSSensor s_Sparky;
 
-    private Pose2D targetPosition;
+    private OmegaPose2D targetPosition;
 
     private final PIDController xController;
     private final PIDController yController;
     private final PIDController staticAngleController;
     private final PIDController dynamicAngleController;
 
-    private final HolonomicDriveController holoController;
+//    private final HolonomicDriveController holoController;
 
     private final boolean areWeWinners;
 
@@ -63,7 +63,7 @@ public class AutoCloseShot {
         dynamicAngleController.setIZone(40);
         dynamicAngleController.enableContinuousInput(0, 360);
 
-        holoController = new HolonomicDriveController(xController, yController, staticAngleController, dynamicAngleController);
+//        holoController = new HolonomicDriveController(xController, yController, staticAngleController);
     }
 
     public void reset(){
@@ -77,7 +77,7 @@ public class AutoCloseShot {
 
     public void execute(){
 
-        Pose2D currentPose = s_Sparky.getPose();
+        OmegaPose2D currentPose = s_Sparky.getPose();
         double currentHeading = s_Sparky.getHeading();
         s_Shooter.setShooterSpeed(0.36);
 
@@ -100,7 +100,7 @@ public class AutoCloseShot {
                 break;
             case 1:
 
-                double[] outputs = holoController.calculate(currentPose, targetPosition);
+//                double[] outputs = holoController.calculate(currentPose, targetPosition);
 
 //                double headingError = Math.abs(targetPosition.r() - currentPose.r());
 //
@@ -113,7 +113,7 @@ public class AutoCloseShot {
 //                    rOutput = -staticAngleController.calculate(currentHeading, targetPosition.r());
 //                    dynamicAngleController.reset();
 //                }
-                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
+//                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
 //                telem.putTelemetry("R Setpoint", targetPosition.r());
 //                telem.putTelemetry("R pose}", currentHeading);
 

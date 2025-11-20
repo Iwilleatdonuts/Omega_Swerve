@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.AutoCommands;
 
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-import org.firstinspires.ftc.teamcode.Utilities.HolonomicDriveController;
-import org.firstinspires.ftc.teamcode.Utilities.PIDController;
-import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
+import org.firstinspires.ftc.teamcode.Utilities.math.controller.HolonomicDriveController;
+import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
 public class AutoGate {
 
@@ -16,14 +15,14 @@ public class AutoGate {
     private final Swerve s_Swerve;
     private final OTOSSensor s_Sparky;
 
-    private Pose2D targetPosition;
+    private OmegaPose2D targetPosition;
 
     private final PIDController xController;
     private final PIDController yController;
     private final PIDController staticAngleController;
     private final PIDController dynamicAngleController;
 
-    private final HolonomicDriveController holoController;
+//    private final HolonomicDriveController holoController;
 
     private final boolean areWeWinners;
     private boolean goingToTeleop;
@@ -54,7 +53,7 @@ public class AutoGate {
         dynamicAngleController.setIZone(40);
         dynamicAngleController.enableContinuousInput(0, 360);
 
-        holoController = new HolonomicDriveController(xController, yController, staticAngleController, dynamicAngleController);
+//        holoController = new HolonomicDriveController(xController, yController, staticAngleController, dynamicAngleController);
     }
 
     public void reset(boolean teleopNext){
@@ -74,7 +73,7 @@ public class AutoGate {
 
     public void execute(){
 
-        Pose2D currentPose = s_Sparky.getPose();
+        OmegaPose2D currentPose = s_Sparky.getPose();
 
         switch(phase) {
             case 0:
@@ -92,9 +91,9 @@ public class AutoGate {
                 break;
             case 1:
 
-                double[] outputs = holoController.calculate(currentPose, targetPosition);
+//                double[] outputs = holoController.calculate(currentPose, targetPosition);
 
-                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
+//                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
 
                 if(isAtRoughSetpoint()) {
                     s_Swerve.stop();

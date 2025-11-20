@@ -2,15 +2,15 @@ package org.firstinspires.ftc.teamcode.Commands;
 
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
-import org.firstinspires.ftc.teamcode.Utilities.PIDController;
-import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
+import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
 public class DriveToPoint {
 
     private final Swerve s_Swerve;
     private final OTOSSensor s_Sparky;
 
-    private Pose2D targetPosition;
+    private OmegaPose2D targetPosition;
 
     private final PIDController xController;
     private final PIDController yController;
@@ -50,7 +50,7 @@ public class DriveToPoint {
 
     public void execute(){
 
-        Pose2D currentPose = s_Sparky.getPose();
+        OmegaPose2D currentPose = s_Sparky.getPose();
         targetPosition = s_Swerve.getTargetPose();
 
         double rotationTarget = targetPosition.r();

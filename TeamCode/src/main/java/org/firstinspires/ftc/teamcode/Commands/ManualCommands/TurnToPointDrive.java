@@ -8,7 +8,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
-import org.firstinspires.ftc.teamcode.Utilities.PIDController;
+import org.firstinspires.ftc.teamcode.Utilities.math.controller.ProfiledPIDController;
+import org.firstinspires.ftc.teamcode.Utilities.math.trajectory.TrapezoidProfile;
 
 public class TurnToPointDrive {
 
@@ -19,8 +20,7 @@ public class TurnToPointDrive {
     private final OmegaController m_Operator;
 
     private boolean slowMode;
-    private final PIDController staticAnglePID;
-    private final PIDController dynamicAnglePID;
+    private final ProfiledPIDController staticAnglePID;
 
     private boolean enableAutoRotate;
     private double turnAngle;
@@ -45,15 +45,9 @@ public class TurnToPointDrive {
 
         turnAngle = 0;
 
-        staticAnglePID = new PIDController(0.006, 0.02, 0.00015);
+        staticAnglePID = new ProfiledPIDController(0.006, 0.02, 0.00015, new TrapezoidProfile.Constraints(4, 2));
         staticAnglePID.setIZone(40);
         staticAnglePID.enableContinuousInput(0, 360);
-
-        dynamicAnglePID = new PIDController(0.0025, 0.015, 0.0001);
-//        dynamicAnglePID = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
-        dynamicAnglePID.setIZone(50);
-        dynamicAnglePID.enableContinuousInput(0, 360);
-//        staticAnglePID = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kF);
 
         xLimiter = new SlewRateLimiter(2);
         yLimiter = new SlewRateLimiter(2);
@@ -105,11 +99,7 @@ public class TurnToPointDrive {
 
             double currentHeading = s_Sparky.getHeading();
             if(Math.abs(currentHeading - turnAngle) > 0.5) {
-                if(xLimited != 0 || yLimited != 0) {
-                    rotationOutput = -dynamicAnglePID.calculate(s_Sparky.getHeading(), turnAngle);
-                } else {
                     rotationOutput = -staticAnglePID.calculate(s_Sparky.getHeading(), turnAngle);
-                }
             }
         }
 

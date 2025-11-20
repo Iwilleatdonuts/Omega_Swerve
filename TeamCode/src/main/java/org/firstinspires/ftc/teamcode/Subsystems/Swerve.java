@@ -7,7 +7,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry; // kept for constructor compatibility
-import org.firstinspires.ftc.teamcode.Utilities.Pose2D;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
+import org.firstinspires.ftc.teamcode.Utilities.math.kinematics.ChassisSpeeds;
 
 public class Swerve {
 
@@ -18,10 +19,15 @@ public class Swerve {
 
     private final SwerveModule[] mods = new SwerveModule[4];
     private final IMU imu;
-    private Pose2D targetPose;
+    private OmegaPose2D targetPose;
 
     private final double[] speeds = new double[4];
     private final double[] angles = new double[4];
+
+    //max theoretical speed is 1.93m/s
+    //max theoretical angular velocity is 5.20884002936 radians per seconds;
+    private final double MAX_SPEED_MPS = 1.93;
+    private final double MAX_ANGULAR_VELOCITY_RAD_PER_SECONDS = 5.20884002936;
 
     private boolean enableTelemetry;
 
@@ -40,7 +46,7 @@ public class Swerve {
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        targetPose = new Pose2D(0,0,0);
+        targetPose = new OmegaPose2D(0,0,0);
 
         enableTelemetry = false;
     }
@@ -61,7 +67,7 @@ public class Swerve {
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        targetPose = new Pose2D(0,0,0);
+        targetPose = new OmegaPose2D(0,0,0);
 
         enableTelemetry = false;
     }
@@ -150,6 +156,16 @@ public class Swerve {
         mods[3].setModulePosition();
     }
 
+    public void drive(ChassisSpeeds speeds) {
+
+        double x = speeds.vxMetersPerSecond/MAX_SPEED_MPS;
+        double y = speeds.vyMetersPerSecond/MAX_SPEED_MPS;
+        double r = speeds.omegaRadiansPerSecond/MAX_ANGULAR_VELOCITY_RAD_PER_SECONDS;
+
+        drive(x, y, r, true, false);
+
+    }
+
     public double getHeading() {
         if (sparky == null) {
             double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
@@ -166,14 +182,14 @@ public class Swerve {
     }
 
     public void setTargetPose(double newX, double newY, double newH) {
-        targetPose = new Pose2D(newX, newY, newH);
+        targetPose = new OmegaPose2D(newX, newY, newH);
     }
 
-    public void setTargetPose(Pose2D newPose) {
+    public void setTargetPose(OmegaPose2D newPose) {
         targetPose = newPose;
     }
 
-    public Pose2D getTargetPose() {
+    public OmegaPose2D getTargetPose() {
         return targetPose;
     }
 
