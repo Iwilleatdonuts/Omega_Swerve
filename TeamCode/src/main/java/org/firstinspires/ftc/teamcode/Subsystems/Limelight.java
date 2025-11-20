@@ -6,6 +6,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.Kalman;
 
 public class Limelight {
 
@@ -18,7 +19,16 @@ public class Limelight {
 
     private LLResult latestResult;
 
+    private final Kalman bearingFilter;
+    private final Kalman distanceFilter;
+
+    private double filteredBearing;
+    private double filteredDistance;
+
     public Limelight(HardwareMap hardwareMap, EZTelemetry telem, boolean areWeWinners) {
+
+        bearingFilter = new Kalman(1.5, 0.75, 0);
+        distanceFilter = new Kalman(0.1, 0.15, 0);
 
         this.telem = telem;
         this.areWeWinners = areWeWinners;
@@ -57,6 +67,14 @@ public class Limelight {
         return isValidReaing() ? (0.31092234) / Math.tan(Math.toRadians(latestResult.getTy() + 20)) : 0;
     }
 
+    public double getFilteredBearing() {
+        return filteredBearing;
+    }
+
+    public double getFilteredDistance() {
+        return filteredDistance;
+    }
+
     public boolean isValidReaing() {
         return latestResult.isValid();
     }
@@ -68,6 +86,11 @@ public class Limelight {
     public void skadoodle() {
 
         latestResult = getLatestResult();
+
+        if(isValidReaing()) {
+            filteredBearing = bearingFilter.update(getGoalBearing());
+            filteredDistance = distanceFilter.update(getGoalDistance());
+        }
 
         if(enableTelemetry) {
             telem.putTelemetry("Tag Bearing: ", getGoalBearing());

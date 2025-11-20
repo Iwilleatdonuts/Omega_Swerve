@@ -25,19 +25,38 @@ public class LimeTurret {
 
     public void initialize(){
 
-        aprilBearing = s_Lime.getGoalBearing();
+        aprilBearing = s_Lime.getFilteredBearing();
 
     }
 
     public void execute(){
 
-        aprilBearing = s_Lime.getGoalBearing();
-        double bearing = s_Turret.getDegrees() - aprilBearing;
 
-        s_Turret.setSetpoint(bearing);
+        if(s_Lime.isValidReaing()){
+
+            aprilBearing = s_Lime.getFilteredBearing();
+            double bearing = s_Turret.getDegrees() - aprilBearing;
+
+            s_Turret.setSetpoint(bearing);
+
+        } else {
+
+            double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
+            operatorJoystickAngle += 360;
+            operatorJoystickAngle %= 360;
+
+            operatorJoystickAngle -= s_Swerve.getHeading();
+
+            operatorJoystickAngle += 360;
+            operatorJoystickAngle %= 360;
+
+            if(Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9) {
+                s_Turret.setSetpoint(operatorJoystickAngle);
+            }
+
+        }
 
         s_Turret.runToSetpoint();
-
     }
 
     public void end() {
