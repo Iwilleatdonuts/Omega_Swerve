@@ -137,7 +137,7 @@ public class BlueShooterTestMode extends LinearOpMode {
                     s_Swerve.zeroGyro();
                 }
 
-            telem.putTelemetry("Distance", s_Lime.getGoalDistance());
+            telem.putTelemetry("Distance", s_Lime.getFilteredDistance());
             telem.putTelemetry("Shooter Target Percentage", shooterSpeed);
 
             telem.updateTelemetry();

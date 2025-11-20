@@ -62,8 +62,12 @@ public class CoolShooters {
             shooterAngle = Constants.ShooterConstants.farAngle;
         }
 
-        if(m_Driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
-            shootersGunnaShoot = !shootersGunnaShoot;
+        if(m_Driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || m_Operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+            shootersGunnaShoot = true;
+        }
+
+        if(m_Driver.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) || m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+            shootersGunnaShoot = false;
         }
 
         if(shootersGunnaShoot){

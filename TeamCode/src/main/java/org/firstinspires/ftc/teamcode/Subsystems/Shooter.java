@@ -112,18 +112,18 @@ public class Shooter {
     }
 
     public double getShooterSpeedFromDistance(double distance) {
-        if(distance > 76){
-            return 0.000000451637 * distance * distance * distance - 0.000129113 * distance * distance + 0.013132 * distance + 0.062;//0.0580873
-        } else if (distance > 1.039) {
-            return 0.0000492152 * distance * distance - 0.00121422 * distance + 0.32;//0.317641
+        if(distance > 3.25){
+            return 0.0635116 * distance * distance * distance - 0.792519 * distance * distance + 3.30372 * distance - 4.00635;//0.0580873
+        } else if (distance > 0.913) {
+            return -0.00452262 * distance * distance * distance + 0.0308923 * distance * distance + 0.0148123 * distance + 0.324272;
         } else {
             return 0.36;
         }
     }
 
     public double getShooterAngleFromDistance(double distance) {
-        return -0.811688 * distance + 1.67451;
-//        return 0;
+        return -0.355366*distance+1.17768;
+//        return 1;
     }
 
     public void toggleTelemetry() {
@@ -137,7 +137,7 @@ public class Shooter {
             telem.putTelemetry("Target Velocity", targetVelocity);
             telem.putTelemetry("Shooter Velocity", getShooterVelocity());
             telem.putTelemetry("Shooter Constant", getShooterConstant());
-//
+
             telem.putDashboard("Target Velocity", targetVelocity);
             telem.putDashboard("Shooter Velocity", getShooterVelocity());
             telem.putDashboard("Shooter Constant", getShooterConstant());
