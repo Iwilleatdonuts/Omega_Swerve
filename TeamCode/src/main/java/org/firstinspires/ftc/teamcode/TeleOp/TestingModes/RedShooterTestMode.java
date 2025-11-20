@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp.TestingModes;
 
 import com.arcrobotics.ftclib.command.button.Button;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,9 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
-import org.firstinspires.ftc.teamcode.Commands.TurretToApril;
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
@@ -20,8 +17,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
-import org.firstinspires.ftc.teamcode.Utilities.Controller.GamepadButton;
-import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaController.GamepadButton;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 //http://192.168.43.1:8080/dash

@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
-import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
 import org.firstinspires.ftc.teamcode.Utilities.PIDController;
 

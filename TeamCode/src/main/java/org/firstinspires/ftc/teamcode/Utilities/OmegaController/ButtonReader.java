@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Utilities.Controller;
+package org.firstinspires.ftc.teamcode.Utilities.OmegaController;
 
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.KeyReader;

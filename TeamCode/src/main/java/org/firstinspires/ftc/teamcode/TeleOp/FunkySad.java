@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
-import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 @TeleOp(name = "Ginger Drive Core Sad", group = "Main")

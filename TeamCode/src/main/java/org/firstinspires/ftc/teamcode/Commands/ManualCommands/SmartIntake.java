@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
-import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 public class SmartIntake {

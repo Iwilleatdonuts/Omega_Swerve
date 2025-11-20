@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
-import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 
 public class TurretToApril {
 

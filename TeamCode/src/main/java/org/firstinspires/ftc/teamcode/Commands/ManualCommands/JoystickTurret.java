@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
-import org.firstinspires.ftc.teamcode.Utilities.Controller.OmegaController;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 
 public class JoystickTurret {
 
