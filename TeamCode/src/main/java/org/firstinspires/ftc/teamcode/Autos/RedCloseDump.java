@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
@@ -31,7 +32,7 @@ public class RedCloseDump extends LinearOpMode {
 
         EZTelemetry telem = new EZTelemetry(telemetry);
 
-        AprilVisionOnTurret s_Vision = new AprilVisionOnTurret(hardwareMap, telem, areWeWinners);
+        Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
         OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telem);
         s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.closeStart));
         s_Sparky.toggleTelemetry();
@@ -43,9 +44,9 @@ public class RedCloseDump extends LinearOpMode {
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
         AutoCloseShot autoShootCommand = new AutoCloseShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
-        AutoIntake intakeCommand = new AutoIntake(s_Swerve, s_Intake, s_Sparky, telem, areWeWinners, 1);
+        AutoIntake intakeCommand = new AutoIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners, 1);
         AutoGate gateCommand = new AutoGate(s_Swerve, s_Sparky, telem, areWeWinners);
-        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Vision);
+        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime);
 
         int phase = 0;
 
@@ -72,7 +73,6 @@ public class RedCloseDump extends LinearOpMode {
 
         );
 
-        telem.putTelemetry("FPS", s_Vision.getCameraFPS());
         telem.updateTelemetry();
 
         waitForStart();
@@ -84,7 +84,7 @@ public class RedCloseDump extends LinearOpMode {
         while (opModeIsActive()) {
 
             s_Sparky.skadoodle();
-            s_Vision.skadoodle();
+            s_Lime.skadoodle();
             turretCommand.execute();
             telem.updateAll();
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.AutoCommands;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 import org.firstinspires.ftc.teamcode.Utilities.math.controller.HolonomicDriveController;
@@ -17,12 +18,7 @@ public class AutoGate {
 
     private OmegaPose2D targetPosition;
 
-    private final PIDController xController;
-    private final PIDController yController;
-    private final PIDController staticAngleController;
-    private final PIDController dynamicAngleController;
-
-//    private final HolonomicDriveController holoController;
+    private final AutoDriveController driveController;
 
     private final boolean areWeWinners;
     private boolean goingToTeleop;
@@ -42,18 +38,7 @@ public class AutoGate {
         this.s_Swerve = s_Swerve;
         this.s_Sparky = s_Sparky;
 
-        xController = new PIDController(2.2, 0, 0.05);
-        yController = new PIDController(2.2, 0, 0.05);
-
-        staticAngleController = new PIDController(0.006, 0.02, 0.00015);
-        staticAngleController.setIZone(40);
-        staticAngleController.enableContinuousInput(0, 360);
-
-        dynamicAngleController = new PIDController(0.0025, 0.015, 0.0001);
-        dynamicAngleController.setIZone(40);
-        dynamicAngleController.enableContinuousInput(0, 360);
-
-//        holoController = new HolonomicDriveController(xController, yController, staticAngleController, dynamicAngleController);
+        driveController = new AutoDriveController();
     }
 
     public void reset(boolean teleopNext){
@@ -65,10 +50,8 @@ public class AutoGate {
         }
         isFinished = false;
         phase = 0;
-        xController.reset();
-        yController.reset();
-        staticAngleController.reset();
-        dynamicAngleController.reset();
+        driveController.reset();
+        driveController.setTargetPose(targetPosition);
     }
 
     public void execute(){
@@ -82,18 +65,16 @@ public class AutoGate {
                 } else if (!areWeWinners && currentPose.x() < -1.21) {
                     s_Swerve.drive(0.8, 0, 0, true, false);
                 } else {
-                    xController.reset();
-                    yController.reset();
-                    staticAngleController.reset();
-                    dynamicAngleController.reset();
+                    driveController.reset();
                     phase++;
                 }
                 break;
             case 1:
 
-//                double[] outputs = holoController.calculate(currentPose, targetPosition);
+                driveController.updateCurrentPose(currentPose);
+                double[] outputs = driveController.getOutputs();
 
-//                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
+                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
 
                 if(isAtRoughSetpoint()) {
                     s_Swerve.stop();
@@ -104,7 +85,7 @@ public class AutoGate {
                 break;
             case 2:
 
-                s_Swerve.drive(0.2, 0, 0, true, false);
+                s_Swerve.drive(0.4, 0, 0, true, false);
 
                 if(System.nanoTime() - timestamp > 1e9 || goingToTeleop) {
                     s_Swerve.stop();

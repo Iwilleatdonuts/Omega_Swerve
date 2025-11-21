@@ -33,6 +33,8 @@ public class DriveToPointTest extends LinearOpMode {
         driveCommand = new DriveToDashboardPoint(s_Swerve, s_Sparky, telem);
 
         driveCommand.initialize();
+        s_Sparky.zeroGyro();
+        s_Swerve.zeroGyro();
 
         waitForStart();
 

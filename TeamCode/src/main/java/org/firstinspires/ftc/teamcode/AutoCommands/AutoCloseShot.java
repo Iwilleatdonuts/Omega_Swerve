@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 import org.firstinspires.ftc.teamcode.Utilities.math.controller.HolonomicDriveController;
@@ -23,12 +24,7 @@ public class AutoCloseShot {
 
     private OmegaPose2D targetPosition;
 
-    private final PIDController xController;
-    private final PIDController yController;
-    private final PIDController staticAngleController;
-    private final PIDController dynamicAngleController;
-
-//    private final HolonomicDriveController holoController;
+    private final AutoDriveController driveController;
 
     private final boolean areWeWinners;
 
@@ -52,16 +48,7 @@ public class AutoCloseShot {
         this.s_Feeder = s_Feeder;
         this.s_Sparky = s_Sparky;
 
-        xController = new PIDController(2.2, 0, 0.05);
-        yController = new PIDController(2.2, 0, 0.05);
-
-        staticAngleController = new PIDController(0.006, 0.02, 0.00015);
-        staticAngleController.setIZone(40);
-        staticAngleController.enableContinuousInput(0, 360);
-
-        dynamicAngleController = new PIDController(0.0025, 0.015, 0.0001);
-        dynamicAngleController.setIZone(40);
-        dynamicAngleController.enableContinuousInput(0, 360);
+        driveController = new AutoDriveController();
 
 //        holoController = new HolonomicDriveController(xController, yController, staticAngleController);
     }
@@ -69,17 +56,13 @@ public class AutoCloseShot {
     public void reset(){
         isFinished = false;
         phase = 0;
-        xController.reset();
-        yController.reset();
-        staticAngleController.reset();
-        dynamicAngleController.reset();
+        driveController.reset();
     }
 
     public void execute(){
 
         OmegaPose2D currentPose = s_Sparky.getPose();
-        double currentHeading = s_Sparky.getHeading();
-        s_Shooter.setShooterSpeed(0.36);
+        s_Shooter.setShooterSpeed(0.38);
 
         telem.putTelemetry("Phase", phase);
 
@@ -91,31 +74,17 @@ public class AutoCloseShot {
                 } else if (!areWeWinners && currentPose.x() < -1.21) {
                     s_Swerve.drive(0.8, 0, 0, true, false);
                 } else {
-                    xController.reset();
-                    yController.reset();
-                    staticAngleController.reset();
-                    dynamicAngleController.reset();
+                    driveController.reset();
                     phase++;
                 }
                 break;
             case 1:
 
-//                double[] outputs = holoController.calculate(currentPose, targetPosition);
+                driveController.updateCurrentPose(currentPose);
+                driveController.setTargetPose(targetPosition);
+                double[] outputs = driveController.getOutputs();
 
-//                double headingError = Math.abs(targetPosition.r() - currentPose.r());
-//
-//                double rOutput = 0;
-//
-//                if(headingError < 5) {
-//                    rOutput = -dynamicAngleController.calculate(currentPose.r(), targetPosition.r());
-//                    staticAngleController.reset();
-//                } else {
-//                    rOutput = -staticAngleController.calculate(currentHeading, targetPosition.r());
-//                    dynamicAngleController.reset();
-//                }
-//                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
-//                telem.putTelemetry("R Setpoint", targetPosition.r());
-//                telem.putTelemetry("R pose}", currentHeading);
+                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
 
                 if(isAtRoughSetpoint() && s_Shooter.shooterAtSpeed()) {
                     timestamp = System.nanoTime();
