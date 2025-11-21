@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurret;
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
@@ -22,8 +21,8 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Red Close Dump")
-public class RedCloseDump extends LinearOpMode {
+@Autonomous(name = "Red 9 Piece Auto")
+public class RedClose9Piece extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -55,8 +54,6 @@ public class RedCloseDump extends LinearOpMode {
                 autoShootCommand::runCommand,
                 () -> {intakeCommand.reset(1); return true;},
                 intakeCommand::runCommand,
-                () -> {gateCommand.reset(false); return true;},
-                gateCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
                 () -> {intakeCommand.reset(2); return true;},

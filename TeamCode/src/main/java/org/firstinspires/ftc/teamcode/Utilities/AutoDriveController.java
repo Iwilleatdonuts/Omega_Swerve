@@ -7,6 +7,9 @@ public class AutoDriveController {
     private final PIDController xController;
     private final PIDController yController;
 
+    private final PIDController slowXController;
+    private final PIDController slowYController;
+
     private final PIDController staticAnglePID;
     private final PIDController dynamicAnglePID;
 
@@ -20,11 +23,16 @@ public class AutoDriveController {
         xController.setIZone(0.5);
         yController.setIZone(0.5);
 
+        slowXController = new PIDController(0.8, 0.08, 0.02);
+        slowYController = new PIDController(0.8, 0.08, 0.02);
+        slowXController.setIZone(0.5);
+        slowYController.setIZone(0.5);
+
         staticAnglePID = new PIDController(0.006, 0.02, 0.00015);
         staticAnglePID.setIZone(40);
         staticAnglePID.enableContinuousInput(0, 360);
 
-        dynamicAnglePID = new PIDController(0.0025, 0.015, 0.0001);
+        dynamicAnglePID = new PIDController(0.0035, 0.015, 0.0001);
         dynamicAnglePID.setIZone(40);
         dynamicAnglePID.enableContinuousInput(0, 360);
 
@@ -46,6 +54,31 @@ public class AutoDriveController {
 
         double xOutput = xController.calculate(currentPose.x(), targetPose.x());
         double yOutput = yController.calculate(currentPose.y(), targetPose.y());
+
+        double rotationOutput = 0;
+
+        double currentHeading = currentPose.r();
+        if(Math.abs(currentHeading - targetPose.r()) > 0.5) {
+            if(xOutput != 0 || yOutput != 0) {
+                rotationOutput = -dynamicAnglePID.calculate(currentHeading, targetPose.r());
+            } else {
+                rotationOutput = -staticAnglePID.calculate(currentHeading, targetPose.r());
+            }
+        }
+
+        outputs[0] = xOutput;
+        outputs[1] = yOutput;
+        outputs[2] = rotationOutput;
+
+        return outputs;
+    }
+
+    public double[] getSlowOutputs() {
+
+        double[] outputs = new double[3];
+
+        double xOutput = slowXController.calculate(currentPose.x(), targetPose.x());
+        double yOutput = slowYController.calculate(currentPose.y(), targetPose.y());
 
         double rotationOutput = 0;
 

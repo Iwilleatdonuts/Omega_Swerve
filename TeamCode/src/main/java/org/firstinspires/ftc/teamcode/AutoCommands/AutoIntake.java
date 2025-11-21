@@ -8,8 +8,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
-import org.firstinspires.ftc.teamcode.Utilities.math.controller.HolonomicDriveController;
-import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
 public class AutoIntake {
 
@@ -20,7 +18,8 @@ public class AutoIntake {
     private final Feeder s_Feeder;
     private final OTOSSensor s_Sparky;
 
-    private OmegaPose2D targetPosition;
+    private OmegaPose2D lineupTarget;
+    private OmegaPose2D pickupTarget;
 
     private final AutoDriveController driveController;
 
@@ -32,6 +31,8 @@ public class AutoIntake {
     private double timestamp;
 
     private boolean isFinished;
+
+    private double[] outputs = new double[3];
 
     public AutoIntake(Swerve s_Swerve, Intake s_Intake, Feeder s_Feeder, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners, int targetRow){
 
@@ -57,7 +58,7 @@ public class AutoIntake {
         targetRow = newRow;
         setIntakeRow();
         driveController.reset();
-        driveController.setTargetPose(targetPosition);
+        driveController.setTargetPose(lineupTarget);
     }
 
     public void execute(){
@@ -69,19 +70,19 @@ public class AutoIntake {
 
         switch(phase) {
             case 0:
-                if(areWeWinners && currentPose.x() > 0.8) {
-                    s_Swerve.drive(-0.5, 0, 0, true, false);
-                } else if (!areWeWinners && currentPose.x() < -0.8) {
-                    s_Swerve.drive(0.5, 0, 0, true, false);
-                } else {
+//                if(areWeWinners && currentPose.x() > 0.8) {
+//                    s_Swerve.drive(-0.5, 0, 0, true, false);
+//                } else if (!areWeWinners && currentPose.x() < -0.8) {
+//                    s_Swerve.drive(0.5, 0, 0, true, false);
+//                } else {
                     driveController.reset();
                     phase++;
-                }
+//                }
                 break;
             case 1:
 
                 driveController.updateCurrentPose(currentPose);
-                double[] outputs = driveController.getOutputs();
+                outputs = driveController.getOutputs();
 
                 s_Intake.setSpeed(1);
 
@@ -90,19 +91,27 @@ public class AutoIntake {
                 if(isAtRoughSetpoint()) {
                     s_Swerve.stop();
                     timestamp = System.nanoTime();
+                    driveController.reset();
+                    driveController.setTargetPose(pickupTarget);
                     phase++;
                 }
 
                 break;
             case 2:
 
+                driveController.updateCurrentPose(currentPose);
+                outputs = driveController.getSlowOutputs();
+
                 s_Intake.setSpeed(1);
 
-                s_Swerve.drive(0.4, 0, 0, true, false);
+                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
 
-                if(System.nanoTime() - timestamp > 1.2e9) {
+                if(System.nanoTime() - timestamp > 1.5e9) {
                     s_Swerve.stop();
+//                    timestamp = System.nanoTime();
+//                    driveController.setTargetPose(pickupTarget);
                     isFinished = true;
+                    phase++;
                 }
 
                 break;
@@ -110,17 +119,17 @@ public class AutoIntake {
     }
 
     public boolean isAtSetpoint(){
-        double xError = Math.abs(s_Sparky.getPose().x() - targetPosition.x());
-        double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
-        double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
+        double xError = Math.abs(s_Sparky.getPose().x() - lineupTarget.x());
+        double yError = Math.abs(s_Sparky.getPose().y() - lineupTarget.y());
+        double rError = Math.abs(s_Sparky.getHeading() - lineupTarget.r());
 
         return xError < 0.02 && yError < 0.02 && rError < 3;
     }
 
     public boolean isAtRoughSetpoint(){
-        double xError = Math.abs(s_Sparky.getPose().x() - targetPosition.x());
-        double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
-        double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
+        double xError = Math.abs(s_Sparky.getPose().x() - lineupTarget.x());
+        double yError = Math.abs(s_Sparky.getPose().y() - lineupTarget.y());
+        double rError = Math.abs(s_Sparky.getHeading() - lineupTarget.r());
 
         return xError < 0.6 && yError < 0.06 && rError < 6;
     }
@@ -133,25 +142,29 @@ public class AutoIntake {
         if(areWeWinners) {
             switch(targetRow) {
                 case 1:
-                    targetPosition = Constants.AutoConstants.RedConstants.closeBallLineup;
+                    lineupTarget = Constants.AutoConstants.RedConstants.closeBallLineup;
+                    pickupTarget = Constants.AutoConstants.RedConstants.closeBallPickup;
                     break;
                 case 2:
-                    targetPosition = Constants.AutoConstants.RedConstants.mediumBallLineup;
+                    lineupTarget = Constants.AutoConstants.RedConstants.mediumBallLineup;
+                    pickupTarget = Constants.AutoConstants.RedConstants.mediumBallPickup;
                     break;
                 case 3:
-                    targetPosition = Constants.AutoConstants.RedConstants.farBallLineup;
+                    lineupTarget = Constants.AutoConstants.RedConstants.farBallLineup;
+                    pickupTarget = Constants.AutoConstants.RedConstants.farBallPickup;
                     break;
             }
         } else {
             switch(targetRow) {
                 case 1:
-                    targetPosition = Constants.AutoConstants.BlueConstants.closeBallLineup;
+                    lineupTarget = Constants.AutoConstants.BlueConstants.closeBallLineup;
+//                    pickupTarget = Constants.AutoConstants.BlueConstants.closeBallPickup;TODO DO THIS THINGDJIOS AJDIOASJDOASOPDaskfhdsklfndsnfwk
                     break;
                 case 2:
-                    targetPosition = Constants.AutoConstants.BlueConstants.mediumBallLineup;
+                    lineupTarget = Constants.AutoConstants.BlueConstants.mediumBallLineup;
                     break;
                 case 3:
-                    targetPosition = Constants.AutoConstants.BlueConstants.farBallLineup;
+                    lineupTarget = Constants.AutoConstants.BlueConstants.farBallLineup;
                     break;
             }
         }
