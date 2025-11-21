@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Commands;
 
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.math.controller.HolonomicDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
@@ -21,13 +22,7 @@ public class DriveToDashboardPoint {
 
     private OmegaPose2D targetPosition;
 
-    private final PIDController xController;
-    private final PIDController yController;
-    private final ProfiledPIDController rController;
-
-    private final HolonomicDriveController holoController;
-
-    private double rGoalPrev;
+    private final AutoDriveController driveController;
 
     public DriveToDashboardPoint(Swerve s_Swerve, OTOSSensor s_Sparky, EZTelemetry telem){
 
@@ -38,24 +33,11 @@ public class DriveToDashboardPoint {
 
         targetPosition = s_Swerve.getTargetPose();
 
-        xController = new PIDController(2.2, 0, 0.05);
-        yController = new PIDController(2.2, 0, 0.05);
-        xController.setIZone(0.5);
-        yController.setIZone(0.5);
-
-        rController = new ProfiledPIDController(0.006, 0.02, 0.00015, new TrapezoidProfile.Constraints(1.93, 3));
-        rController.setIZone(40);
-        rController.enableContinuousInput(0, 360);
-
-        holoController = new HolonomicDriveController(xController, yController, rController);
-
-        rGoalPrev = s_Sparky.getHeading();
+        driveController = new AutoDriveController();
     }
 
     public void initialize(){
-        xController.reset();
-        yController.reset();
-        rController.reset(s_Sparky.getHeading());
+        driveController.reset();
     }
 
     public void execute(){
@@ -63,14 +45,12 @@ public class DriveToDashboardPoint {
         OmegaPose2D currentPose = s_Sparky.getPose();
         targetPosition = new OmegaPose2D(PIDTuning.randomVal0, PIDTuning.randomVal1, PIDTuning.randomVal2);
 
-        if(targetPosition.r() != rGoalPrev) {
-            rController.reset(s_Sparky.getHeading());
-        }
+        driveController.setTargetPose(targetPosition);
+        driveController.updateCurrentPose(currentPose);
 
-        ChassisSpeeds speeds = holoController.calculate(OmegaPose2D.OmegaPoseToWPIPose(currentPose), OmegaPose2D.OmegaPoseToWPIPose(targetPosition), 1.2, Rotation2d.fromDegrees(targetPosition.r()));
+        double[] outputs = driveController.getOutputs();
 
-        s_Swerve.drive(speeds);
-        rGoalPrev = targetPosition.r();
+        s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
     }
 
 }
