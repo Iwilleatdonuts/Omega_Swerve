@@ -8,7 +8,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
+import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 import org.firstinspires.ftc.teamcode.Utilities.math.controller.ProfiledPIDController;
+import org.firstinspires.ftc.teamcode.Utilities.math.kinematics.ChassisSpeeds;
 import org.firstinspires.ftc.teamcode.Utilities.math.trajectory.TrapezoidProfile;
 
 public class TurnToPointDrive {
@@ -20,7 +22,9 @@ public class TurnToPointDrive {
     private final OmegaController m_Operator;
 
     private boolean slowMode;
-    private final ProfiledPIDController staticAnglePID;
+    private final ProfiledPIDController profiledAnglePID;
+    private final PIDController anglePID;
+    private final PIDController dynamicAnglePID;
 
     private boolean enableAutoRotate;
     private double turnAngle;
@@ -45,9 +49,17 @@ public class TurnToPointDrive {
 
         turnAngle = 0;
 
-        staticAnglePID = new ProfiledPIDController(0.006, 0.02, 0.00015, new TrapezoidProfile.Constraints(4, 2));
-        staticAnglePID.setIZone(40);
-        staticAnglePID.enableContinuousInput(0, 360);
+        profiledAnglePID = new ProfiledPIDController(0.006, 0.02, 0.00015, new TrapezoidProfile.Constraints(4, 2));
+        profiledAnglePID.setIZone(40);
+        profiledAnglePID.enableContinuousInput(0, 360);
+
+        dynamicAnglePID = new PIDController(0.0025, 0.015, 0.0001);
+        dynamicAnglePID.setIZone(40);
+        dynamicAnglePID.enableContinuousInput(0, 360);
+
+        anglePID = new PIDController(0.006, 0.02, 0.00015);
+        anglePID.setIZone(40);
+        anglePID.enableContinuousInput(0, 360);
 
         xLimiter = new SlewRateLimiter(2);
         yLimiter = new SlewRateLimiter(2);
@@ -99,12 +111,18 @@ public class TurnToPointDrive {
 
             double currentHeading = s_Sparky.getHeading();
             if(Math.abs(currentHeading - turnAngle) > 0.5) {
-                    rotationOutput = -staticAnglePID.calculate(s_Sparky.getHeading(), turnAngle);
+                if(xLimited != 0 || yLimited != 0) {
+                    rotationOutput = -dynamicAnglePID.calculate(s_Sparky.getHeading(), turnAngle);
+                } else {
+                    rotationOutput = -anglePID.calculate(s_Sparky.getHeading(), turnAngle);
+                }
             }
         }
 
         s_Swerve.drive(xLimited, yLimited, rotationOutput, true, slowMode);
 
+        telem.putTelemetry("TUrn Angle", turnAngle);
+        telem.putTelemetry("Target spec", profiledAnglePID.getGoal().position);
         telem.putTelemetry("CLT", timer.milliseconds() - timestamp);
     }
 

@@ -59,7 +59,7 @@ public class DriveToDashboardPoint {
         OmegaPose2D currentPose = s_Sparky.getPose();
         targetPosition = new OmegaPose2D(PIDTuning.randomVal0, PIDTuning.randomVal1, PIDTuning.randomVal2);
 
-        ChassisSpeeds speeds = holoController.calculate(OmegaPose2D.OmegaPoseToWPIPose(currentPose), OmegaPose2D.OmegaPoseToWPIPose(targetPosition), 1, new Rotation2d());
+        ChassisSpeeds speeds = holoController.calculate(OmegaPose2D.OmegaPoseToWPIPose(currentPose), OmegaPose2D.OmegaPoseToWPIPose(targetPosition), 1, Rotation2d.fromDegrees(targetPosition.r()));
 
         s_Swerve.drive(speeds);
 

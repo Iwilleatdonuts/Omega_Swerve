@@ -55,7 +55,7 @@ public class SmartIntake {
             s_Feeder.setFeederSpeed(1);
             s_Intake.setSpeed(1);
         } else if (m_Driver.isDown(GamepadKeys.Button.A)) {
-            if((s_Lime.isValidReaing() && s_Shooter.shooterAtSpeed()) || s_Lime.getGoalDistance() < 50) {
+            if((s_Lime.isValidReaing() && s_Shooter.shooterAtSpeed()) || s_Lime.getGoalDistance() < 0.913) {
                 s_Feeder.openGate();
                 s_Feeder.setFeederSpeed(1);
                 s_Intake.setSpeed(1);

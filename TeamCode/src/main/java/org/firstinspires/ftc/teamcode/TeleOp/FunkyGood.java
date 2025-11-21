@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
 import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
@@ -121,6 +122,12 @@ public class FunkyGood extends LinearOpMode {
         }
 
         while (opModeIsActive()) {
+
+//            s_Lime.updateRobotYawFromGyro(s_Sparky.getHeading());
+//
+//            telem.putTelemetry("Tag X", s_Lime.getLimePose().getPosition().x);
+//            telem.putTelemetry("Tag Y", s_Lime.getLimePose().getPosition().y);
+//            telem.putTelemetry("Tag R", s_Lime.getLimePose().getOrientation().getYaw(AngleUnit.DEGREES));
 
             long loopStart = System.nanoTime();
 

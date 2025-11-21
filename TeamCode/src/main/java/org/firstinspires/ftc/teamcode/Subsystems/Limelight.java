@@ -5,6 +5,10 @@ import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.Kalman;
 
@@ -25,6 +29,12 @@ public class Limelight {
     private double filteredBearing;
     private double filteredDistance;
 
+    private double adjustedBearing;
+
+    private Pose3D limePose;
+
+    private double cameraHeading = 0;
+
     public Limelight(HardwareMap hardwareMap, EZTelemetry telem, boolean areWeWinners) {
 
         bearingFilter = new Kalman(1.5, 0.75, 0);
@@ -36,6 +46,7 @@ public class Limelight {
         lime = hardwareMap.get(Limelight3A.class, "lime");
 
         lime.pipelineSwitch(areWeWinners? 0 : 1);
+//        lime.pipelineSwitch(2);
 
         latestResult = lime.getLatestResult();
 
@@ -83,6 +94,21 @@ public class Limelight {
         enableTelemetry = !enableTelemetry;
     }
 
+    public double getTagSkew() {
+        return isValidReaing() ? latestResult.getFiducialResults().get(0).getSkew() : 0;
+    }
+
+    public void updateRobotYawFromGyro(double degrees) {
+        cameraHeading = degrees;
+        if(cameraHeading > 180) {
+            cameraHeading -= 360;
+        }
+    }
+
+    public Pose3D getLimePose() {
+        return limePose != null ? limePose : new Pose3D(new Position(), new YawPitchRollAngles(AngleUnit.DEGREES, 0, 0, 0, 0));
+    }
+
     public void skadoodle() {
 
         latestResult = getLatestResult();
@@ -90,7 +116,11 @@ public class Limelight {
         if(isValidReaing()) {
             filteredBearing = bearingFilter.update(getGoalBearing());
             filteredDistance = distanceFilter.update(getGoalDistance());
+//            lime.updateRobotOrientation(cameraHeading);
+//            limePose = latestResult.getBotpose_MT2();
         }
+
+//        telem.putTelemetry("CAMERA HEADING", cameraHeading);
 
         if(enableTelemetry) {
             telem.putTelemetry("Tag Bearing: ", getGoalBearing());

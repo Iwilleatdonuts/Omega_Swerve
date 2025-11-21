@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry; // kept for constructor compatibility
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
+import org.firstinspires.ftc.teamcode.Utilities.math.geometry.Rotation2d;
 import org.firstinspires.ftc.teamcode.Utilities.math.kinematics.ChassisSpeeds;
 
 public class Swerve {
@@ -157,6 +158,8 @@ public class Swerve {
     }
 
     public void drive(ChassisSpeeds speeds) {
+
+//        ChassisSpeeds newSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromDegrees(getHeading()));
 
         double x = speeds.vxMetersPerSecond/MAX_SPEED_MPS;
         double y = speeds.vyMetersPerSecond/MAX_SPEED_MPS;

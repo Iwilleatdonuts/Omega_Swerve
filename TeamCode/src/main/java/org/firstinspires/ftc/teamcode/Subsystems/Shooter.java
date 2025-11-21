@@ -112,9 +112,9 @@ public class Shooter {
 
     public double getShooterSpeedFromDistance(double distance) {
         if(distance > 3.25){
-            return 0.0635116 * distance * distance * distance - 0.792519 * distance * distance + 3.30372 * distance - 4.00635;//0.0580873
+            return -0.0160072 * distance * distance+0.159525 * distance+0.200864;//0.0580873
         } else if (distance > 0.913) {
-            return -0.00452262 * distance * distance * distance + 0.0308923 * distance * distance + 0.0148123 * distance + 0.324272;
+            return -0.00949792 * distance * distance * distance+0.0577341 * distance * distance-0.0299664 * distance+0.347056;
         } else {
             return 0.36;
         }
