@@ -27,6 +27,8 @@ public class DriveToDashboardPoint {
 
     private final HolonomicDriveController holoController;
 
+    private double rGoalPrev;
+
     public DriveToDashboardPoint(Swerve s_Swerve, OTOSSensor s_Sparky, EZTelemetry telem){
 
         this.telem = telem;
@@ -46,6 +48,8 @@ public class DriveToDashboardPoint {
         rController.enableContinuousInput(0, 360);
 
         holoController = new HolonomicDriveController(xController, yController, rController);
+
+        rGoalPrev = s_Sparky.getHeading();
     }
 
     public void initialize(){
@@ -59,10 +63,14 @@ public class DriveToDashboardPoint {
         OmegaPose2D currentPose = s_Sparky.getPose();
         targetPosition = new OmegaPose2D(PIDTuning.randomVal0, PIDTuning.randomVal1, PIDTuning.randomVal2);
 
-        ChassisSpeeds speeds = holoController.calculate(OmegaPose2D.OmegaPoseToWPIPose(currentPose), OmegaPose2D.OmegaPoseToWPIPose(targetPosition), 1, Rotation2d.fromDegrees(targetPosition.r()));
+        if(targetPosition.r() != rGoalPrev) {
+            rController.reset(s_Sparky.getHeading());
+        }
+
+        ChassisSpeeds speeds = holoController.calculate(OmegaPose2D.OmegaPoseToWPIPose(currentPose), OmegaPose2D.OmegaPoseToWPIPose(targetPosition), 1.2, Rotation2d.fromDegrees(targetPosition.r()));
 
         s_Swerve.drive(speeds);
-
+        rGoalPrev = targetPosition.r();
     }
 
 }
