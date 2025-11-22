@@ -123,7 +123,7 @@ public class AutoDriveController {
     }
 
     public boolean isAtRoughSetpoint() {
-    return getXError() < 0.1 && getYError() < 0.1 && getRError() < 10;
+        return getXError() < 0.1 && getYError() < 0.1 && getRError() < 10;
     }
 
 }

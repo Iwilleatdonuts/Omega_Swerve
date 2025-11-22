@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCloseShot;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoIntake;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurret;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
@@ -43,7 +43,7 @@ public class RedClose12Overflow extends LinearOpMode {
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
         AutoCloseShot autoShootCommand = new AutoCloseShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
-        AutoIntake intakeCommand = new AutoIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners, 1);
+        AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners, 1);
         AutoGate gateCommand = new AutoGate(s_Swerve, s_Sparky, telem, areWeWinners);
         AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime);
 

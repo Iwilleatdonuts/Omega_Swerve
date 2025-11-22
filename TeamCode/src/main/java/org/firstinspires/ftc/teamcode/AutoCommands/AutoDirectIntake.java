@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
-public class AutoIntake {
+public class AutoDirectIntake {
 
     private final EZTelemetry telem;
 
@@ -34,7 +34,7 @@ public class AutoIntake {
 
     private double[] outputs = new double[3];
 
-    public AutoIntake(Swerve s_Swerve, Intake s_Intake, Feeder s_Feeder, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners, int targetRow){
+    public AutoDirectIntake(Swerve s_Swerve, Intake s_Intake, Feeder s_Feeder, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners, int targetRow){
 
         this.targetRow = targetRow;
 
@@ -70,14 +70,8 @@ public class AutoIntake {
 
         switch(phase) {
             case 0:
-//                if(areWeWinners && currentPose.x() > 0.8) {
-//                    s_Swerve.drive(-0.5, 0, 0, true, false);
-//                } else if (!areWeWinners && currentPose.x() < -0.8) {
-//                    s_Swerve.drive(0.5, 0, 0, true, false);
-//                } else {
                     driveController.reset();
                     phase++;
-//                }
                 break;
             case 1:
 
