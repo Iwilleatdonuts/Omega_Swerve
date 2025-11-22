@@ -152,13 +152,15 @@ public class AutoDirectIntake {
             switch(targetRow) {
                 case 1:
                     lineupTarget = Constants.AutoConstants.BlueConstants.closeBallLineup;
-//                    pickupTarget = Constants.AutoConstants.BlueConstants.closeBallPickup;TODO DO THIS THINGDJIOS AJDIOASJDOASOPDaskfhdsklfndsnfwk
+                    pickupTarget = Constants.AutoConstants.BlueConstants.closeBallPickup;
                     break;
                 case 2:
                     lineupTarget = Constants.AutoConstants.BlueConstants.mediumBallLineup;
+                    pickupTarget = Constants.AutoConstants.BlueConstants.mediumBallPickup;
                     break;
                 case 3:
                     lineupTarget = Constants.AutoConstants.BlueConstants.farBallLineup;
+                    pickupTarget = Constants.AutoConstants.BlueConstants.farBallPickup;
                     break;
             }
         }
