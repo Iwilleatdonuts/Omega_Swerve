@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Red 9 Piece Auto")
-public class RedClose9Piece extends LinearOpMode {
+@Autonomous(name = "Red 12 Overflow")
+public class RedClose12Overflow extends LinearOpMode {
 
     @Override
     public void runOpMode() {
