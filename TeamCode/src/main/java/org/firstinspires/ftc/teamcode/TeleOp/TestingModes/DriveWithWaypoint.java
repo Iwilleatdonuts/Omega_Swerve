@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
 //http://192.168.43.1:8080/dash
 //adb connect 192.168.43.1:5555
-@TeleOp(name = "Auto Drive Test", group = "Testing")
+@TeleOp(name = "Auto Drive Test With Swerb", group = "Testing")
 public class DriveWithWaypoint extends LinearOpMode {
 
     private final EZTelemetry telem = new EZTelemetry(telemetry);

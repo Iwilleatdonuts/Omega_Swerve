@@ -23,16 +23,18 @@ public class AutoDriveController {
         xController.setIZone(0.5);
         yController.setIZone(0.5);
 
-        slowXController = new PIDController(0.8, 0.08, 0.02);
-        slowYController = new PIDController(0.8, 0.08, 0.02);
+        slowXController = new PIDController(0.5, 0.08, 0.02);
+        slowYController = new PIDController(0.5, 0.08, 0.02);
         slowXController.setIZone(0.5);
         slowYController.setIZone(0.5);
 
         staticAnglePID = new PIDController(0.006, 0.02, 0.00015);
+//        staticAnglePID = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);
         staticAnglePID.setIZone(40);
         staticAnglePID.enableContinuousInput(0, 360);
 
         dynamicAnglePID = new PIDController(0.0035, 0.015, 0.0001);
+//        dynamicAnglePID = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
         dynamicAnglePID.setIZone(40);
         dynamicAnglePID.enableContinuousInput(0, 360);
 

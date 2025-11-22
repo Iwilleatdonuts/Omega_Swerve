@@ -1,19 +1,29 @@
 package org.firstinspires.ftc.teamcode.AutoCommands;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 import org.firstinspires.ftc.teamcode.Utilities.math.controller.HolonomicDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
-public class AutoGate {
+public class AutoMediumShot {
 
     private final EZTelemetry telem;
 
+    private final Limelight s_Lime;
     private final Swerve s_Swerve;
+    private final Shooter s_Shooter;
+    private final Turret s_Turret;
+    private final Intake s_Intake;
+    private final Feeder s_Feeder;
     private final OTOSSensor s_Sparky;
 
     private OmegaPose2D targetPosition;
@@ -21,45 +31,54 @@ public class AutoGate {
     private final AutoDriveController driveController;
 
     private final boolean areWeWinners;
-    private boolean goingToTeleop;
+
+    private boolean isFinished;
 
     private int phase;
 
     private double timestamp;
 
-    private boolean isFinished;
-
-    public AutoGate(Swerve s_Swerve, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
+    public AutoMediumShot(Limelight s_Lime, Swerve s_Swerve, Shooter s_Shooter, Turret s_Turret, Intake s_Intake, Feeder s_Feeder, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
 
         this.telem = telem;
 
+        targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.mediumShot : Constants.AutoConstants.BlueConstants.mediumShot;
+
+        this.s_Lime = s_Lime;
         this.s_Swerve = s_Swerve;
+        this.s_Shooter = s_Shooter;
+        this.s_Turret = s_Turret;
+        this.s_Intake = s_Intake;
+        this.s_Feeder = s_Feeder;
         this.s_Sparky = s_Sparky;
 
         driveController = new AutoDriveController();
     }
 
-    public void reset(boolean teleopNext){
-        goingToTeleop = teleopNext;
-//        if(goingToTeleop) {
-//            targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.gateLineupTeleop : Constants.AutoConstants.BlueConstants.gateLineupTeleop;
-//        } else {
-            targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.gateLineup : Constants.AutoConstants.BlueConstants.gateLineup;
-//        }
+    public void reset(){
         isFinished = false;
         phase = 0;
         driveController.reset();
-        driveController.setTargetPose(targetPosition);
     }
 
     public void execute(){
 
         OmegaPose2D currentPose = s_Sparky.getPose();
+        s_Shooter.setShooterSpeed(0.43);
+        s_Shooter.setShooterAngle(0.6);
+        if(s_Lime.isValidReaing()) {
+            double distance = s_Lime.getFilteredDistance();
+            s_Shooter.setShooterSpeed(s_Shooter.getShooterSpeedFromDistance(distance));
+            s_Shooter.setShooterAngle(s_Shooter.getShooterAngleFromDistance(distance));
+        }
+
+        telem.putTelemetry("Phase", phase);
 
         switch(phase) {
             case 0:
+                s_Feeder.closeGate();
                 if(areWeWinners && currentPose.x() > 1.21) {
                     s_Swerve.drive(-0.8, 0, 0, true, false);
                 } else if (!areWeWinners && currentPose.x() < -1.21) {
@@ -72,23 +91,30 @@ public class AutoGate {
             case 1:
 
                 driveController.updateCurrentPose(currentPose);
+                driveController.setTargetPose(targetPosition);
                 double[] outputs = driveController.getOutputs();
 
-                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
+                double rotationOutput = 0;
+                if(240 > currentPose.r() || currentPose.r() < 300) {
+                    rotationOutput = outputs[2];
+                }
 
-                if(isAtRoughSetpoint()) {
-                    s_Swerve.stop();
+                s_Swerve.drive(outputs[0], outputs[1], rotationOutput, true, false);
+
+                if(translationAtSetpoint() && s_Shooter.shooterAtSpeed() && s_Turret.atSetpoint()) {
                     timestamp = System.nanoTime();
+                    s_Swerve.stop();
                     phase++;
                 }
 
                 break;
             case 2:
 
-                s_Swerve.drive(0.4, 0, 0, true, false);
+                s_Feeder.openGate();
+                s_Feeder.setFeederSpeed(1);
+                s_Intake.setSpeed(1);
 
-                if(System.nanoTime() - timestamp > 1e9 || goingToTeleop) {
-                    s_Swerve.stop();
+                if(System.nanoTime() - timestamp > 2e9) {
                     isFinished = true;
                 }
 
@@ -109,7 +135,15 @@ public class AutoGate {
         double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
         double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
 
-        return xError < 0.1 && yError < 0.1 && rError < 4;
+        return xError < 0.1 && yError < 0.1 && rError < 10;
+    }
+
+    public boolean translationAtSetpoint(){
+        double xError = Math.abs(s_Sparky.getPose().x() - targetPosition.x());
+        double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
+//        double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
+
+        return xError < 0.1 && yError < 0.1;
     }
 
     public boolean isFinished() {
@@ -120,4 +154,5 @@ public class AutoGate {
         execute();
         return isFinished();
     }
+
 }

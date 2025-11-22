@@ -96,9 +96,12 @@ public class DriveToDashboardPoint {
         driveController.updateCurrentPose(currentPose);
 
         double[] outputs;
+        double[] xOutputs;
 
         if(foo == 3 || foo == 5 || foo == 7 || foo == 8 || foo == 9) {
             outputs = driveController.getSlowOutputs();
+//            xOutputs = driveController.getSlowOutputs();
+//            outputs = new double[]{xOutputs[0], 0, 0};
         } else {
             outputs = driveController.getOutputs();
         }
