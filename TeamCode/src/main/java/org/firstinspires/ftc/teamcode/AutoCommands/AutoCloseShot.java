@@ -50,7 +50,6 @@ public class AutoCloseShot {
 
         driveController = new AutoDriveController();
 
-//        holoController = new HolonomicDriveController(xController, yController, staticAngleController);
     }
 
     public void reset(){

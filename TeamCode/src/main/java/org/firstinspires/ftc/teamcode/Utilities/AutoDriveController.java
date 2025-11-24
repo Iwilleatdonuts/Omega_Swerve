@@ -18,8 +18,9 @@ public class AutoDriveController {
 
     public AutoDriveController() {
 
-        xController = new PIDController(2.2, 0, 0.05);
-        yController = new PIDController(2.2, 0, 0.05);
+        xController = new PIDController(1.4, 0.08, 0.05);
+        yController = new PIDController(1.4, 0.08, 0.05);
+
         xController.setIZone(0.5);
         yController.setIZone(0.5);
 

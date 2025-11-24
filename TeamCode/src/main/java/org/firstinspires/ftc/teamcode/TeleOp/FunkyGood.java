@@ -95,7 +95,7 @@ public class FunkyGood extends LinearOpMode {
         s_Shooter = new Shooter(hardwareMap, telem);
 
         s_Sparky.toggleTelemetry();
-        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.gateLineupTeleop));
+        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.gateLineupTeleop));
 
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);

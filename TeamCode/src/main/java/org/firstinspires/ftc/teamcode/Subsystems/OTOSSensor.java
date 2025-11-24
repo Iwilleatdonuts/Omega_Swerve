@@ -30,6 +30,8 @@ public class OTOSSensor {
 
         enableTelemetry = false;
 
+//        configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
+
     }
 
     public void disable() {

@@ -179,7 +179,8 @@ public class Constants {
             public static final OmegaPose2D farBallPickup = new OmegaPose2D(1.3, -0.87, 260);
             public static final OmegaPose2D gateLineup = new OmegaPose2D(1.21, 0.1, 180);
             public static final OmegaPose2D gatePush = new OmegaPose2D(1.39, 0.1, 180);
-            public static final OmegaPose2D gateLineupTeleop = new OmegaPose2D(-0.1, 1.39, 270);
+            public static final OmegaPose2D gateLineupAutoTeleop = new OmegaPose2D(1, 0.1, 180);
+            public static final OmegaPose2D gateLineupTeleop = new OmegaPose2D(-0.1, 1, 270);
 
         }
 
@@ -195,6 +196,7 @@ public class Constants {
             public static final OmegaPose2D farBallPickup = new OmegaPose2D(-1.3, -0.87, 100);
             public static final OmegaPose2D gateLineup = new OmegaPose2D(-1.21, 0.1, 180);
             public static final OmegaPose2D gatePush = new OmegaPose2D(-1.39, 0.1, 180);
+            public static final OmegaPose2D gateLineupAutoTeleop = new OmegaPose2D(-1, 0.1, 180);
             public static final OmegaPose2D gateLineupTeleop = new OmegaPose2D(0.1, 1.39, 90);
 
         }

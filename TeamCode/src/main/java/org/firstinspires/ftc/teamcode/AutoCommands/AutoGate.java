@@ -43,11 +43,11 @@ public class AutoGate {
 
     public void reset(boolean teleopNext){
         goingToTeleop = teleopNext;
-//        if(goingToTeleop) {
-//            targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.gateLineupTeleop : Constants.AutoConstants.BlueConstants.gateLineupTeleop;
-//        } else {
+        if(goingToTeleop) {
+            targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.gateLineupAutoTeleop : Constants.AutoConstants.BlueConstants.gateLineupAutoTeleop;
+        } else {
             targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.gateLineup : Constants.AutoConstants.BlueConstants.gateLineup;
-//        }
+        }
         isFinished = false;
         phase = 0;
         driveController.reset();
