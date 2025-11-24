@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCloseShot;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurret;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
@@ -21,13 +21,13 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Red 12 Overflow")
-public class RedClose12Overflow extends LinearOpMode {
+@Autonomous(name = "Loser 12 Close Waypoints")
+public class BlueClose12Waypoints extends LinearOpMode {
 
     @Override
     public void runOpMode() {
 
-        boolean areWeWinners = true;
+        boolean areWeWinners = false;
 
         EZTelemetry telem = new EZTelemetry(telemetry);
 
@@ -49,12 +49,13 @@ public class RedClose12Overflow extends LinearOpMode {
 
         int phase = 0;
 
-
         List<AutoManager> autoCommands = Arrays.asList(
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
                 () -> {intakeCommand.reset(1); return true;},
                 intakeCommand::runCommand,
+//                () -> {gateCommand.reset(false); return true;},
+//                gateCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
                 () -> {intakeCommand.reset(2); return true;},
@@ -67,6 +68,8 @@ public class RedClose12Overflow extends LinearOpMode {
                 autoShootCommand::runCommand,
                 () -> {gateCommand.reset(true); return true;},
                 gateCommand::runCommand
+
+
         );
 
         telem.updateTelemetry();

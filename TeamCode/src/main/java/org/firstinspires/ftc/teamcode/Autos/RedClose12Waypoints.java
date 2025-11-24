@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Winner 8 + 1.3333333 + 2.66666666 Bad")
-public class RedClose12Gate extends LinearOpMode {
+@Autonomous(name = "Winner 12 Close Waypoints")
+public class RedClose12Waypoints extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -54,8 +54,8 @@ public class RedClose12Gate extends LinearOpMode {
                 autoShootCommand::runCommand,
                 () -> {intakeCommand.reset(1); return true;},
                 intakeCommand::runCommand,
-                () -> {gateCommand.reset(false); return true;},
-                gateCommand::runCommand,
+//                () -> {gateCommand.reset(false); return true;},
+//                gateCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
                 () -> {intakeCommand.reset(2); return true;},

@@ -19,7 +19,7 @@ public class AutoWaypointIntake {
     private final Feeder s_Feeder;
     private final OTOSSensor s_Sparky;
 
-    private OmegaPose2D lineupTarget;
+    private OmegaPose2D finalTarget;
     private OmegaPose2D pickupTarget;
 
     private final AutoDriveController driveController;
@@ -35,6 +35,7 @@ public class AutoWaypointIntake {
     private boolean isFinished;
 
     private double[] outputs = new double[3];
+    private OmegaPose2D[] targetPositions = new OmegaPose2D[3];
 
     public AutoWaypointIntake(Swerve s_Swerve, Intake s_Intake, Feeder s_Feeder, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners, int targetRow){
 
@@ -56,13 +57,12 @@ public class AutoWaypointIntake {
     }
 
     public void reset(int newRow){
+        driveController.reset();
         waypointFollower.resetWaypointFollower();
         isFinished = false;
         phase = 0;
         targetRow = newRow;
         setIntakeRow();
-        driveController.reset();
-        driveController.setTargetPose(lineupTarget);
     }
 
     public void execute(){
@@ -71,6 +71,7 @@ public class AutoWaypointIntake {
 
         s_Feeder.closeGate();
         s_Feeder.setFeederSpeed(0);
+        s_Intake.setSpeed(1);
 
         switch(phase) {
             case 0:
@@ -81,9 +82,7 @@ public class AutoWaypointIntake {
             case 1:
 
                 driveController.updateCurrentPose(currentPose);
-                outputs = driveController.getOutputs();
-
-                s_Intake.setSpeed(1);
+                outputs = waypointFollower.getWaypointOutputs(currentPose, targetPositions);
 
                 s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
 
@@ -92,23 +91,6 @@ public class AutoWaypointIntake {
                     timestamp = System.nanoTime();
                     driveController.reset();
                     driveController.setTargetPose(pickupTarget);
-                    phase++;
-                }
-
-                break;
-            case 2:
-
-                driveController.updateCurrentPose(currentPose);
-                outputs = driveController.getSlowOutputs();
-
-                s_Intake.setSpeed(1);
-
-                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
-
-                if(System.nanoTime() - timestamp > 1.5e9) {
-                    s_Swerve.stop();
-//                    timestamp = System.nanoTime();
-//                    driveController.setTargetPose(pickupTarget);
                     isFinished = true;
                     phase++;
                 }
@@ -118,17 +100,17 @@ public class AutoWaypointIntake {
     }
 
     public boolean isAtSetpoint(){
-        double xError = Math.abs(s_Sparky.getPose().x() - lineupTarget.x());
-        double yError = Math.abs(s_Sparky.getPose().y() - lineupTarget.y());
-        double rError = Math.abs(s_Sparky.getHeading() - lineupTarget.r());
+        double xError = Math.abs(s_Sparky.getPose().x() - finalTarget.x());
+        double yError = Math.abs(s_Sparky.getPose().y() - finalTarget.y());
+        double rError = Math.abs(s_Sparky.getHeading() - finalTarget.r());
 
         return xError < 0.02 && yError < 0.02 && rError < 3;
     }
 
     public boolean isAtRoughSetpoint(){
-        double xError = Math.abs(s_Sparky.getPose().x() - lineupTarget.x());
-        double yError = Math.abs(s_Sparky.getPose().y() - lineupTarget.y());
-        double rError = Math.abs(s_Sparky.getHeading() - lineupTarget.r());
+        double xError = Math.abs(s_Sparky.getPose().x() - finalTarget.x());
+        double yError = Math.abs(s_Sparky.getPose().y() - finalTarget.y());
+        double rError = Math.abs(s_Sparky.getHeading() - finalTarget.r());
 
         return xError < 0.6 && yError < 0.06 && rError < 6;
     }
@@ -141,32 +123,73 @@ public class AutoWaypointIntake {
         if(areWeWinners) {
             switch(targetRow) {
                 case 1:
-                    lineupTarget = Constants.AutoConstants.RedConstants.closeBallLineup;
-                    pickupTarget = Constants.AutoConstants.RedConstants.closeBallPickup;
+                    targetPositions = new OmegaPose2D[]{
+                            new OmegaPose2D(
+                                    Constants.AutoConstants.RedConstants.closeBallLineup.x()-0.4,
+                                    Constants.AutoConstants.RedConstants.closeBallLineup.y()+0.5,
+                                    Constants.AutoConstants.RedConstants.closeBallLineup.r()),
+                            Constants.AutoConstants.RedConstants.closeBallLineup,
+                            Constants.AutoConstants.RedConstants.closeBallPickup
+                    };
                     break;
                 case 2:
-                    lineupTarget = Constants.AutoConstants.RedConstants.mediumBallLineup;
-                    pickupTarget = Constants.AutoConstants.RedConstants.mediumBallPickup;
+                    targetPositions = new OmegaPose2D[]{
+                            new OmegaPose2D(
+                                    Constants.AutoConstants.RedConstants.mediumBallLineup.x()-0.4,
+                                    Constants.AutoConstants.RedConstants.mediumBallLineup.y()+0.5,
+                                    Constants.AutoConstants.RedConstants.mediumBallLineup.r()),
+                            Constants.AutoConstants.RedConstants.mediumBallLineup,
+                            Constants.AutoConstants.RedConstants.mediumBallPickup
+                    };
                     break;
                 case 3:
-                    lineupTarget = Constants.AutoConstants.RedConstants.farBallLineup;
-                    pickupTarget = Constants.AutoConstants.RedConstants.farBallPickup;
+                    targetPositions = new OmegaPose2D[]{
+                            new OmegaPose2D(
+                                    Constants.AutoConstants.RedConstants.farBallLineup.x()-0.4,
+                                    Constants.AutoConstants.RedConstants.farBallLineup.y()+0.5,
+                                    Constants.AutoConstants.RedConstants.farBallLineup.r()),
+                            Constants.AutoConstants.RedConstants.farBallLineup,
+                            Constants.AutoConstants.RedConstants.farBallPickup
+                    };
                     break;
             }
         } else {
+
             switch(targetRow) {
                 case 1:
-                    lineupTarget = Constants.AutoConstants.BlueConstants.closeBallLineup;
-//                    pickupTarget = Constants.AutoConstants.BlueConstants.closeBallPickup;TODO DO THIS THINGDJIOS AJDIOASJDOASOPDaskfhdsklfndsnfwk
+                    targetPositions = new OmegaPose2D[]{
+                            new OmegaPose2D(
+                                    Constants.AutoConstants.BlueConstants.closeBallLineup.x()+0.4,
+                                    Constants.AutoConstants.BlueConstants.closeBallLineup.y()+0.5,
+                                    Constants.AutoConstants.BlueConstants.closeBallLineup.r()),
+                            Constants.AutoConstants.BlueConstants.closeBallLineup,
+                            Constants.AutoConstants.BlueConstants.closeBallPickup
+                    };
                     break;
                 case 2:
-                    lineupTarget = Constants.AutoConstants.BlueConstants.mediumBallLineup;
+                    targetPositions = new OmegaPose2D[]{
+                            new OmegaPose2D(
+                                    Constants.AutoConstants.BlueConstants.mediumBallLineup.x()+0.4,
+                                    Constants.AutoConstants.BlueConstants.mediumBallLineup.y()+0.5,
+                                    Constants.AutoConstants.BlueConstants.mediumBallLineup.r()),
+                            Constants.AutoConstants.BlueConstants.mediumBallLineup,
+                            Constants.AutoConstants.BlueConstants.mediumBallPickup
+                    };
                     break;
                 case 3:
-                    lineupTarget = Constants.AutoConstants.BlueConstants.farBallLineup;
+                    targetPositions = new OmegaPose2D[]{
+                            new OmegaPose2D(
+                                    Constants.AutoConstants.BlueConstants.farBallLineup.x()+0.4,
+                                    Constants.AutoConstants.BlueConstants.farBallLineup.y()+0.5,
+                                    Constants.AutoConstants.BlueConstants.farBallLineup.r()),
+                            Constants.AutoConstants.BlueConstants.farBallLineup,
+                            Constants.AutoConstants.BlueConstants.farBallPickup
+                    };
                     break;
             }
         }
+
+        finalTarget = targetPositions[2];
     }
 
     public boolean runCommand() {
