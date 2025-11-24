@@ -23,7 +23,8 @@ public class SmartIntake {
     private final OmegaController m_Driver;
     private final OmegaController m_Operator;
 
-    double timestamp;
+    private double timestamp;
+    private boolean unjamTime;
 
     public SmartIntake(Intake s_Intake, Feeder s_Feeder, Shooter s_Shooter, Turret s_Turret, Limelight s_Lime, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem){
 
@@ -44,10 +45,19 @@ public class SmartIntake {
 
     public void execute(){
 
-        s_Intake.setSpeed(m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
-
         if(s_Intake.getIntakeCurrent() > 8 && m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
-            m_Driver.setRumble(2000);
+            m_Driver.setRumble(300);
+            timestamp = System.nanoTime();
+            unjamTime = true;
+        }
+
+        if(unjamTime) {
+            s_Intake.setSpeed(-1);
+            if(System.nanoTime() - timestamp > 0.4e9){
+                unjamTime = false;
+            }
+        } else {
+            s_Intake.setSpeed(m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
         }
 
          if (m_Operator.isDown(GamepadKeys.Button.A)){

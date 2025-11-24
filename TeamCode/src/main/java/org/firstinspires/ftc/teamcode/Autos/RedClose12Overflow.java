@@ -43,8 +43,7 @@ public class RedClose12Overflow extends LinearOpMode {
         Intake s_Intake = new Intake(hardwareMap, telem);
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
-        AutoCloseShot autoShootCloseCommand = new AutoCloseShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
-        AutoMediumShot autoShootMediumCommand = new AutoMediumShot(s_Lime, s_Swerve, s_Shooter, s_Turret, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
+        AutoCloseShot autoShootCommand = new AutoCloseShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
         AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners, 1);
         AutoGate gateCommand = new AutoGate(s_Swerve, s_Sparky, telem, areWeWinners);
         AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime);
@@ -52,24 +51,22 @@ public class RedClose12Overflow extends LinearOpMode {
         int phase = 0;
 
         List<AutoManager> autoCommands = Arrays.asList(
-                () -> {autoShootCloseCommand.reset(); return true;},
-                autoShootCloseCommand::runCommand,
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
                 () -> {intakeCommand.reset(1); return true;},
                 intakeCommand::runCommand,
-                () -> {autoShootCloseCommand.reset(); return true;},
-                autoShootCloseCommand::runCommand,
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
                 () -> {intakeCommand.reset(2); return true;},
                 intakeCommand::runCommand,
-                () -> {autoShootMediumCommand.reset(); return true;},
-                autoShootMediumCommand::runCommand,
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
                 () -> {intakeCommand.reset(3); return true;},
                 intakeCommand::runCommand,
-                () -> {autoShootMediumCommand.reset(); return true;},
-                autoShootMediumCommand::runCommand,
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
                 () -> {gateCommand.reset(true); return true;},
                 gateCommand::runCommand
-
-
         );
 
         telem.updateTelemetry();
