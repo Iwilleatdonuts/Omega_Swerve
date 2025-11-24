@@ -12,13 +12,19 @@ public class AutoTurret {
     private final Turret s_Turret;
     private final Limelight s_Lime;
     private double aprilBearing;
+    private double turretDefault;
 
-    public AutoTurret(Turret s_Turret, Limelight s_Lime){
+    public AutoTurret(Turret s_Turret, Limelight s_Lime, boolean areWeWinners, boolean areWeFar){
 
         this.s_Turret = s_Turret;
         this.s_Lime = s_Lime;
         aprilBearing = s_Lime.getFilteredBearing();
 
+        if(areWeFar) {
+            turretDefault = areWeWinners? 70 : -70;
+        } else {
+            turretDefault = areWeWinners? 45 : -45;
+        }
     }
 
     public void execute(){
@@ -32,7 +38,7 @@ public class AutoTurret {
 
         } else {
 
-            s_Turret.setSetpoint(45);
+            s_Turret.setSetpoint(turretDefault);
 
         }
         s_Turret.runToSetpoint();

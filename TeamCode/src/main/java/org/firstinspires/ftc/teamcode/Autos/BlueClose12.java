@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Winner 12 Close Waypoints")
-public class RedClose12Waypoints extends LinearOpMode {
+@Autonomous(name = "Loser Close 12")
+public class BlueClose12 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -45,7 +45,7 @@ public class RedClose12Waypoints extends LinearOpMode {
         AutoCloseShot autoShootCommand = new AutoCloseShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
         AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners, 1);
         AutoGate gateCommand = new AutoGate(s_Swerve, s_Sparky, telem, areWeWinners);
-        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime);
+        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime, areWeWinners, false);
 
         int phase = 0;
 

@@ -62,6 +62,7 @@ public class AutoCloseShot {
 
         OmegaPose2D currentPose = s_Sparky.getPose();
         s_Shooter.setShooterSpeed(0.38);
+        s_Shooter.setShooterAngle(Constants.ShooterConstants.closeAngle-0.08);
 
         telem.putTelemetry("Phase", phase);
 

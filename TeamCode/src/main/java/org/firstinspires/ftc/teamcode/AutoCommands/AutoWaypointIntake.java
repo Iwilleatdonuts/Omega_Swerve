@@ -125,8 +125,8 @@ public class AutoWaypointIntake {
                 case 1:
                     targetPositions = new OmegaPose2D[]{
                             new OmegaPose2D(
-                                    Constants.AutoConstants.RedConstants.closeBallLineup.x()-0.4,
-                                    Constants.AutoConstants.RedConstants.closeBallLineup.y()+0.5,
+                                    Constants.AutoConstants.RedConstants.closeBallLineup.x()-0.25,
+                                    Constants.AutoConstants.RedConstants.closeBallLineup.y()+0,
                                     Constants.AutoConstants.RedConstants.closeBallLineup.r()),
                             Constants.AutoConstants.RedConstants.closeBallLineup,
                             Constants.AutoConstants.RedConstants.closeBallPickup
@@ -135,8 +135,8 @@ public class AutoWaypointIntake {
                 case 2:
                     targetPositions = new OmegaPose2D[]{
                             new OmegaPose2D(
-                                    Constants.AutoConstants.RedConstants.mediumBallLineup.x()-0.4,
-                                    Constants.AutoConstants.RedConstants.mediumBallLineup.y()+0.5,
+                                    Constants.AutoConstants.RedConstants.mediumBallLineup.x()-0.25,
+                                    Constants.AutoConstants.RedConstants.mediumBallLineup.y()+0,
                                     Constants.AutoConstants.RedConstants.mediumBallLineup.r()),
                             Constants.AutoConstants.RedConstants.mediumBallLineup,
                             Constants.AutoConstants.RedConstants.mediumBallPickup
@@ -145,8 +145,8 @@ public class AutoWaypointIntake {
                 case 3:
                     targetPositions = new OmegaPose2D[]{
                             new OmegaPose2D(
-                                    Constants.AutoConstants.RedConstants.farBallLineup.x()-0.4,
-                                    Constants.AutoConstants.RedConstants.farBallLineup.y()+0.5,
+                                    Constants.AutoConstants.RedConstants.farBallLineup.x()-0.25,
+                                    Constants.AutoConstants.RedConstants.farBallLineup.y()+0,
                                     Constants.AutoConstants.RedConstants.farBallLineup.r()),
                             Constants.AutoConstants.RedConstants.farBallLineup,
                             Constants.AutoConstants.RedConstants.farBallPickup
@@ -159,8 +159,8 @@ public class AutoWaypointIntake {
                 case 1:
                     targetPositions = new OmegaPose2D[]{
                             new OmegaPose2D(
-                                    Constants.AutoConstants.BlueConstants.closeBallLineup.x()+0.4,
-                                    Constants.AutoConstants.BlueConstants.closeBallLineup.y()+0.5,
+                                    Constants.AutoConstants.BlueConstants.closeBallLineup.x()+0.25,
+                                    Constants.AutoConstants.BlueConstants.closeBallLineup.y()+0.35,
                                     Constants.AutoConstants.BlueConstants.closeBallLineup.r()),
                             Constants.AutoConstants.BlueConstants.closeBallLineup,
                             Constants.AutoConstants.BlueConstants.closeBallPickup
@@ -169,8 +169,8 @@ public class AutoWaypointIntake {
                 case 2:
                     targetPositions = new OmegaPose2D[]{
                             new OmegaPose2D(
-                                    Constants.AutoConstants.BlueConstants.mediumBallLineup.x()+0.4,
-                                    Constants.AutoConstants.BlueConstants.mediumBallLineup.y()+0.5,
+                                    Constants.AutoConstants.BlueConstants.mediumBallLineup.x()+0.25,
+                                    Constants.AutoConstants.BlueConstants.mediumBallLineup.y()+0.35,
                                     Constants.AutoConstants.BlueConstants.mediumBallLineup.r()),
                             Constants.AutoConstants.BlueConstants.mediumBallLineup,
                             Constants.AutoConstants.BlueConstants.mediumBallPickup
@@ -179,8 +179,8 @@ public class AutoWaypointIntake {
                 case 3:
                     targetPositions = new OmegaPose2D[]{
                             new OmegaPose2D(
-                                    Constants.AutoConstants.BlueConstants.farBallLineup.x()+0.4,
-                                    Constants.AutoConstants.BlueConstants.farBallLineup.y()+0.5,
+                                    Constants.AutoConstants.BlueConstants.farBallLineup.x()+0.25,
+                                    Constants.AutoConstants.BlueConstants.farBallLineup.y()+0.35,
                                     Constants.AutoConstants.BlueConstants.farBallLineup.r()),
                             Constants.AutoConstants.BlueConstants.farBallLineup,
                             Constants.AutoConstants.BlueConstants.farBallPickup

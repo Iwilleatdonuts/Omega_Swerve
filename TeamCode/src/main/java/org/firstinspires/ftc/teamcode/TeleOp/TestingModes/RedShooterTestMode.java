@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaController.GamepadButton;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
 //http://192.168.43.1:8080/dash
 //adb connect 192.168.43.1:5555
@@ -134,6 +135,9 @@ public class RedShooterTestMode extends LinearOpMode {
                 s_Swerve.zeroGyro();
             }
 
+            OmegaPose2D currentPose = s_Sparky.getPose();
+            telem.putTelemetry("X pose", currentPose.x());
+            telem.putTelemetry("Y pose", currentPose.y());
             telem.putTelemetry("Distance", s_Lime.getFilteredDistance());
             telem.putTelemetry("Shooter Target Percentage", shooterSpeed);
 

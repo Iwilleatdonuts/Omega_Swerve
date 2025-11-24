@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.AutoCommands;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
@@ -18,6 +19,7 @@ public class AutoFarShot {
     private final Shooter s_Shooter;
     private final Intake s_Intake;
     private final Feeder s_Feeder;
+    private final Limelight s_Lime;
     private final OTOSSensor s_Sparky;
 
     private OmegaPose2D targetPosition;
@@ -31,19 +33,21 @@ public class AutoFarShot {
     private int phase;
 
     private double timestamp;
+    private double shooterSpeed;
 
-    public AutoFarShot(Swerve s_Swerve, Shooter s_Shooter, Intake s_Intake, Feeder s_Feeder, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
+    public AutoFarShot(Swerve s_Swerve, Shooter s_Shooter, Intake s_Intake, Feeder s_Feeder, Limelight s_Lime, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
 
         this.telem = telem;
 
-        targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.closeShot : Constants.AutoConstants.BlueConstants.closeShot;
+        targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.farShot : Constants.AutoConstants.BlueConstants.farShot;
 
         this.s_Swerve = s_Swerve;
         this.s_Shooter = s_Shooter;
         this.s_Intake = s_Intake;
         this.s_Feeder = s_Feeder;
+        this.s_Lime = s_Lime;
         this.s_Sparky = s_Sparky;
 
         driveController = new AutoDriveController();
@@ -51,6 +55,7 @@ public class AutoFarShot {
     }
 
     public void reset(){
+        shooterSpeed = 0.58;
         isFinished = false;
         phase = 0;
         driveController.reset();
@@ -59,21 +64,22 @@ public class AutoFarShot {
     public void execute(){
 
         OmegaPose2D currentPose = s_Sparky.getPose();
-        s_Shooter.setShooterSpeed(0.38);
+        double distance = s_Lime.getFilteredDistance();
+
+        if(distance != 0) {
+            shooterSpeed = s_Shooter.getShooterSpeedFromDistance(distance);
+        }
+
+        s_Shooter.setShooterSpeed(shooterSpeed);
+        s_Shooter.setShooterAngle(Constants.ShooterConstants.farAngle);
 
         telem.putTelemetry("Phase", phase);
 
         switch(phase) {
             case 0:
                 s_Feeder.closeGate();
-                if(areWeWinners && currentPose.x() > 1.21) {
-                    s_Swerve.drive(-0.8, 0, 0, true, false);
-                } else if (!areWeWinners && currentPose.x() < -1.21) {
-                    s_Swerve.drive(0.8, 0, 0, true, false);
-                } else {
-                    driveController.reset();
-                    phase++;
-                }
+                driveController.reset();
+                phase++;
                 break;
             case 1:
 

@@ -30,7 +30,7 @@ public class WaypointFollower {
 
         double translationError = Math.abs(Math.hypot(currentPose.x() - poseList[waypointIndex].x(), currentPose.y() - poseList[waypointIndex].y()));
 
-        if(translationError < 0.5 && waypointIndex < poseList.length-1) {
+        if(translationError < 0.2 && waypointIndex < poseList.length-1) {
             waypointIndex++;
         }
 
