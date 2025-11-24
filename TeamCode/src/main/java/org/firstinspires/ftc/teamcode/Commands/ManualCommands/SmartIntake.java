@@ -45,15 +45,15 @@ public class SmartIntake {
 
     public void execute(){
 
-        if(s_Intake.getIntakeCurrent() > 8 && m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
-            m_Driver.setRumble(300);
+        if(s_Intake.getIntakeCurrent() > 7.5 && m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
+            m_Driver.setRumble(8000);
             timestamp = System.nanoTime();
             unjamTime = true;
         }
 
         if(unjamTime) {
             s_Intake.setSpeed(-1);
-            if(System.nanoTime() - timestamp > 0.4e9){
+            if(System.nanoTime() - timestamp > 0.15e9){
                 unjamTime = false;
             }
         } else {

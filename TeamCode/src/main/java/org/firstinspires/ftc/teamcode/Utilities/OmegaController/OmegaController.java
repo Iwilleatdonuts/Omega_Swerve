@@ -203,8 +203,8 @@ public class OmegaController {
         return gamepadButtons.get(button);
     }
 
-    public void setRumble(double rumbleTime) {
-        gamepad.rumble(1, 1, 2000);
+    public void setRumble(int rumbleTime) {
+        gamepad.rumble(1, 1, rumbleTime);
     }
 
 }
