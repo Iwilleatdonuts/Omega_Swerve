@@ -41,6 +41,8 @@ public class SwerveModule {
 
     private double moduleSetpoint;
 
+    private double MAX_CURRENT = 7;
+
     public SwerveModule(HardwareMap hardwareMap, EZTelemetry telem, SwerveModuleConstants moduleConstants) {
 
         this.telem = telem;
@@ -98,7 +100,14 @@ public class SwerveModule {
                         (kV * targetVelocityTicksPerSec) +
                         (kA * acceleration);
 
-        drive.setPower(clamp(ff));
+        double output = clamp(ff);
+        double currentCurrentLMAO = getMotorCurrent();
+
+        if(Math.abs(currentCurrentLMAO) > MAX_CURRENT) {
+            output *= MAX_CURRENT / currentCurrentLMAO;
+        }
+
+        drive.setPower(output);
     }
 
     public double getVelocity() {
