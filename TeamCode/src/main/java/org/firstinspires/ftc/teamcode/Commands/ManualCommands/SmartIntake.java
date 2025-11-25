@@ -46,7 +46,7 @@ public class SmartIntake {
     public void execute(){
 
         if(s_Intake.getIntakeCurrent() > 7.5 && m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
-            m_Driver.setRumble(8000);
+            m_Driver.setRumble(300);
             timestamp = System.nanoTime();
             unjamTime = true;
         }

@@ -34,6 +34,7 @@ public class AutoCornerIntake {
     private boolean isFinished;
 
     private double[] outputs = new double[3];
+    private OmegaPose2D[] poses;
 
     public AutoCornerIntake(Swerve s_Swerve, Intake s_Intake, Feeder s_Feeder, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
 
@@ -47,6 +48,24 @@ public class AutoCornerIntake {
         this.s_Sparky = s_Sparky;
 
         finalPose = areWeWinners? Constants.AutoConstants.RedConstants.cornerPickup : Constants.AutoConstants.BlueConstants.cornerPickup;
+
+//        if(areWeWinners) {
+//            poses = new OmegaPose2D[]{
+//                    new OmegaPose2D(
+//                            Constants.AutoConstants.RedConstants.cornerPickup.x()-0.5,
+//                            Constants.AutoConstants.RedConstants.cornerPickup.y()+0.05,
+//                            Constants.AutoConstants.RedConstants.cornerPickup.r()),
+//                    Constants.AutoConstants.RedConstants.cornerPickup
+//            };
+//        } else {
+//            poses = new OmegaPose2D[]{
+//                    new OmegaPose2D(
+//                            Constants.AutoConstants.BlueConstants.cornerPickup.x()+0.5,
+//                            Constants.AutoConstants.BlueConstants.cornerPickup.y()+0.05,
+//                            Constants.AutoConstants.BlueConstants.cornerPickup.r()),
+//                    Constants.AutoConstants.BlueConstants.cornerPickup
+//            };
+//        }
 
         driveController = new AutoDriveController();
         waypointFollower = new WaypointFollower(driveController);
@@ -63,12 +82,57 @@ public class AutoCornerIntake {
 
         s_Feeder.closeGate();
         s_Feeder.setFeederSpeed(0);
+        s_Intake.setSpeed(1);
 
         switch(phase) {
             case 0:
-                    waypointFollower.resetWaypointFollower();
-                    phase++;
+//                waypointFollower.resetWaypointFollower();
+                driveController.reset();
+                driveController.setTargetPose(finalPose);
+                phase++;
                 break;
+            case 1:
+
+//                outputs = waypointFollower.getWaypointOutputs(currentPose, poses);
+
+                driveController.updateCurrentPose(currentPose);
+
+                outputs = driveController.getOutputs();
+
+                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
+
+                if(isAtRoughSetpoint()) {
+                    timestamp = System.nanoTime();
+                    phase++;
+                }
+                break;
+            case 2:
+                s_Swerve.drive(0, 0.3, 0, true, false);
+                if(System.nanoTime() - timestamp > 0.3e9) {
+                    timestamp = System.nanoTime();
+                    phase++;
+                }
+                break;
+            case 3:
+                s_Swerve.drive(0, -0.3, 0, true, false);
+                if(System.nanoTime() - timestamp > 0.8e9) {
+                    timestamp = System.nanoTime();
+                    phase++;
+                }
+                break;
+            case 4:
+                if(areWeWinners) {
+                    s_Swerve.drive(0.1, -0.1, 0, true, false);
+                } else {
+                    s_Swerve.drive(-0.1, -0.1, 0, true, false);
+                }
+                if(System.nanoTime() - timestamp > 0.5e9) {
+                    timestamp = System.nanoTime();
+                    isFinished = true;
+                    phase++;
+                }
+                break;
+
         }
     }
 
@@ -77,7 +141,7 @@ public class AutoCornerIntake {
         double yError = Math.abs(s_Sparky.getPose().y() - finalPose.y());
         double rError = Math.abs(s_Sparky.getHeading() - finalPose.r());
 
-        return xError < 0.6 && yError < 0.06 && rError < 6;
+        return xError < 0.06 && yError < 0.06 && rError < 6;
     }
 
     public boolean isFinished() {

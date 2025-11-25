@@ -76,7 +76,7 @@ public class AutoWaypointIntake {
         switch(phase) {
             case 0:
                     driveController.reset();
-                waypointFollower.resetWaypointFollower();
+                    waypointFollower.resetWaypointFollower();
                     phase++;
                 break;
             case 1:
@@ -112,7 +112,7 @@ public class AutoWaypointIntake {
         double yError = Math.abs(s_Sparky.getPose().y() - finalTarget.y());
         double rError = Math.abs(s_Sparky.getHeading() - finalTarget.r());
 
-        return xError < 0.6 && yError < 0.06 && rError < 6;
+        return xError < 0.06 && yError < 0.06 && rError < 6;
     }
 
     public boolean isFinished() {

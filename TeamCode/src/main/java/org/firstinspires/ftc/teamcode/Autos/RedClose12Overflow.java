@@ -50,6 +50,7 @@ public class RedClose12Overflow extends LinearOpMode {
 
         int phase = 0;
         double timestamp;
+        boolean timedOut = false;
 
         List<AutoManager> autoCommands = Arrays.asList(
                 () -> {autoShootCommand.reset(); return true;},
@@ -91,9 +92,13 @@ public class RedClose12Overflow extends LinearOpMode {
             turretCommand.execute();
             telem.updateAll();
 
-            if (timer.seconds() > 27.0) {
-                phase = 15;
-            } else if(phase < autoCommands.size()) {
+//            if (timer.seconds() > 5 && !timedOut) {
+//                phase = 14;
+//                timedOut = true;
+//            } else if (timedOut){
+//                phase = 15;
+//            }else
+                if(phase < autoCommands.size()) {
                 boolean isFinished = autoCommands.get(phase).run();
                 if(isFinished) {
                     phase++;

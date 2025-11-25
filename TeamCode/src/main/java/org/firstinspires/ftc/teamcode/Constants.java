@@ -168,16 +168,16 @@ public class Constants {
 
         public static final class RedConstants {
             public static final OmegaPose2D closeStart = new OmegaPose2D(1.24088, 1.22156, 270);
-            public static final OmegaPose2D farStart = new OmegaPose2D(0.6039, -1.5625, 270);
+            public static final OmegaPose2D farStart = new OmegaPose2D(0.48, -1.5625, 270);
             public static final OmegaPose2D closeShot = new OmegaPose2D(0.95, 0.95, 270);
-            public static final OmegaPose2D farShot = new OmegaPose2D(0.6039, -1.45, 270);
-            public static final OmegaPose2D cornerPickup = new OmegaPose2D(1.42, -1.5625, 270);
-            public static final OmegaPose2D closeBallLineup = new OmegaPose2D(0.58, 0.37, 260);
-            public static final OmegaPose2D mediumBallLineup = new OmegaPose2D(0.58, -0.25, 260);
-            public static final OmegaPose2D farBallLineup = new OmegaPose2D(0.58, -0.87, 260);
-            public static final OmegaPose2D closeBallPickup = new OmegaPose2D(1.4, 0.37, 260);
-            public static final OmegaPose2D mediumBallPickup = new OmegaPose2D(1.4, -0.25, 260);
-            public static final OmegaPose2D farBallPickup = new OmegaPose2D(1.4, -0.87, 260);
+            public static final OmegaPose2D farShot = new OmegaPose2D(0.48, -1.48, 270);
+            public static final OmegaPose2D cornerPickup = new OmegaPose2D(1.45, -1.45, 250);
+            public static final OmegaPose2D closeBallLineup = new OmegaPose2D(0.48, 0.27, 270);
+            public static final OmegaPose2D mediumBallLineup = new OmegaPose2D(0.48, -0.38, 270);
+            public static final OmegaPose2D farBallLineup = new OmegaPose2D(0.48, -0.99, 270);
+            public static final OmegaPose2D closeBallPickup = new OmegaPose2D(1.5, 0.27, 270);
+            public static final OmegaPose2D mediumBallPickup = new OmegaPose2D(1.5, -0.38, 270);
+            public static final OmegaPose2D farBallPickup = new OmegaPose2D(1.7, -0.99, 270);
             public static final OmegaPose2D gateLineup = new OmegaPose2D(1.21, 0.1, 0);
             public static final OmegaPose2D gatePush = new OmegaPose2D(1.39, 0.1, 0);
             public static final OmegaPose2D gateLineupAutoTeleop = new OmegaPose2D(1, 0.1, 0);
@@ -188,9 +188,9 @@ public class Constants {
         public static final class BlueConstants {
             public static final OmegaPose2D closeStart = new OmegaPose2D(-1.24088, 1.22156, 90);
             public static final OmegaPose2D closeShot = new OmegaPose2D(-0.95, 0.95, 90);
-            public static final OmegaPose2D farStart = new OmegaPose2D(-0.6039, -1.5625, 90);
+            public static final OmegaPose2D farStart = new OmegaPose2D(0.48, -1.5625, 90);
             public static final OmegaPose2D cornerPickup = new OmegaPose2D(-1.42, -1.5625, 90);
-            public static final OmegaPose2D farShot = new OmegaPose2D(-0.6039, -1.45, 90);
+            public static final OmegaPose2D farShot = new OmegaPose2D(-0.48, -1.52, 90);
             public static final OmegaPose2D closeBallLineup = new OmegaPose2D(-0.58, 0.37, 100);
             public static final OmegaPose2D mediumBallLineup = new OmegaPose2D(-0.58, -0.25, 100);
             public static final OmegaPose2D farBallLineup = new OmegaPose2D(-0.58, -0.87, 100);

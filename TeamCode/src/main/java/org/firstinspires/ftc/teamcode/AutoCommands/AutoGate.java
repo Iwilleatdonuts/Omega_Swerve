@@ -58,6 +58,10 @@ public class AutoGate {
 
         OmegaPose2D currentPose = s_Sparky.getPose();
 
+        if(goingToTeleop) {
+
+        }
+
         switch(phase) {
             case 0:
                 if(areWeWinners && currentPose.x() > 1.21) {

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCloseShot;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoCornerIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoFarShot;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
@@ -22,7 +23,7 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Winner Support")
+@Autonomous(name = "Red Far Support")
 public class RedFarSupport extends LinearOpMode {
 
     @Override
@@ -44,12 +45,28 @@ public class RedFarSupport extends LinearOpMode {
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
         AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lime, s_Sparky, telem, areWeWinners);
-        AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners, 1);
+        AutoCornerIntake cornerIntakeCommand = new AutoCornerIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
         AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime, areWeWinners, true);
 
         int phase = 0;
 
         List<AutoManager> autoCommands = Arrays.asList(
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
+                () -> {cornerIntakeCommand.reset(); return true;},
+                cornerIntakeCommand::runCommand,
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
+                () -> {cornerIntakeCommand.reset(); return true;},
+                cornerIntakeCommand::runCommand,
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
+                () -> {cornerIntakeCommand.reset(); return true;},
+                cornerIntakeCommand::runCommand,
+                () -> {autoShootCommand.reset(); return true;},
+                autoShootCommand::runCommand,
+                () -> {cornerIntakeCommand.reset(); return true;},
+                cornerIntakeCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand
         );
