@@ -21,19 +21,19 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Loser Close 12")
-public class BlueClose12 extends LinearOpMode {
+@Autonomous(name = "Blue Close 12 Overflow")
+public class BlueClose12Overflow extends LinearOpMode {
 
     @Override
     public void runOpMode() {
 
-        boolean areWeWinners = true;
+        boolean areWeWinners = false;
 
         EZTelemetry telem = new EZTelemetry(telemetry);
 
         Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
         OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telem);
-        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.closeStart));
+        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.closeStart));
         s_Sparky.toggleTelemetry();
 
         Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Sparky);
@@ -54,8 +54,6 @@ public class BlueClose12 extends LinearOpMode {
                 autoShootCommand::runCommand,
                 () -> {intakeCommand.reset(1); return true;},
                 intakeCommand::runCommand,
-//                () -> {gateCommand.reset(false); return true;},
-//                gateCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
                 () -> {intakeCommand.reset(2); return true;},
