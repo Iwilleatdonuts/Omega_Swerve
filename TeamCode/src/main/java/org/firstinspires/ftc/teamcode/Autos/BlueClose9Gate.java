@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Blue Close 12 Gate")
-public class BlueClose12Gate extends LinearOpMode {
+@Autonomous(name = "Blue Close 9 Gate")
+public class BlueClose9Gate extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -62,10 +62,10 @@ public class BlueClose12Gate extends LinearOpMode {
                 intakeCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
-                () -> {intakeCommand.reset(3); return true;},
-                intakeCommand::runCommand,
-                () -> {autoShootCommand.reset(); return true;},
-                autoShootCommand::runCommand,
+//                () -> {intakeCommand.reset(3); return true;},
+//                intakeCommand::runCommand,
+//                () -> {autoShootCommand.reset(); return true;},
+//                autoShootCommand::runCommand,
                 () -> {gateCommand.reset(true); return true;},
                 gateCommand::runCommand
         );
