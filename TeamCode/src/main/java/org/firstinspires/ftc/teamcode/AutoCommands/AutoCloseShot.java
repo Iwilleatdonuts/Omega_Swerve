@@ -69,9 +69,9 @@ public class AutoCloseShot {
         switch(phase) {
             case 0:
                 s_Feeder.closeGate();
-                if(areWeWinners && currentPose.x() > 1.21) {
+                if(areWeWinners && currentPose.x() > 1.1) {
                     s_Swerve.drive(-0.8, 0, 0, true, false);
-                } else if (!areWeWinners && currentPose.x() < -1.21) {
+                } else if (!areWeWinners && currentPose.x() < -1.1) {
                     s_Swerve.drive(0.8, 0, 0, true, false);
                 } else {
                     driveController.reset();
@@ -98,8 +98,10 @@ public class AutoCloseShot {
                 s_Feeder.openGate();
                 s_Feeder.setFeederSpeed(1);
                 s_Intake.setSpeed(1);
+                s_Swerve.drivePrep(0, -1, 0, true);
 
                 if(System.nanoTime() - timestamp > 1.3e9) {
+                    s_Swerve.stop();
                     isFinished = true;
                 }
 

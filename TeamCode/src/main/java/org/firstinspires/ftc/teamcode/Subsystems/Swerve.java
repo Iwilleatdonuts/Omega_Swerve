@@ -157,16 +157,61 @@ public class Swerve {
         mods[3].setModulePosition();
     }
 
-    public void drive(ChassisSpeeds speeds) {
+    public void drivePrep(double xVal, double yVal, double rVal, boolean fieldRelative){
 
-//        ChassisSpeeds newSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromDegrees(getHeading()));
+        if (Math.abs(xVal) < 0.03) xVal = 0;
+        if (Math.abs(yVal) < 0.03) yVal = 0;
+        if (Math.abs(rVal) < 0.03) rVal = 0;
 
-        double x = speeds.vxMetersPerSecond/MAX_SPEED_MPS;
-        double y = speeds.vyMetersPerSecond/MAX_SPEED_MPS;
-        double r = speeds.omegaRadiansPerSecond/MAX_ANGULAR_VELOCITY_RAD_PER_SECONDS;
+        double x = yVal;
+        double y = -xVal;
 
-        drive(x, y, r, true, false);
+        if (fieldRelative) {
+            double headingRad = Math.toRadians(getHeading());
+            double cos = Math.cos(headingRad);
+            double sien = Math.sin(headingRad);
+            double xTemp = x;
+            double yTemp = y;
 
+            x = xTemp * cos + yTemp * sien;
+            y = -xTemp * sien + yTemp * cos;
+        }
+
+        double r = -rVal;
+
+        final double rotX = r * (Constants.DriveTrainConstants.trackWidth / Constants.DriveTrainConstants.moduleHypotenuse);
+        final double rotY = r * (Constants.DriveTrainConstants.wheelbase / Constants.DriveTrainConstants.moduleHypotenuse);
+
+        final double xLeft = x - rotX;
+        final double xRight = x + rotX;
+        final double yBack = y - rotY;
+        final double yFront = y + rotY;
+
+        double a0 = Math.toDegrees(Math.atan2(yFront, xLeft));
+        if (a0 < 0) a0 += 360.0;
+        double a1 = Math.toDegrees(Math.atan2(yFront, xRight));
+        if (a1 < 0) a1 += 360.0;
+        double a2 = Math.toDegrees(Math.atan2(yBack, xLeft));
+        if (a2 < 0) a2 += 360.0;
+        double a3 = Math.toDegrees(Math.atan2(yBack, xRight));
+        if (a3 < 0) a3 += 360.0;
+
+        mods[0].setDrivePower(0);
+        mods[1].setDrivePower(0);
+        mods[2].setDrivePower(0);
+        mods[3].setDrivePower(0);
+
+        if (xVal != 0 || yVal != 0 || rVal != 0) {
+            mods[0].setModuleSetpoint(a0);
+            mods[1].setModuleSetpoint(a1);
+            mods[2].setModuleSetpoint(a2);
+            mods[3].setModuleSetpoint(a3);
+        }
+
+        mods[0].setModulePosition();
+        mods[1].setModulePosition();
+        mods[2].setModulePosition();
+        mods[3].setModulePosition();
     }
 
     public double getHeading() {

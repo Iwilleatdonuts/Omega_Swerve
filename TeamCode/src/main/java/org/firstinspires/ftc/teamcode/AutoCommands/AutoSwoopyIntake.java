@@ -108,15 +108,16 @@ public class AutoSwoopyIntake {
                 break;
             case 2:
                 s_Swerve.drive(0, 0.3, 0, true, false);
-                if(System.nanoTime() - timestamp > 0.8e9) {
+                if(System.nanoTime() - timestamp > 0.3e9) {
                     timestamp = System.nanoTime();
                     phase++;
                 }
                 break;
             case 3:
                 s_Swerve.drive(0, -0.3, 0, true, false);
-                if(System.nanoTime() - timestamp > 0.8e9) {
+                if(System.nanoTime() - timestamp > 0.3e9) {
                     timestamp = System.nanoTime();
+                    isFinished = true;
                     phase++;
                 }
                 break;

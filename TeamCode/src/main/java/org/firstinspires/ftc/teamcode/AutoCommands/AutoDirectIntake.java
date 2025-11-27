@@ -71,6 +71,7 @@ public class AutoDirectIntake {
         switch(phase) {
             case 0:
                     driveController.reset();
+                    timestamp = System.nanoTime();
                     phase++;
                 break;
             case 1:
@@ -82,7 +83,7 @@ public class AutoDirectIntake {
 
                 s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
 
-                if(isAtRoughSetpoint()) {
+                if(isAtRoughSetpoint() || System.nanoTime() - timestamp > 3.5e9) {
                     s_Swerve.stop();
                     timestamp = System.nanoTime();
                     driveController.reset();
@@ -92,6 +93,24 @@ public class AutoDirectIntake {
 
                 break;
             case 2:
+
+                driveController.updateCurrentPose(currentPose);
+                outputs = driveController.getOutputs();
+
+                s_Intake.setSpeed(1);
+
+                s_Swerve.drivePrep(outputs[0], outputs[1], outputs[2], true);
+
+                if(System.nanoTime() - timestamp > 0.4) {
+                    s_Swerve.stop();
+                    timestamp = System.nanoTime();
+                    driveController.reset();
+                    driveController.setTargetPose(pickupTarget);
+                    phase++;
+                }
+
+                break;
+            case 3:
 
                 driveController.updateCurrentPose(currentPose);
                 outputs = driveController.getSlowOutputs();
