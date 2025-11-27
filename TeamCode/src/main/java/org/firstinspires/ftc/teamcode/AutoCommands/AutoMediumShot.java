@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
-public class AutoFarShot {
+public class AutoMediumShot {
 
     private final EZTelemetry telem;
 
@@ -34,14 +34,15 @@ public class AutoFarShot {
 
     private double timestamp;
     private double shooterSpeed;
+    private double shooterAngle;
 
-    public AutoFarShot(Swerve s_Swerve, Shooter s_Shooter, Intake s_Intake, Feeder s_Feeder, Limelight s_Lime, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
+    public AutoMediumShot(Swerve s_Swerve, Shooter s_Shooter, Intake s_Intake, Feeder s_Feeder, Limelight s_Lime, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
 
         this.telem = telem;
 
-        targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.farShot : Constants.AutoConstants.BlueConstants.farShot;
+        targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.mediumShot : Constants.AutoConstants.BlueConstants.mediumShot;
 
         this.s_Swerve = s_Swerve;
         this.s_Shooter = s_Shooter;
@@ -55,7 +56,8 @@ public class AutoFarShot {
     }
 
     public void reset(){
-        shooterSpeed = 0.58;
+        shooterSpeed = 0.42;
+        shooterAngle = 0.7;
         isFinished = false;
         phase = 0;
         driveController.reset();
@@ -68,18 +70,24 @@ public class AutoFarShot {
 
         if(distance != 0) {
             shooterSpeed = s_Shooter.getShooterSpeedFromDistance(distance);
+            shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
         }
-
         s_Shooter.setShooterSpeed(shooterSpeed);
-        s_Shooter.setShooterAngle(Constants.ShooterConstants.farAngle);
+        s_Shooter.setShooterAngle(shooterAngle);
 
         telem.putTelemetry("Phase", phase);
 
         switch(phase) {
             case 0:
                 s_Feeder.closeGate();
-                driveController.reset();
-                phase++;
+                if(areWeWinners && currentPose.x() > 1.21) {
+                    s_Swerve.drive(-0.8, 0, 0, true, false);
+                } else if (!areWeWinners && currentPose.x() < -1.21) {
+                    s_Swerve.drive(0.8, 0, 0, true, false);
+                } else {
+                    driveController.reset();
+                    phase++;
+                }
                 break;
             case 1:
 
@@ -100,9 +108,9 @@ public class AutoFarShot {
 
                 s_Feeder.openGate();
                 s_Feeder.setFeederSpeed(1);
-                s_Intake.setSpeed(0.8);
+                s_Intake.setSpeed(1);
 
-                if(System.nanoTime() - timestamp > 2e9) {
+                if(System.nanoTime() - timestamp > 1.7e9) {
                     isFinished = true;
                 }
 

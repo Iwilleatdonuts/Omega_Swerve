@@ -46,19 +46,19 @@ public class SmartIntake {
     public void execute(){
 
         if(s_Intake.getIntakeCurrent() > 7.5 && m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
-            m_Driver.setRumble(8000);
-            timestamp = System.nanoTime();
-            unjamTime = true;
+            m_Driver.setRumble(300);
+//            timestamp = System.nanoTime();
+//            unjamTime = true;
         }
 
-        if(unjamTime) {
-            s_Intake.setSpeed(-1);
-            if(System.nanoTime() - timestamp > 0.15e9){
-                unjamTime = false;
-            }
-        } else {
+//        if(unjamTime) {
+//            s_Intake.setSpeed(-1);
+//            if(System.nanoTime() - timestamp > 0.15e9){
+//                unjamTime = false;
+//            }
+//        } else {
             s_Intake.setSpeed(m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
-        }
+//        }
 
          if (m_Operator.isDown(GamepadKeys.Button.A)){
             s_Feeder.openGate();

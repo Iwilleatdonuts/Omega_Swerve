@@ -99,7 +99,7 @@ public class AutoCloseShot {
                 s_Feeder.setFeederSpeed(1);
                 s_Intake.setSpeed(1);
 
-                if(System.nanoTime() - timestamp > 2e9) {
+                if(System.nanoTime() - timestamp > 1.3e9) {
                     isFinished = true;
                 }
 

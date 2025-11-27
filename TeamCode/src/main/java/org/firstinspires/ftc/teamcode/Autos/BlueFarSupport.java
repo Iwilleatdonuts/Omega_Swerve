@@ -3,11 +3,8 @@ package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoCloseShot;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCornerIntake;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoFarShot;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoSwoopyIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurret;
 import org.firstinspires.ftc.teamcode.Constants;
@@ -24,19 +21,19 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Red Far Support")
-public class RedFarSupport extends LinearOpMode {
+@Autonomous(name = "Blue Far Support")
+public class BlueFarSupport extends LinearOpMode {
 
     @Override
     public void runOpMode() {
 
-        boolean areWeWinners = true;
+        boolean areWeWinners = false;
 
         EZTelemetry telem = new EZTelemetry(telemetry);
 
         Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
         OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telem);
-        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.farStart));
+        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.farStart));
         s_Sparky.toggleTelemetry();
 
         Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Sparky);

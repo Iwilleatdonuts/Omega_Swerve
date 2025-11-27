@@ -52,12 +52,12 @@ public class CoolShooters {
             s_Shooter.decrementSpeedConstant();
         }
 
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-            shooterAngle = Constants.ShooterConstants.closeAngle;
+        if(m_Operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
+            shooterAngle = Constants.ShooterConstants.farAngle;
         }
 
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            shooterAngle = Constants.ShooterConstants.farAngle;
+        if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0) {
+            shooterAngle = Constants.ShooterConstants.closeAngle;
         }
 
         if(m_Driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || m_Operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){

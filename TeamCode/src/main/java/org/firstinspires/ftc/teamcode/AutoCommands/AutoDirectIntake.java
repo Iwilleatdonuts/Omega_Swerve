@@ -125,7 +125,7 @@ public class AutoDirectIntake {
         double yError = Math.abs(s_Sparky.getPose().y() - lineupTarget.y());
         double rError = Math.abs(s_Sparky.getHeading() - lineupTarget.r());
 
-        return xError < 0.6 && yError < 0.06 && rError < 6;
+        return xError < 0.06 && yError < 0.06 && rError < 6;
     }
 
     public boolean isFinished() {

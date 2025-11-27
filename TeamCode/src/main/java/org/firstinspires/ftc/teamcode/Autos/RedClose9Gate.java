@@ -4,11 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCloseShot;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoCornerIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoFarShot;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoSwoopyIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurret;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
@@ -24,8 +21,8 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Red Far Support")
-public class RedFarSupport extends LinearOpMode {
+@Autonomous(name = "Red Close 9 Gate")
+public class RedClose9Gate extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -36,7 +33,7 @@ public class RedFarSupport extends LinearOpMode {
 
         Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
         OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telem);
-        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.farStart));
+        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.closeStart));
         s_Sparky.toggleTelemetry();
 
         Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Sparky);
@@ -45,32 +42,34 @@ public class RedFarSupport extends LinearOpMode {
         Intake s_Intake = new Intake(hardwareMap, telem);
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
-        AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lime, s_Sparky, telem, areWeWinners);
-        AutoCornerIntake cornerIntakeCommand = new AutoCornerIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
-        AutoSwoopyIntake swoopyIntakeCommand = new AutoSwoopyIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
-        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime, areWeWinners, true);
+        AutoCloseShot autoShootCommand = new AutoCloseShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
+        AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners, 1);
+        AutoGate gateCommand = new AutoGate(s_Swerve, s_Sparky, telem, areWeWinners);
+        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime, areWeWinners, false);
 
         int phase = 0;
 
         List<AutoManager> autoCommands = Arrays.asList(
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
-                () -> {cornerIntakeCommand.reset(); return true;},
-                cornerIntakeCommand::runCommand,
+                () -> {intakeCommand.reset(1); return true;},
+                intakeCommand::runCommand,
+                () -> {gateCommand.reset(false); return true;},
+                gateCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
-                () -> {swoopyIntakeCommand.reset(); return true;},
-                swoopyIntakeCommand::runCommand,
+                () -> {intakeCommand.reset(2); return true;},
+                intakeCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
-                () -> {swoopyIntakeCommand.reset(); return true;},
-                swoopyIntakeCommand::runCommand,
-                () -> {autoShootCommand.reset(); return true;},
-                autoShootCommand::runCommand,
-                () -> {swoopyIntakeCommand.reset(); return true;},
-                swoopyIntakeCommand::runCommand,
-                () -> {autoShootCommand.reset(); return true;},
-                autoShootCommand::runCommand
+//                () -> {intakeCommand.reset(3); return true;},
+//                intakeCommand::runCommand,
+//                () -> {autoShootCommand.reset(); return true;},
+//                autoShootCommand::runCommand,
+                () -> {gateCommand.reset(true); return true;},
+                gateCommand::runCommand
+
+
         );
 
         telem.updateTelemetry();

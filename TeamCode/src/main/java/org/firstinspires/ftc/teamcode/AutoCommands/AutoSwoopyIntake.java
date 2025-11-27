@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 import org.firstinspires.ftc.teamcode.Utilities.WaypointFollower;
 
-public class AutoCornerIntake {
+public class AutoSwoopyIntake {
 
     private final EZTelemetry telem;
 
@@ -36,7 +36,7 @@ public class AutoCornerIntake {
     private double[] outputs = new double[3];
     private OmegaPose2D[] poses;
 
-    public AutoCornerIntake(Swerve s_Swerve, Intake s_Intake, Feeder s_Feeder, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
+    public AutoSwoopyIntake(Swerve s_Swerve, Intake s_Intake, Feeder s_Feeder, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
 
@@ -47,7 +47,7 @@ public class AutoCornerIntake {
         this.s_Feeder = s_Feeder;
         this.s_Sparky = s_Sparky;
 
-        finalPose = areWeWinners? Constants.AutoConstants.RedConstants.cornerPickup : Constants.AutoConstants.BlueConstants.cornerPickup;
+        finalPose = areWeWinners? Constants.AutoConstants.RedConstants.swoopyIntake : Constants.AutoConstants.BlueConstants.swoopyIntake;
 
 //        if(areWeWinners) {
 //            poses = new OmegaPose2D[]{
@@ -108,7 +108,7 @@ public class AutoCornerIntake {
                 break;
             case 2:
                 s_Swerve.drive(0, 0.3, 0, true, false);
-                if(System.nanoTime() - timestamp > 0.3e9) {
+                if(System.nanoTime() - timestamp > 0.8e9) {
                     timestamp = System.nanoTime();
                     phase++;
                 }
@@ -120,19 +120,6 @@ public class AutoCornerIntake {
                     phase++;
                 }
                 break;
-            case 4:
-                if(areWeWinners) {
-                    s_Swerve.drive(0.1, -0.1, 0, true, false);
-                } else {
-                    s_Swerve.drive(-0.1, -0.1, 0, true, false);
-                }
-                if(System.nanoTime() - timestamp > 0.5e9) {
-                    timestamp = System.nanoTime();
-                    isFinished = true;
-                    phase++;
-                }
-                break;
-
         }
     }
 
