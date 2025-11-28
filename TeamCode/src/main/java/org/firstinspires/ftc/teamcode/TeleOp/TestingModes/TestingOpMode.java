@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.SwerveModule;
@@ -38,16 +39,17 @@ public class TestingOpMode extends LinearOpMode {
 
         s_Sparky.configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
 
-        AprilVisionOnTurret s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
+//        AprilVisionOnTurret s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
+        Limelight s_Lime = new Limelight(hardwareMap, telem, true);
 
-        telem.enableCameraStrea(s_Vision.getAprilCamera(), 5);
+//        telem.enableCameraStrea(s_Vision.getAprilCamera(), 5);
 
         ElapsedTime runtime = new ElapsedTime();
 
         boolean runTurns = false;
         boolean enableOtherTelemetries = false;
 
-        telem.putTelemetry("FPS", s_Vision.getCameraFPS());
+//        telem.putTelemetry("FPS", s_Lime.get());
         telem.updateTelemetry();
 
         waitForStart();
@@ -74,7 +76,7 @@ public class TestingOpMode extends LinearOpMode {
                 s_Intake.toggleTelemetry();
                 s_Turret.toggleTelemetry();
                 s_Shooter.toggleTelemetry();
-                s_Vision.toggleTelemetry();
+                s_Lime.toggleTelemetry();
                 enableOtherTelemetries = !enableOtherTelemetries;
             }
 
@@ -191,7 +193,7 @@ public class TestingOpMode extends LinearOpMode {
             s_Intake.skadoodle();
             s_Turret.skadoodle();
             s_Shooter.skadoodle();
-            s_Vision.skadoodle();
+            s_Lime.skadoodle();
 
             telem.putTelemetry("Telemetry on?", enableOtherTelemetries);
 

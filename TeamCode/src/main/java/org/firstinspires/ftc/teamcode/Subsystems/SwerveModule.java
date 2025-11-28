@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.arcrobotics.ftclib.controller.wpilibcontroller.SimpleMotorFeedforward;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,6 +24,7 @@ public class SwerveModule {
     private final CRServoImplEx angle;
     private final AnalogInput moduleHeading;
     private final PIDController angleController;
+    private final SimpleMotorFeedforward ffController;
 
     private final double moduleOffset;
     private final double headingMaxVoltage;
@@ -70,6 +72,8 @@ public class SwerveModule {
         angleController.setIZone(30);
 
         moduleSetpoint = getDegrees(true);
+
+        ffController = new SimpleMotorFeedforward(0, 0, 0);
 
         keyRaw = "Module " + modNumber + " Raw Angle";
         keyDeg = "Module " + modNumber + " Degrees";
@@ -167,6 +171,10 @@ public class SwerveModule {
 
         double measurement = getDegrees(true);
         double output = angleController.calculate(measurement, moduleSetpoint);
+
+        double ff = Math.signum(output) * 0.045;
+
+        output += ff;
 
         angle.setPower(0.5 * clamp(output));  // half scaling kept
     }
