@@ -122,6 +122,9 @@ public class Constants {
 
     public static final class TurretConstants {
 
+        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.55, 1.55, 0);
+        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.55, 1.55, 0);
+
         public static final String turretMotor = "turret";
 
         public static final double lowerRotationLimit = -100;
@@ -130,9 +133,6 @@ public class Constants {
     }
 
     public static final class ShooterConstants {
-
-        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.45, 1.45, 0);
-        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.45, 1.45, 0);
 
         public static final String upperMotor = "upperShooter";
         public static final String lowerMotor = "lowerShooter";

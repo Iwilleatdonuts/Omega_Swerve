@@ -81,9 +81,9 @@ public class TurnToPointDrive {
         m_Driver.readButtons();
         m_Operator.readButtons();
 
-        if(m_Driver.wasJustPressed(GamepadKeys.Button.BACK)){
-            enableAutoRotate = !enableAutoRotate;
-        }
+//        if(m_Driver.wasJustPressed(GamepadKeys.Button.BACK)){
+//            enableAutoRotate = !enableAutoRotate;
+//        }
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.Y) || m_Driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
             s_Swerve.setTargetPose(s_Sparky.getPose());

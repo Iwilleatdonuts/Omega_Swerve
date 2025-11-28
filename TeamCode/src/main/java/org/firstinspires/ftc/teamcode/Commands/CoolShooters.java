@@ -38,7 +38,7 @@ public class CoolShooters {
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
 
-        this.targetPose = areWeWinners ? Constants.ShooterConstants.redTarget : Constants.ShooterConstants.blueTarget;
+        this.targetPose = areWeWinners ? Constants.TurretConstants.redTarget : Constants.TurretConstants.blueTarget;
 
         this.telem = telem;
     }

@@ -28,6 +28,9 @@ public class LimeTurret {
     private final double farSkew;
     private final double closeSkew;
 
+    private final OmegaPose2D gatePose;
+    private final OmegaPose2D farZonePose;
+
     public LimeTurret(Swerve s_Swerve, Turret s_Turret, Limelight s_Lime, OTOSSensor s_Sparky, OmegaController m_Operator, OmegaController m_Driver, EZTelemetry telem, boolean areWeWinners){
 
         this.s_Swerve = s_Swerve;
@@ -41,7 +44,9 @@ public class LimeTurret {
 
         this.areWeWinners = areWeWinners;
 
-        targetPose = areWeWinners ? Constants.ShooterConstants.redTarget : Constants.ShooterConstants.blueTarget;
+        targetPose = areWeWinners ? Constants.TurretConstants.redTarget : Constants.TurretConstants.blueTarget;
+        gatePose = new OmegaPose2D(0, 1.39, 0);
+        farZonePose = areWeWinners ? new OmegaPose2D(1.36, 0, 0) : new OmegaPose2D(-1.36, 0, 0);
         farSkew = areWeWinners ? 2 : -2;
         closeSkew = areWeWinners ? -3 : 3;
 
@@ -55,8 +60,16 @@ public class LimeTurret {
 
     public void execute(){
 
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.Y) || m_Driver.wasJustPressed(GamepadKeys.Button.Y)) {
+        if(m_Driver.wasJustPressed(GamepadKeys.Button.Y)) {
             s_Sparky.setNewLinearPose(new OmegaPose2D(0, 0, 0));
+        }
+
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.Y)) {
+            s_Sparky.setNewLinearPose(gatePose);
+        }
+
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.X)) {
+            s_Sparky.setNewLinearPose(farZonePose);
         }
 
         if(s_Lime.isValidReaing()){

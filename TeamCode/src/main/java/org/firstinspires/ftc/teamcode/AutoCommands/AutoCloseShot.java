@@ -69,9 +69,9 @@ public class AutoCloseShot {
         switch(phase) {
             case 0:
                 s_Feeder.closeGate();
-                if(areWeWinners && currentPose.x() > 1.1) {
+                if(areWeWinners && currentPose.x() > 1.15) {
                     s_Swerve.drive(-0.8, 0, 0, true, false);
-                } else if (!areWeWinners && currentPose.x() < -1.1) {
+                } else if (!areWeWinners && currentPose.x() < -1.15) {
                     s_Swerve.drive(0.8, 0, 0, true, false);
                 } else {
                     driveController.reset();
@@ -122,7 +122,8 @@ public class AutoCloseShot {
         double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
         double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
 
-        return xError < 0.1 && yError < 0.1 && rError < 10;
+//        return xError < 0.1 && yError < 0.1 && rError < 10;
+        return xError < 0.1 && yError < 0.1;
     }
 
     public boolean isFinished() {
