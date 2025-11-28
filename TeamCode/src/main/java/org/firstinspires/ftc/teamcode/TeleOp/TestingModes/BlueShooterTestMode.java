@@ -53,6 +53,7 @@ public class BlueShooterTestMode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        boolean areWeWinners = false;
 
         m_Driver = new OmegaController(gamepad1);
         m_Operator = new OmegaController(gamepad2);
@@ -66,13 +67,13 @@ public class BlueShooterTestMode extends LinearOpMode {
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
         s_Sparky = new OTOSSensor(hardwareMap, telem);
-        s_Lime = new Limelight(hardwareMap, telem, false);
+        s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
 
         s_Sparky.configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
 
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, m_Driver, m_Operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, m_Driver, m_Operator, telem);
-        turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, m_Operator);
+        turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, s_Sparky, m_Operator, m_Driver, telem, areWeWinners);
 
         driveCommand.initialize();
         intakeCommand.initialize();
@@ -129,7 +130,7 @@ public class BlueShooterTestMode extends LinearOpMode {
                 s_Shooter.setShooterSpeed(output);
 
 
-                if(m_Driver.wasJustPressed(GamepadKeys.Button.START)) {
+                if(m_Driver.wasJustPressed(GamepadKeys.Button.BACK)) {
                     s_Sparky.zeroGyro();
                     s_Swerve.zeroGyro();
                 }

@@ -76,6 +76,7 @@ public class FunkySad extends LinearOpMode {
 
     @Override
     public void runOpMode(){
+        boolean areWeWinners = false;
 
         driver = new OmegaController(gamepad1);
         operator = new OmegaController(gamepad2);
@@ -83,7 +84,7 @@ public class FunkySad extends LinearOpMode {
         telem = new EZTelemetry(telemetry);
 
         s_Sparky = new OTOSSensor(hardwareMap, telem);
-        s_Lime = new Limelight(hardwareMap, telem, false);
+        s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
 
         s_Lime.startLime();
 
@@ -94,12 +95,12 @@ public class FunkySad extends LinearOpMode {
         s_Shooter = new Shooter(hardwareMap, telem);
 
         s_Sparky.toggleTelemetry();
-        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.gateLineupTeleop));
+        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.mediumShotPositionForTeleop));
 
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
-        turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, operator);
-        shooterCommand = new CoolShooters(s_Shooter, s_Lime, driver, operator, telem);
+        turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, s_Sparky, operator, driver, telem, areWeWinners);
+        shooterCommand = new CoolShooters(s_Shooter, s_Lime, s_Sparky, driver, operator, telem, areWeWinners);
 
         driveCommand.initialize();
         intakeCommand.initialize();
@@ -129,7 +130,7 @@ public class FunkySad extends LinearOpMode {
             turretCommand.execute();
             shooterCommand.execute();
 
-            if(driver.wasJustPressed(GamepadKeys.Button.START)) {
+            if(driver.wasJustPressed(GamepadKeys.Button.BACK)) {
                 s_Swerve.zeroGyro();
                 s_Sparky.zeroGyro();
             }

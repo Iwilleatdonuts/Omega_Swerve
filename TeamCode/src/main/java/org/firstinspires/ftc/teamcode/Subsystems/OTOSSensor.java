@@ -98,6 +98,16 @@ public class OTOSSensor {
         return new OmegaPose2D(otosPose.x, otosPose.y, heading);
     }
 
+    public void setNewLinearPose(OmegaPose2D newPose) {
+        double heading = getHeading();
+        if(heading > 180) {
+            heading -=360;
+        }
+
+        SparkFunOTOS.Pose2D hehehePose = new SparkFunOTOS.Pose2D(newPose.x(), newPose.y(), heading);
+        otos.setPosition(hehehePose);
+    }
+
     public SparkFunOTOS.Pose2D normiePoseToSparkyPose(OmegaPose2D normiePose) {
         double heading = normiePose.r();
         if(heading > 180) {

@@ -121,8 +121,8 @@ public class TurnToPointDrive {
 
         s_Swerve.drive(xLimited, yLimited, rotationOutput, true, slowMode);
 
-        telem.putTelemetry("TUrn Angle", turnAngle);
-        telem.putTelemetry("Target spec", profiledAnglePID.getGoal().position);
+//        telem.putTelemetry("TUrn Angle", turnAngle);
+//        telem.putTelemetry("Target spec", profiledAnglePID.getGoal().position);
         telem.putTelemetry("CLT", timer.milliseconds() - timestamp);
     }
 

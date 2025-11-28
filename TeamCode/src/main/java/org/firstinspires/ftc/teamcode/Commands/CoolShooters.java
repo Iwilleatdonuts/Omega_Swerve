@@ -4,9 +4,12 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
+import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
 public class CoolShooters {
 
@@ -14,6 +17,7 @@ public class CoolShooters {
 
     private final Shooter s_Shooter;
     private final Limelight s_Lime;
+    private final OTOSSensor s_Sparky;
     private final OmegaController m_Driver;
     private final OmegaController m_Operator;
 
@@ -23,13 +27,18 @@ public class CoolShooters {
 
     private double shooterAngle;
 
-    public CoolShooters(Shooter s_Shooter, Limelight s_Lime, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem){
+    private final OmegaPose2D targetPose;
+
+    public CoolShooters(Shooter s_Shooter, Limelight s_Lime, OTOSSensor s_Sparky, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem, boolean areWeWinners){
 
         this.s_Shooter = s_Shooter;
         this.s_Lime = s_Lime;
+        this.s_Sparky = s_Sparky;
 
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
+
+        this.targetPose = areWeWinners ? Constants.ShooterConstants.redTarget : Constants.ShooterConstants.blueTarget;
 
         this.telem = telem;
     }
@@ -73,9 +82,10 @@ public class CoolShooters {
                 double distance = s_Lime.getGoalDistance();
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
                 shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
-            } else if(shooterPercent == 0) {
-                shooterPercent = 0.36;
-                shooterAngle = Constants.ShooterConstants.closeAngle;
+            } else {
+                double distance = Math.hypot(s_Sparky.getPose().x() - targetPose.x(), s_Sparky.getPose().y() - targetPose.y());
+                shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
+                shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
             }
         } else {
             shooterPercent = 0;
