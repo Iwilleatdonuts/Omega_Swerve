@@ -39,7 +39,7 @@ public class Constants {
             public static final String driveMotor = "drive0";
             public static final String angleServo = "angle0";
             public static final String feedback = "angleFeedback0";
-            public static final double moduleOffset = 89.4545;
+            public static final double moduleOffset = 271.5273;
 
             public static final double angleKP = 0;
             public static final double angleKI = 0;
@@ -55,7 +55,7 @@ public class Constants {
             public static final String driveMotor = "drive1";
             public static final String angleServo = "angle1";
             public static final String feedback = "angleFeedback1";
-            public static final double moduleOffset = 151.7455;
+            public static final double moduleOffset = 149.7818;
 
             public static final double angleKP = 0;
             public static final double angleKI = 0;
@@ -71,7 +71,7 @@ public class Constants {
             public static final String driveMotor = "drive2";
             public static final String angleServo = "angle2";
             public static final String feedback = "angleFeedback2";
-            public static final double moduleOffset = 213.8182;
+            public static final double moduleOffset = 95.5636;
 
             public static final double angleKP = 0;
             public static final double angleKI = 0;
@@ -87,7 +87,7 @@ public class Constants {
             public static final String driveMotor = "drive3";
             public static final String angleServo = "angle3";
             public static final String feedback = "angleFeedback3";
-            public static final double moduleOffset = 193.0909;
+            public static final double moduleOffset = 192.4364;
 
             public static final double angleKP = 0;//0.02
             public static final double angleKI = 0;
@@ -187,7 +187,7 @@ public class Constants {
             public static final OmegaPose2D gatePush = new OmegaPose2D(1.39, 0.1, 0);
             public static final OmegaPose2D gateLineupAutoTeleop = new OmegaPose2D(1, 0.1, 0);
             public static final OmegaPose2D gateLineupTeleop = new OmegaPose2D(-0.1, 1, 90);
-            public static final OmegaPose2D mediumShotPositionForTeleop = new OmegaPose2D(0.95, 0.6, 0);
+            public static final OmegaPose2D mediumShotPositionForTeleop = new OmegaPose2D(-0.95, 0.6, 0);
 
         }
 
@@ -209,7 +209,7 @@ public class Constants {
             public static final OmegaPose2D gatePush = new OmegaPose2D(-1.39, 0.1, 0);
             public static final OmegaPose2D gateLineupAutoTeleop = new OmegaPose2D(-1, 0.1, 0);
             public static final OmegaPose2D gateLineupTeleop = new OmegaPose2D(0.1, 1, 270);
-            public static final OmegaPose2D mediumShotPositionForTeleop = new OmegaPose2D(-0.95, 0.6, 0);
+            public static final OmegaPose2D mediumShotPositionForTeleop = new OmegaPose2D(0.95, 0.6, 0);
         }
 
     }
