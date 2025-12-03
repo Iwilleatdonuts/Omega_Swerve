@@ -60,7 +60,7 @@ public class Shooter {
 
         shooterFF = new SimpleMotorFeedforward(0.005,1/Constants.ShooterConstants.MAX_TICKS_PER_SEC, 0);
 
-        speedConstant = 0.00;
+        speedConstant = -0.009;
         targetVelocity = 0;
 
     }

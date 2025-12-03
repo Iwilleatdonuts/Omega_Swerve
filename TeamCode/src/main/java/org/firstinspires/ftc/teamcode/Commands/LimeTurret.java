@@ -31,6 +31,8 @@ public class LimeTurret {
     private final OmegaPose2D gatePose;
     private final OmegaPose2D farZonePose;
 
+    private double timestamp;
+
     public LimeTurret(Swerve s_Swerve, Turret s_Turret, Limelight s_Lime, OTOSSensor s_Sparky, OmegaController m_Operator, OmegaController m_Driver, EZTelemetry telem, boolean areWeWinners){
 
         this.s_Swerve = s_Swerve;
@@ -55,6 +57,7 @@ public class LimeTurret {
     public void initialize(){
 
         aprilBearing = s_Lime.getFilteredBearing();
+        timestamp = System.nanoTime();
 
     }
 
@@ -72,58 +75,64 @@ public class LimeTurret {
             s_Sparky.setNewLinearPose(farZonePose);
         }
 
-        if(s_Lime.isValidReaing()){
+        if(m_Driver.isDown(GamepadKeys.Button.A)) {
 
-            aprilBearing = s_Lime.getFilteredBearing();
-            double bearing = s_Turret.getDegrees() - aprilBearing;
+            if(s_Lime.isValidReaing()){
 
-            if((s_Sparky.getPose().x() < -1.3 && !areWeWinners) || (s_Sparky.getPose().x() > 1.3 && areWeWinners)) {
-                bearing -= farSkew;
-            }
+                aprilBearing = s_Lime.getGoalBearing();
+                double bearing = s_Turret.getDegrees() - aprilBearing;
 
-            if((s_Sparky.getPose().x() > 1.3 && !areWeWinners) || (s_Sparky.getPose().x() < -1.3 && areWeWinners)) {
-                bearing -= closeSkew;
-            }
+//                if((s_Sparky.getPose().x() < -1.3 && !areWeWinners) || (s_Sparky.getPose().x() > 1.3 && areWeWinners)) {
+//                    bearing -= farSkew;
+//                }
+//
+//                if((s_Sparky.getPose().x() > 1.3 && !areWeWinners) || (s_Sparky.getPose().x() < -1.3 && areWeWinners)) {
+//                    bearing -= closeSkew;
+//                }
 
-            s_Turret.setSetpoint(bearing);
+                s_Turret.setSetpoint(bearing);
+                timestamp = System.nanoTime();
 
-        } else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
+            } else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
 
-            double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
-            operatorJoystickAngle += 360;
-            operatorJoystickAngle %= 360;
+                double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
+                operatorJoystickAngle += 360;
+                operatorJoystickAngle %= 360;
 
-            operatorJoystickAngle -= s_Swerve.getHeading();
+                operatorJoystickAngle -= s_Swerve.getHeading();
 
-            operatorJoystickAngle += 360;
-            operatorJoystickAngle %= 360;
+                operatorJoystickAngle += 360;
+                operatorJoystickAngle %= 360;
 
                 s_Turret.setSetpoint(operatorJoystickAngle);
 
-        } else {
+            } else {
 
-            if(!m_Driver.isDown(GamepadKeys.Button.A)){
+                if(System.nanoTime() - timestamp > 1e9){
 
-                OmegaPose2D currentPose = s_Sparky.getPose();
+                    OmegaPose2D currentPose = s_Sparky.getPose();
+                    //gtes x and Y value on field
 
-                double theta = Math.toDegrees(Math.atan2(-(targetPose.x() - currentPose.x()), targetPose.y() - currentPose.y()));
-                double turretHeading = theta - s_Sparky.getHeading();
+                    double theta = Math.toDegrees(Math.atan2(-(targetPose.x() - currentPose.x()), targetPose.y() - currentPose.y()));
+                    double turretHeading = theta - s_Sparky.getHeading();
 
-                if(turretHeading < -180) {
-                    turretHeading += 360;
-                }
+                    if(turretHeading < -180) {
+                        turretHeading += 360;
+                    }
 
-                if(turretHeading > 180) {
-                    turretHeading -= 360;
-                }
+                    if(turretHeading > 180) {
+                        turretHeading -= 360;
+                    }
 
-                s_Turret.setSetpoint(turretHeading);
+                    s_Turret.setSetpoint(turretHeading);
 
 //                telem.putTelemetry("Theta", theta);
 //                telem.putTelemetry("X", currentPose.x());
 //                telem.putTelemetry("Y", currentPose.y());
+                }
             }
-
+        } else {
+            s_Turret.setSetpoint(0);
         }
 
         s_Turret.runToSetpoint();

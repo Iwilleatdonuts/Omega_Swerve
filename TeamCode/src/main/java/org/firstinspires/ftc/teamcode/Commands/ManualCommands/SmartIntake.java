@@ -45,36 +45,23 @@ public class SmartIntake {
 
     public void execute(){
 
-        if(s_Intake.getIntakeCurrent() > 7.5 && m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
+        if(s_Intake.getIntakeCurrent() > 7 && m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
             m_Driver.setRumble(300);
-//            timestamp = System.nanoTime();
-//            unjamTime = true;
         }
 
-//        if(unjamTime) {
-//            s_Intake.setSpeed(-1);
-//            if(System.nanoTime() - timestamp > 0.15e9){
-//                unjamTime = false;
-//            }
-//        } else {
-            s_Intake.setSpeed(m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
-//        }
+        s_Intake.setSpeed(m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
-         if (m_Operator.isDown(GamepadKeys.Button.A)){
+        if (m_Operator.isDown(GamepadKeys.Button.A)) {
             s_Feeder.openGate();
             s_Feeder.setFeederSpeed(1);
             s_Intake.setSpeed(1);
         } else if (m_Driver.isDown(GamepadKeys.Button.A)) {
-            if((s_Lime.isValidReaing() && s_Shooter.shooterAtSpeed()) || s_Lime.getGoalDistance() < 0.913) {
+            if (s_Lime.isValidReaing() && s_Lime.getFilteredBearing() < 1) {
                 s_Feeder.openGate();
                 s_Feeder.setFeederSpeed(1);
-                if(s_Lime.getFilteredDistance() > 2) {
-                    s_Intake.setSpeed(0.8);
-                } else {
-                    s_Intake.setSpeed(1);
-                }
+                s_Intake.setSpeed(1);
             }
-        }else if (m_Driver.isDown(GamepadKeys.Button.B)) {
+        } else if (m_Driver.isDown(GamepadKeys.Button.B)) {
             s_Feeder.setFeederSpeed(-1);
             s_Feeder.openGate();
         } else {
@@ -82,7 +69,7 @@ public class SmartIntake {
             s_Feeder.closeGate();
         }
 
-    s_Intake.skadoodle();
+        s_Intake.skadoodle();
 
     }
 }

@@ -112,6 +112,8 @@ public class FunkyGood extends LinearOpMode {
         Thread visionThread = new Thread(visionRunnable, "Vision Thread");
         visionThread.start();
 
+//        telem.enableCameraStrea(s_Lime.);
+
         telem.putTelemetry("FPS", s_Lime.getLimeStatus().getFps());
         telem.updateAll();
 
