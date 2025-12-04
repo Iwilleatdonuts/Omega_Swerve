@@ -85,9 +85,9 @@ public class TurnToPointDrive {
 //            enableAutoRotate = !enableAutoRotate;
 //        }
 
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.Y) || m_Driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
-            s_Swerve.setTargetPose(s_Sparky.getPose());
-        }
+//        if(m_Operator.wasJustPressed(GamepadKeys.Button.Y) || m_Driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
+//            s_Swerve.setTargetPose(s_Sparky.getPose());
+//        }
 
         double xVal = m_Driver.getLeftX();
         double yVal = m_Driver.getLeftY();

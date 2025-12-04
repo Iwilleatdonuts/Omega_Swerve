@@ -1,0 +1,151 @@
+package org.firstinspires.ftc.teamcode.TeleOp;
+
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
+import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
+import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
+import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
+import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
+import org.firstinspires.ftc.teamcode.Utilities.math.MathUtil;
+
+@TeleOp(name = "Fun", group = "Main")
+public class FunShooter extends OpMode {
+
+    private EZTelemetry telem;
+    private OmegaController driver, operator;
+
+    private OTOSSensor s_Sparky;
+
+    private Swerve s_Swerve;
+    private Intake s_Intake;
+    private Feeder s_Feeder;
+    private Turret s_Turret;
+    private Shooter s_Shooter;
+
+    private TurnToPointDrive driveCommand;
+
+    private double shooterAngle;
+    private double shooterSpeed;
+    private double turretAngle;
+
+    @Override
+    public void init() {
+
+        driver = new OmegaController(gamepad1);
+        operator = new OmegaController(gamepad2);
+
+        telem = new EZTelemetry(telemetry);
+
+        s_Sparky = new OTOSSensor(hardwareMap, telem);
+
+        s_Swerve = new Swerve(hardwareMap, telem, s_Sparky);
+        s_Intake = new Intake(hardwareMap, telem);
+        s_Feeder = new Feeder(hardwareMap, telem);
+        s_Turret = new Turret(hardwareMap, telem);
+        s_Shooter = new Shooter(hardwareMap, telem);
+
+        s_Sparky.toggleTelemetry();
+        s_Sparky.configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
+
+        driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, driver, operator);
+
+        driveCommand.initialize();
+
+        shooterAngle = Constants.ShooterConstants.closeAngle;
+        shooterSpeed = 0;
+        turretAngle = 0;
+
+    }
+
+    @Override
+    public void loop() {
+
+        long loopStart = System.nanoTime();
+
+        driveCommand.execute();
+
+        s_Intake.setSpeed(driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
+
+        if(driver.isDown(GamepadKeys.Button.A)) {
+            s_Intake.setSpeed(1);
+            s_Feeder.setFeederSpeed(1);
+            s_Feeder.openGate();
+        } else if (driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) != 0) {
+            s_Feeder.openGate();
+            s_Feeder.setFeederSpeed(-1);
+        } else {
+            s_Feeder.setFeederSpeed(0);
+            s_Feeder.closeGate();
+        }
+
+        if(driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            if(driver.isDown(GamepadKeys.Button.X)) {
+                shooterSpeed += 0.2;
+            }
+
+            if(driver.isDown(GamepadKeys.Button.Y)) {
+                shooterAngle -= 0.2;
+            }
+
+            if(driver.isDown(GamepadKeys.Button.B)) {
+                turretAngle += 20;
+            }
+        }
+
+        if(driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+            if(driver.isDown(GamepadKeys.Button.X)) {
+                shooterSpeed -= 0.2;
+            }
+
+            if(driver.isDown(GamepadKeys.Button.Y)) {
+                shooterAngle += 0.2;
+            }
+
+            if(driver.isDown(GamepadKeys.Button.B)) {
+                turretAngle -= 20;
+            }
+        }
+
+        shooterSpeed = MathUtil.clamp(1, 0, shooterSpeed);
+        shooterAngle = MathUtil.clamp(1, 0, shooterAngle);
+        turretAngle = MathUtil.clamp(100, -100, turretAngle);
+
+        s_Shooter.setShooterSpeed(shooterSpeed);
+        s_Shooter.setShooterAngle(shooterAngle);
+        s_Turret.setSetpoint(turretAngle);
+
+        if (driver.wasJustPressed(GamepadKeys.Button.BACK)) {
+            s_Swerve.zeroGyro();
+            s_Sparky.zeroGyro();
+        }
+
+        telem.updateTelemetry();
+
+        long sleepTime = 20 - ((System.nanoTime() - loopStart) / 1_000_000);
+        if (sleepTime > 0) {
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    @Override
+    public void stop() {
+        s_Sparky.disable();
+    }
+}
