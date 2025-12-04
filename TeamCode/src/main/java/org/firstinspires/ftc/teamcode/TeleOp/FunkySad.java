@@ -94,6 +94,8 @@ public class FunkySad extends LinearOpMode {
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
 
+        s_Lime.toggleTelemetry();
+
         s_Sparky.toggleTelemetry();
         s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.mediumShotPositionForTeleop));
 
@@ -129,6 +131,7 @@ public class FunkySad extends LinearOpMode {
             intakeCommand.execute();
             turretCommand.execute();
             shooterCommand.execute();
+            s_Lime.skadoodle();
 
             if(driver.wasJustPressed(GamepadKeys.Button.BACK)) {
                 s_Swerve.zeroGyro();

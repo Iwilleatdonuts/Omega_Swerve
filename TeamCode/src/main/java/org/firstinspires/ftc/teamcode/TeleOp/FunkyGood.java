@@ -86,6 +86,7 @@ public class FunkyGood extends LinearOpMode {
 
         s_Sparky = new OTOSSensor(hardwareMap, telem);
         s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
+        s_Lime.toggleTelemetry();
 
         s_Lime.startLime();
 
@@ -138,6 +139,7 @@ public class FunkyGood extends LinearOpMode {
             intakeCommand.execute();
             turretCommand.execute();
             shooterCommand.execute();
+            s_Lime.skadoodle();
 
             if(driver.wasJustPressed(GamepadKeys.Button.BACK)) {
                 s_Swerve.zeroGyro();

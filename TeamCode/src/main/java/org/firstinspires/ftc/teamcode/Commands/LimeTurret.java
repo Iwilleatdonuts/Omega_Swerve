@@ -108,7 +108,7 @@ public class LimeTurret {
 
             } else {
 
-                if(System.nanoTime() - timestamp > 1e9){
+                if(System.nanoTime() - timestamp > 0.3e9){
 
                     OmegaPose2D currentPose = s_Sparky.getPose();
                     //gtes x and Y value on field

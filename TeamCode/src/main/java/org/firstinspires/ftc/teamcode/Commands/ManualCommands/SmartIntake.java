@@ -23,8 +23,9 @@ public class SmartIntake {
     private final OmegaController m_Driver;
     private final OmegaController m_Operator;
 
-    private double timestamp;
-    private boolean unjamTime;
+    private double seeTagTimestamp;
+    private double loseTagTimestamp;
+    private boolean allowedToShoot;
 
     public SmartIntake(Intake s_Intake, Feeder s_Feeder, Shooter s_Shooter, Turret s_Turret, Limelight s_Lime, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem){
 
@@ -55,18 +56,41 @@ public class SmartIntake {
             s_Feeder.openGate();
             s_Feeder.setFeederSpeed(1);
             s_Intake.setSpeed(1);
+            allowedToShoot = false;
         } else if (m_Driver.isDown(GamepadKeys.Button.A)) {
-            if (s_Lime.isValidReaing() && s_Lime.getFilteredBearing() < 1) {
+
+            if(s_Lime.isValidReaing() && s_Lime.getGoalBearing() < 2) {
+                seeTagTimestamp = System.nanoTime();
+            } else {
+                loseTagTimestamp = System.nanoTime();
+            }
+
+            if(!allowedToShoot && System.nanoTime() - loseTagTimestamp > 0.3e9) {
+                allowedToShoot = true;
+            }
+
+            if(allowedToShoot && System.nanoTime() - seeTagTimestamp >0.8e9) {
+                allowedToShoot = false;
+            }
+
+            if(allowedToShoot) {
                 s_Feeder.openGate();
                 s_Feeder.setFeederSpeed(1);
                 s_Intake.setSpeed(1);
+            } else {
+                s_Feeder.closeGate();
+                s_Feeder.setFeederSpeed(0);
+                s_Intake.setSpeed(0);
             }
-        } else if (m_Driver.isDown(GamepadKeys.Button.B)) {
+
+        } else if (m_Driver.isDown(GamepadKeys.Button.B) || m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) != 0) {
             s_Feeder.setFeederSpeed(-1);
             s_Feeder.openGate();
+            allowedToShoot = false;
         } else {
             s_Feeder.setFeederSpeed(0);
             s_Feeder.closeGate();
+            allowedToShoot = false;
         }
 
         s_Intake.skadoodle();

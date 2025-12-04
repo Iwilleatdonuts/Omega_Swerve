@@ -50,10 +50,6 @@ public class Limelight {
 
         latestResult = lime.getLatestResult();
 
-//        telem.enableCameraStrea(
-//
-//        , 1);
-
         startLime();
 
     }
