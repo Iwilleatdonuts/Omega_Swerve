@@ -59,7 +59,7 @@ public class SmartIntake {
             allowedToShoot = false;
         } else if (m_Driver.isDown(GamepadKeys.Button.A)) {
 
-            if(s_Lime.isValidReaing() && s_Lime.getGoalBearing() < 2) {
+            if(s_Lime.isValidReaing() && s_Lime.getGoalBearing() < 1.5) {
                 seeTagTimestamp = System.nanoTime();
             } else {
                 loseTagTimestamp = System.nanoTime();
@@ -69,11 +69,11 @@ public class SmartIntake {
                 allowedToShoot = true;
             }
 
-            if(allowedToShoot && System.nanoTime() - seeTagTimestamp >0.8e9) {
+            if(allowedToShoot && System.nanoTime() - seeTagTimestamp >1.5e9) {
                 allowedToShoot = false;
             }
 
-            if(allowedToShoot) {
+            if(allowedToShoot && s_Shooter.shooterAtRoughSpeed()) {
                 s_Feeder.openGate();
                 s_Feeder.setFeederSpeed(1);
                 s_Intake.setSpeed(1);

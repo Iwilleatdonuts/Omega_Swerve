@@ -325,7 +325,6 @@ public class BlueShooterTestMode extends LinearOpMode {
             s_Shooter.setShooterAngle(shooterAngle);
             s_Shooter.setShooterSpeed(output);
 
-
             s_Lime.skadoodle();
 
             if(driver.wasJustPressed(GamepadKeys.Button.BACK)) {
@@ -338,7 +337,8 @@ public class BlueShooterTestMode extends LinearOpMode {
             telem.putTelemetry("Y pose", currentPose.y());
             telem.putTelemetry("Distance", s_Lime.getFilteredDistance());
             telem.putTelemetry("Shooter Target Percentage", shooterSpeed);
-            telem.updateTelemetry();
+            telem.putDashboard("Shooter Speed", s_Shooter.getShooterVelocity());
+            telem.updateAll();
 
             long mainThreadSleep = 20 - ((System.nanoTime() - loopStart) / 1000000);
 

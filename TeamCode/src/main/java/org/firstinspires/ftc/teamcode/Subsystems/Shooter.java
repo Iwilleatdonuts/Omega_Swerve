@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
+import org.firstinspires.ftc.teamcode.Utilities.math.MathUtil;
 import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
 public class Shooter {
@@ -35,8 +37,8 @@ public class Shooter {
 
         this.telem = telem;
 
-        shooterController = new PIDController(0.008, 0.0005, 0);
-//        shooterController = new PIDController(PIDTuning.kP, PIDTuning.kI, PIDTuning.kD);
+        shooterController = new PIDController(0.024, 0.005, 0);
+//        shooterController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
 
         upperShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.upperMotor);
         lowerShooterMotor = hardwareMap.get(DcMotorEx.class, Constants.ShooterConstants.lowerMotor);
@@ -58,9 +60,10 @@ public class Shooter {
 
         angleServo.setPosition(Constants.ShooterConstants.closeAngle);
 
-        shooterFF = new SimpleMotorFeedforward(0.005,1/Constants.ShooterConstants.MAX_TICKS_PER_SEC, 0);
+        //0.005
+    shooterFF = new SimpleMotorFeedforward(0.005,1/Constants.ShooterConstants.MAX_TICKS_PER_SEC, 0);
 
-        speedConstant = -0.009;
+        speedConstant = -0.007;
         targetVelocity = 0;
 
     }
@@ -73,6 +76,8 @@ public class Shooter {
         double PID = shooterController.calculate(getShooterVelocity(), targetVelocity);
 
         double output = ff + PID;
+
+        telem.putDashboard("Target Velocity", targetVelocity);
 
         lowerShooterMotor.setPower(output);
         upperShooterMotor.setPower(output);
@@ -123,7 +128,9 @@ public class Shooter {
     }
 
     public double getShooterAngleFromDistance(double distance) {
-        return -0.355366*distance+1.17768;
+        double foo = -0.355366*distance+1.17768;
+        foo = MathUtil.clamp(1, 0, foo);
+        return foo;
 //        return 1;
     }
 

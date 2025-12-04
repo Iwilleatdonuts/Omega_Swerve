@@ -28,6 +28,7 @@ public class CoolShooters {
     private double shooterAngle;
 
     private final OmegaPose2D targetPose;
+    private double timestamp;
 
     public CoolShooters(Shooter s_Shooter, Limelight s_Lime, OTOSSensor s_Sparky, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem, boolean areWeWinners){
 
@@ -48,6 +49,7 @@ public class CoolShooters {
         shootersGunnaShoot = false;
         shooterPercent = 0;
         shooterAngle = 1;
+        timestamp = System.nanoTime();
 
     }
 
@@ -79,10 +81,11 @@ public class CoolShooters {
 
         if(shootersGunnaShoot){
             if(s_Lime.isValidReaing()){
-                double distance = s_Lime.getGoalDistance();
+                double distance = s_Lime.getFilteredDistance();
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
                 shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
-            } else {
+                timestamp = System.nanoTime();
+            } else if(System.nanoTime() - timestamp > 1e9){
                 double distance = Math.hypot(s_Sparky.getPose().x() - targetPose.x(), s_Sparky.getPose().y() - targetPose.y());
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
                 shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
@@ -97,6 +100,8 @@ public class CoolShooters {
         telem.putTelemetry("Shooter Percentage", shooterPercent);
         telem.putTelemetry("Shooter Velocity", s_Shooter.getShooterVelocity());
         telem.putTelemetry("Shooter Constant", s_Shooter.getShooterConstant());
+        telem.putDashboard("Shooter Velocity", s_Shooter.getShooterVelocity());
+        telem.updateDashboard();
 
     }
 
