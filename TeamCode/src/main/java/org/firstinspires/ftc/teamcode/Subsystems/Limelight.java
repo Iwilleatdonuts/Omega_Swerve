@@ -12,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.Kalman;
 
+import java.util.ArrayDeque;
+
 public class Limelight {
 
     private final EZTelemetry telem;
@@ -34,6 +36,11 @@ public class Limelight {
     private Pose3D limePose;
 
     private double cameraHeading = 0;
+
+    private final ArrayDeque<Double> distanceWindow = new ArrayDeque<>();
+    private static final int WINDOW_SIZE = 5;
+
+//    private double smoothedDistance = 0;
 
     public Limelight(HardwareMap hardwareMap, EZTelemetry telem, boolean areWeWinners) {
 
@@ -109,6 +116,10 @@ public class Limelight {
         return limePose != null ? limePose : new Pose3D(new Position(), new YawPitchRollAngles(AngleUnit.DEGREES, 0, 0, 0, 0));
     }
 
+//    public double getSmoothedDistance() {
+//        return smoothedDistance;
+//    }
+
     public void skadoodle() {
 
         latestResult = getLatestResult();
@@ -116,6 +127,17 @@ public class Limelight {
         if(isValidReaing()) {
             filteredBearing = bearingFilter.update(getGoalBearing());
             filteredDistance = distanceFilter.update(getGoalDistance());
+
+//            distanceWindow.addLast(filteredDistance);
+//
+//
+//            if (distanceWindow.size() > WINDOW_SIZE) {
+//                distanceWindow.removeFirst();
+//            }
+
+//            double sum = 0;
+//            for (double d : distanceWindow) sum += d;
+//            smoothedDistance = sum / distanceWindow.size();
 //            lime.updateRobotOrientation(cameraHeading);
 //            limePose = latestResult.getBotpose_MT2();
         }

@@ -117,13 +117,15 @@ public class Shooter {
 
     public double getShooterSpeedFromDistance(double distance) {
         double power = speedConstant;
-        if(distance > 3.25){
-            power += (-0.0160072 * distance * distance+0.159525 * distance+0.200864);//0.0580873
-        } else if (distance > 0.913) {
-            power += (-0.00949792 * distance * distance * distance+0.0577341 * distance * distance-0.0299664 * distance+0.347056);
-        } else {
-            power = 0.36;
-        }
+//        if(distance > 3.25){
+//            power += (-0.0160072 * distance * distance+0.159525 * distance+0.200864);//0.0580873
+//        } else if (distance > 0.913) {
+//            power += (-0.00949792 * distance * distance * distance+0.0577341 * distance * distance-0.0299664 * distance+0.347056);
+//        } else {
+//            power = 0.36;
+//        }
+
+        power += (-0.00552734 * distance * distance * distance+0.040303 * distance * distance-0.014396 * distance+0.339615);
         return power;
     }
 

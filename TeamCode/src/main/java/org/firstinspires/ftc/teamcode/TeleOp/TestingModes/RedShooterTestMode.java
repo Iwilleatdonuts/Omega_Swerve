@@ -160,6 +160,7 @@ import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
 import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
+import org.firstinspires.ftc.teamcode.Commands.TestTurret;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -224,7 +225,7 @@ public class RedShooterTestMode extends LinearOpMode {
 
     private TurnToPointDrive driveCommand;
     private SmartIntake intakeCommand;
-    private LimeTurret turretCommand;
+    private TestTurret turretCommand;
     private boolean shootersGunnaShoot = false;
 
     private double shooterSpeed = 0;
@@ -257,7 +258,7 @@ public class RedShooterTestMode extends LinearOpMode {
 
         driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
-        turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, s_Sparky, operator, driver, telem, areWeWinners);
+        turretCommand = new TestTurret(s_Swerve, s_Turret, s_Lime, s_Sparky, operator, driver, telem, areWeWinners);
 
         driveCommand.initialize();
         intakeCommand.initialize();
@@ -336,7 +337,8 @@ public class RedShooterTestMode extends LinearOpMode {
             OmegaPose2D currentPose = s_Sparky.getPose();
             telem.putTelemetry("X pose", currentPose.x());
             telem.putTelemetry("Y pose", currentPose.y());
-            telem.putTelemetry("Distance", s_Lime.getFilteredDistance());
+            telem.putTelemetry("ODOM DISTNACE", Math.hypot(s_Sparky.getPose().x() - Constants.TurretConstants.redTarget.x(), s_Sparky.getPose().y() - Constants.TurretConstants.redTarget.y()));
+            telem.putTelemetry("VISION DISTNACVE", s_Lime.getFilteredDistance());
             telem.putTelemetry("Shooter Target Percentage", shooterSpeed);
             telem.updateTelemetry();
 
