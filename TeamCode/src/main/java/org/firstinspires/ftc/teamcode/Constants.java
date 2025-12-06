@@ -1,15 +1,51 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.Utilities.PedroPathing.localization.Encoder.REVERSE;
+
+import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
+import com.pedropathing.ftc.FollowerBuilder;
+import com.pedropathing.ftc.localization.RevHubIMU;
+import com.pedropathing.ftc.localization.constants.TwoWheelConstants;
+import com.pedropathing.paths.PathConstraints;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class Constants {
+
+    public static FollowerConstants followerConstants = new FollowerConstants();
+
+    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
+
+    public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
+            .forwardEncoder_HardwareMapName("intake")
+            .strafeEncoder_HardwareMapName("upperShooter")
+            .forwardEncoderDirection(REVERSE)
+            .strafeEncoderDirection(REVERSE)
+            .forwardTicksToInches(0.0013)
+            .strafeTicksToInches(0.0007)
+            .forwardPodY(-1.54921)
+            .strafePodX(-5.97835)
+            .IMU_HardwareMapName("IMU")
+            .IMU_Orientation(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT))
+            .customIMU(new RevHubIMU());
+
+    public static Follower createFollower(HardwareMap hardwareMap, Swerve swerve) {
+        return new FollowerBuilder(followerConstants, hardwareMap)
+                .pathConstraints(pathConstraints)
+                .twoWheelLocalizer(localizerConstants)
+                .setDrivetrain(swerve)
+                .build();
+    }
 
     public static final class DriveTrainConstants {
 

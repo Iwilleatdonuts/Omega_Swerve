@@ -1,20 +1,19 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.pedropathing.Drivetrain;
+import com.pedropathing.math.Vector;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry; // kept for constructor compatibility
+import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
-import org.firstinspires.ftc.teamcode.Utilities.math.geometry.Rotation2d;
-import org.firstinspires.ftc.teamcode.Utilities.math.kinematics.ChassisSpeeds;
+import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.drivetrains.SwerveConstants;
 
-public class Swerve{
+public class Swerve extends Drivetrain{
 
-    @SuppressWarnings("unused")
     private final EZTelemetry telem;
 
     private OTOSSensor sparky;
@@ -28,34 +27,13 @@ public class Swerve{
 
     //max theoretical speed is 1.93m/s
     //max theoretical angular velocity is 5.20884002936 radians per seconds;
-    private final double MAX_SPEED_MPS = 1.93;
+    private double MAX_SPEED_MPS = 1.93;
     private final double MAX_ANGULAR_VELOCITY_RAD_PER_SECONDS = 5.20884002936;
 
     private boolean enableTelemetry;
 
     public Swerve(HardwareMap hardwareMap, EZTelemetry telem){
         this.telem = telem;
-
-        mods[0] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants);
-        mods[1] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod1.modConstants);
-        mods[2] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod2.modConstants);
-        mods[3] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod3.modConstants);
-
-        RevHubOrientationOnRobot.LogoFacingDirection logo = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection usb = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logo, usb);
-
-        imu = hardwareMap.get(IMU.class, "imu");
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
-
-        targetPose = new OmegaPose2D(0,0,0);
-
-        enableTelemetry = false;
-    }
-
-    public Swerve(HardwareMap hardwareMap, EZTelemetry telem, OTOSSensor sparky){
-        this.telem = telem;
-        this.sparky = sparky;
 
         mods[0] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants);
         mods[1] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod1.modConstants);
@@ -240,6 +218,85 @@ public class Swerve{
 
     public OmegaPose2D getTargetPose() {
         return targetPose;
+    }
+
+    @Override
+    public double[] calculateDrive(Vector correctivePower, Vector headingPower, Vector pathingPower, double robotHeading) {
+        double x = correctivePower.getXComponent() + headingPower.getXComponent() + pathingPower.getXComponent();
+        double y = correctivePower.getYComponent() + headingPower.getYComponent() + pathingPower.getYComponent();
+        double rot = headingPower.getTheta();
+        return new double[] {x, y, rot};
+    }
+
+    @Override
+    public void updateConstants() {
+    }
+
+    @Override
+    public void breakFollowing() {
+        for (SwerveModule pod : mods) {
+            pod.setDrivePower(0);
+        }
+    }
+
+    @Override
+    public void runDrive(double[] drivePowers) {
+        drive(drivePowers[0], drivePowers[1], drivePowers[2], true, false);
+    }
+
+    @Override
+    public void startTeleopDrive() {
+    }
+
+    @Override
+    public void startTeleopDrive(boolean brakeMode) {
+    }
+
+    @Override
+    public double xVelocity() {
+        return MAX_SPEED_MPS;
+    }
+
+    @Override
+    public double yVelocity() {
+        return MAX_SPEED_MPS;
+    }
+
+    @Override
+    public void setXVelocity(double xMovement) {
+        MAX_SPEED_MPS = xMovement;
+    }
+
+    @Override
+    public void setYVelocity(double yMovement) {
+        MAX_SPEED_MPS = yMovement;
+    }
+
+    @Override
+    public double getVoltage() {
+        return getNominalVoltage();
+    }
+
+    @Override
+    public String debugString() {
+//        return "Swerve{" +
+//                "\nforward input=" + lastForward +
+//                "\n, strafe input=" + lastStrafe +
+//                "\n, rotation input=" + lastRotation +
+//                "\n, unrotated translationVector x" + lastTranslationalVector.getXComponent() +
+//                "\n, unrotated translationVector y" + lastTranslationalVector.getYComponent() +
+//                "\n, correctivePower x" + lastCorrectivePower.getXComponent() +
+//                "\n, correctivePower y" + lastCorrectivePower.getYComponent() +
+//                "\n, pathingPower x" + lastPathingPower.getXComponent() +
+//                "\n, pathingPower y" + lastPathingPower.getYComponent() +
+//                "\n, headingPower magnitude" + lastHeadingPower.getMagnitude() +
+//                "\n, headingPower direction" + lastHeadingPower.getTheta() +
+//                "\nrobot heading" + lastHeading +
+//                ", leftFront=" + leftFrontPod.debugString() +
+//                ", rightFront=" + rightFrontPod.debugString() +
+//                ", rightRear=" + rightRearPod.debugString() +
+//                "\n}";
+        return "Hi";
     }
 
     public void toggleTelemetry() {
