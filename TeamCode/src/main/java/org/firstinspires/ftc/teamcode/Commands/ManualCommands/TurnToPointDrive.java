@@ -17,7 +17,6 @@ public class TurnToPointDrive {
 
     private final EZTelemetry telem;
     private final Swerve s_Swerve;
-    private final OTOSSensor s_Sparky;
     private final OmegaController m_Driver;
     private final OmegaController m_Operator;
 
@@ -36,11 +35,10 @@ public class TurnToPointDrive {
 
     private double timestamp;
 
-    public TurnToPointDrive(EZTelemetry telem, Swerve s_Swerve, OTOSSensor s_Sparky, OmegaController m_Driver, OmegaController m_Operator){
+    public TurnToPointDrive(EZTelemetry telem, Swerve s_Swerve, OmegaController m_Driver, OmegaController m_Operator){
 
         this.telem = telem;
         this.s_Swerve = s_Swerve;
-        this.s_Sparky = s_Sparky;
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
 
@@ -109,12 +107,12 @@ public class TurnToPointDrive {
 
         if(Math.hypot(rightX, rightY) > 0.9 || enableAutoRotate) {
 
-            double currentHeading = s_Sparky.getHeading();
+            double currentHeading = s_Swerve.getHeading();
             if(Math.abs(currentHeading - turnAngle) > 0.5) {
                 if(xLimited != 0 || yLimited != 0) {
-                    rotationOutput = -dynamicAnglePID.calculate(s_Sparky.getHeading(), turnAngle);
+                    rotationOutput = -dynamicAnglePID.calculate(s_Swerve.getHeading(), turnAngle);
                 } else {
-                    rotationOutput = -anglePID.calculate(s_Sparky.getHeading(), turnAngle);
+                    rotationOutput = -anglePID.calculate(s_Swerve.getHeading(), turnAngle);
                 }
             }
         }

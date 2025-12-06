@@ -60,7 +60,7 @@ public class FunShooter extends OpMode {
         s_Sparky.toggleTelemetry();
         s_Sparky.configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
 
-        driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, driver, operator);
+        driveCommand = new TurnToPointDrive(telem, s_Swerve, driver, operator);
 
         driveCommand.initialize();
 

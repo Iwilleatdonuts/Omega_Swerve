@@ -256,7 +256,7 @@ public class RedShooterTestMode extends LinearOpMode {
         s_Sparky.toggleTelemetry();
         s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.mediumShotPositionForTeleop));
 
-        driveCommand = new TurnToPointDrive(telem, s_Swerve, s_Sparky, driver, operator);
+        driveCommand = new TurnToPointDrive(telem, s_Swerve, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
         turretCommand = new TestTurret(s_Swerve, s_Turret, s_Lime, s_Sparky, operator, driver, telem, areWeWinners);
 
