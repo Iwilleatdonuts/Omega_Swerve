@@ -17,21 +17,14 @@ public class TurnToPointDrive {
     private final Swerve s_Swerve;
     private final OmegaController m_Driver;
     private final OmegaController m_Operator;
-
-    private boolean slowMode;
-    private final ProfiledPIDController profiledAnglePID;
     private final PIDController anglePID;
     private final PIDController dynamicAnglePID;
-
-    private boolean enableAutoRotate;
     private double turnAngle;
 
     private final SlewRateLimiter xLimiter;
     private final SlewRateLimiter yLimiter;
 
     private final ElapsedTime timer;
-
-    private double timestamp;
 
     public TurnToPointDrive(EZTelemetry telem, Swerve s_Swerve, OmegaController m_Driver, OmegaController m_Operator){
 
@@ -40,14 +33,7 @@ public class TurnToPointDrive {
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
 
-        slowMode = false;
-        enableAutoRotate = false;
-
         turnAngle = 0;
-
-        profiledAnglePID = new ProfiledPIDController(0.006, 0.02, 0.00015, new TrapezoidProfile.Constraints(4, 2));
-        profiledAnglePID.setIZone(40);
-        profiledAnglePID.enableContinuousInput(0, 360);
 
         dynamicAnglePID = new PIDController(0.0025, 0.015, 0.0001);
         dynamicAnglePID.setIZone(40);
@@ -72,23 +58,13 @@ public class TurnToPointDrive {
 
     public void execute(){
 
-        timestamp = timer.milliseconds();
+        double timestamp = timer.milliseconds();
 
         m_Driver.readButtons();
         m_Operator.readButtons();
 
-//        if(m_Driver.wasJustPressed(GamepadKeys.Button.BACK)){
-//            enableAutoRotate = !enableAutoRotate;
-//        }
-
-//        if(m_Operator.wasJustPressed(GamepadKeys.Button.Y) || m_Driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)){
-//            s_Swerve.setTargetPose(s_Sparky.getPose());
-//        }
-
         double xVal = m_Driver.getLeftX();
         double yVal = m_Driver.getLeftY();
-
-        slowMode = m_Driver.isDown(GamepadKeys.Button.LEFT_STICK_BUTTON) || m_Driver.isDown(GamepadKeys.Button.RIGHT_STICK_BUTTON);
 
         double xLimited = xLimiter.calculate(xVal);
         double yLimited = yLimiter.calculate(yVal);
@@ -103,7 +79,7 @@ public class TurnToPointDrive {
             turnAngle = (turnAngle + 180) % 360;
         }
 
-        if(Math.hypot(rightX, rightY) > 0.9 || enableAutoRotate) {
+        if(Math.hypot(rightX, rightY) > 0.9) {
 
             double currentHeading = s_Swerve.getHeading();
             if(Math.abs(currentHeading - turnAngle) > 0.5) {
@@ -115,10 +91,8 @@ public class TurnToPointDrive {
             }
         }
 
-        s_Swerve.drive(xLimited, yLimited, rotationOutput, true, slowMode);
+        s_Swerve.setTeleOpDrive(xLimited, yLimited, rotationOutput);
 
-//        telem.putTelemetry("TUrn Angle", turnAngle);
-//        telem.putTelemetry("Target spec", profiledAnglePID.getGoal().position);
         telem.putTelemetry("CLT", timer.milliseconds() - timestamp);
     }
 

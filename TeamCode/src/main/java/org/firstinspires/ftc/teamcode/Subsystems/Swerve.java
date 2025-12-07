@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import static com.pedropathing.math.MathFunctions.findNormalizingScaling;
+
+import com.pedropathing.Drivetrain;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.Vector;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -12,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.drivetrains.CustomD
 import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.localization.constants.TwoWheelConstants;
 import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.localization.localizers.TwoWheelLocalizer;
 
-public class Swerve extends CustomDrivetrain {
+public class Swerve extends Drivetrain {
 
     private final EZTelemetry telem;
 
@@ -27,6 +31,14 @@ public class Swerve extends CustomDrivetrain {
     private boolean enableTelemetry;
 
     private TwoWheelLocalizer localizer;
+
+
+    protected Vector lastTranslationalVector = new Vector();
+    protected Vector lastHeadingPower = new Vector();
+    protected Vector lastCorrectivePower = new Vector();
+    protected Vector lastPathingPower = new Vector();
+    protected double lastHeading = 0;
+
 
     public Swerve(HardwareMap hardwareMap, EZTelemetry telem){
 
@@ -55,11 +67,6 @@ public class Swerve extends CustomDrivetrain {
             mods[i].setModuleSetpoint(mods[i].getDegrees(true));
             mods[i].setTurnSpeed(0);
         }
-    }
-
-    @Override
-    public void arcadeDrive(double forward, double strafe, double rotation) {
-        drive(strafe, forward, rotation, false, false);
     }
 
     public void drive(double xVal, double yVal, double rVal, boolean fieldRelative, boolean slowMode){
@@ -211,6 +218,64 @@ public class Swerve extends CustomDrivetrain {
     }
 
     @Override
+    public double[] calculateDrive(Vector correctivePower, Vector headingPower, Vector pathingPower, double robotHeading) {
+        if (correctivePower.getMagnitude() >= maxPowerScaling) {
+            correctivePower.setMagnitude(maxPowerScaling);
+            return new double[] {
+                    correctivePower.getXComponent(),
+                    correctivePower.getYComponent(),
+                    0
+            };
+        }
+        if (headingPower.getMagnitude() > maxPowerScaling)
+            headingPower.setMagnitude(maxPowerScaling);
+        if (pathingPower.getMagnitude() > maxPowerScaling)
+            pathingPower.setMagnitude(maxPowerScaling);
+
+        if (scaleDown(correctivePower, headingPower, true)) {
+            headingPower = scaledVector(correctivePower, headingPower, true);
+            return new double[] {
+                    correctivePower.getXComponent(),
+                    correctivePower.getYComponent(),
+                    headingPower.dot(new Vector(-1, robotHeading))
+            };
+        } else {
+            Vector combinedStatic = correctivePower.plus(headingPower);
+            if (scaleDown(combinedStatic, pathingPower, false)) {
+                pathingPower = scaledVector(combinedStatic, pathingPower, false);
+                Vector combinedMovement = correctivePower.plus(pathingPower);
+                return new double[] {
+                        combinedMovement.getXComponent(),
+                        combinedMovement.getYComponent(),
+                        headingPower.dot(new Vector(-1, robotHeading))
+                };
+            } else {
+                Vector combinedMovement = correctivePower.plus(pathingPower);
+                return new double[] {
+                        combinedMovement.getXComponent(),
+                        combinedMovement.getYComponent(),
+                        headingPower.dot(new Vector(-1, robotHeading))
+                };
+            }
+        }
+    }
+
+    private boolean scaleDown(Vector staticVector, Vector variableVector, boolean useMinus) {
+        return (staticVector.plus(variableVector).getMagnitude() >= maxPowerScaling) ||
+                (useMinus && staticVector.minus(variableVector).getMagnitude() >= maxPowerScaling);
+    }
+
+    private Vector scaledVector(Vector staticVector, Vector variableVector, boolean useMinus) {
+        double scalingFactor = useMinus
+                ? Math.min(
+                findNormalizingScaling(staticVector, variableVector, maxPowerScaling),
+                findNormalizingScaling(staticVector, variableVector.times(-1), maxPowerScaling)
+        )
+                : findNormalizingScaling(staticVector, variableVector, maxPowerScaling);
+        return variableVector.times(scalingFactor);
+    }
+
+    @Override
     public void updateConstants() {
     }
 
@@ -221,12 +286,39 @@ public class Swerve extends CustomDrivetrain {
         }
     }
 
+    @Deprecated
+    @Override
+    public void runDrive(double[] drivePowers) {
+    }
+
+    @Override
+    public void runDrive(Vector correctivePower, Vector headingPower, Vector pathingPower, double robotHeading) {
+        double[] calculatedDrive = calculateDrive(correctivePower, headingPower, pathingPower, robotHeading);
+
+        Vector translationalVector = new Vector();
+        translationalVector.setOrthogonalComponents(calculatedDrive[0], calculatedDrive[1]);
+
+        lastPathingPower = pathingPower;
+        lastCorrectivePower = correctivePower;
+        lastTranslationalVector = translationalVector;
+        lastHeadingPower = headingPower;
+        lastHeading = robotHeading;
+
+        translationalVector.rotateVector(-robotHeading);
+        drive(translationalVector.getXComponent(),
+                translationalVector.getYComponent(),
+                calculatedDrive[2],
+                false,
+                false);
+    }
+
     @Override
     public void startTeleopDrive() {
     }
 
     @Override
     public void startTeleopDrive(boolean brakeMode) {
+
     }
 
     @Override
@@ -274,6 +366,10 @@ public class Swerve extends CustomDrivetrain {
 //                ", rightRear=" + rightRearPod.debugString() +
 //                "\n}";
         return "Hi";
+    }
+
+    public void setTeleOpDrive(double forward, double strafe, double turn) {
+        drive(forward, strafe, turn, true, false);
     }
 
     public void toggleTelemetry() {
