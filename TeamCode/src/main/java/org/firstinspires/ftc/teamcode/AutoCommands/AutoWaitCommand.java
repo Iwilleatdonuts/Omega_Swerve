@@ -1,15 +1,5 @@
 package org.firstinspires.ftc.teamcode.AutoCommands;
 
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
-import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
-import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
-import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
-import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
-import org.firstinspires.ftc.teamcode.Utilities.WaypointFollower;
-
 public class AutoWaitCommand {
 
     private int phase;

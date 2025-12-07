@@ -155,9 +155,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
-import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TestTurret;
@@ -247,7 +244,7 @@ public class RedShooterTestMode extends LinearOpMode {
 
         s_Lime.startLime();
 
-        s_Swerve = new Swerve(hardwareMap, telem, s_Sparky);
+        s_Swerve = new Swerve(hardwareMap, telem);
         s_Intake = new Intake(hardwareMap, telem);
         s_Feeder = new Feeder(hardwareMap, telem);
         s_Turret = new Turret(hardwareMap, telem);

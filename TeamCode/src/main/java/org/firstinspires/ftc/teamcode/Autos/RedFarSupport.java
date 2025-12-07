@@ -3,11 +3,8 @@ package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoCloseShot;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCornerIntake;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoFarShot;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoSwoopyIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurret;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoWaitCommand;
@@ -40,7 +37,7 @@ public class RedFarSupport extends LinearOpMode {
         s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.farStart));
         s_Sparky.toggleTelemetry();
 
-        Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Sparky);
+        Swerve s_Swerve = new Swerve(hardwareMap, telem);
         Shooter s_Shooter = new Shooter(hardwareMap, telem);
         Turret s_Turret = new Turret(hardwareMap, telem);
         Intake s_Intake = new Intake(hardwareMap, telem);

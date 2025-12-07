@@ -6,14 +6,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-import org.firstinspires.ftc.teamcode.Utilities.math.controller.HolonomicDriveController;
-import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
-import org.firstinspires.ftc.teamcode.Utilities.math.controller.ProfiledPIDController;
-import org.firstinspires.ftc.teamcode.Utilities.math.geometry.Rotation2d;
-import org.firstinspires.ftc.teamcode.Utilities.math.kinematics.ChassisSpeeds;
-import org.firstinspires.ftc.teamcode.Utilities.math.trajectory.TrapezoidProfile;
 
 public class DriveToDashboardPoint {
 
@@ -35,7 +29,7 @@ public class DriveToDashboardPoint {
         this.s_Intake = s_Intake;
         this.s_Sparky = s_Sparky;
 
-        targetPosition = s_Swerve.getTargetPose();
+//        targetPosition = s_Swerve.getTargetPose();
 
         driveController = new AutoDriveController();
     }

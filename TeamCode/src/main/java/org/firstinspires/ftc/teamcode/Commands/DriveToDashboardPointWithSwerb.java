@@ -30,7 +30,7 @@ public class DriveToDashboardPointWithSwerb {
         this.s_Intake = s_Intake;
         this.s_Sparky = s_Sparky;
 
-        targetPosition = s_Swerve.getTargetPose();
+//        targetPosition = s_Swerve.getTargetPose();
 
         driveController = new AutoDriveController();
         waypointFollower = new WaypointFollower(driveController);

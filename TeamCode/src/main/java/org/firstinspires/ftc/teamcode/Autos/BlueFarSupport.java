@@ -37,7 +37,7 @@ public class BlueFarSupport extends LinearOpMode {
         s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.farStart));
         s_Sparky.toggleTelemetry();
 
-        Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Sparky);
+        Swerve s_Swerve = new Swerve(hardwareMap, telem);
         Shooter s_Shooter = new Shooter(hardwareMap, telem);
         Turret s_Turret = new Turret(hardwareMap, telem);
         Intake s_Intake = new Intake(hardwareMap, telem);

@@ -88,7 +88,7 @@ public class FunkySad extends LinearOpMode {
 
         s_Lime.startLime();
 
-        s_Swerve = new Swerve(hardwareMap, telem, s_Sparky);
+        s_Swerve = new Swerve(hardwareMap, telem);
         s_Intake = new Intake(hardwareMap, telem);
         s_Feeder = new Feeder(hardwareMap, telem);
         s_Turret = new Turret(hardwareMap, telem);

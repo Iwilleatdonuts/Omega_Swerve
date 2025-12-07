@@ -9,8 +9,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
-import org.firstinspires.ftc.teamcode.Utilities.math.controller.HolonomicDriveController;
-import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
 public class AutoCloseShot {
 

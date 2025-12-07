@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.pedropathing.Drivetrain;
-import com.pedropathing.math.Vector;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -9,21 +8,16 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
-import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.drivetrains.SwerveConstants;
+import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.drivetrains.CustomDrivetrain;
+import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.localization.constants.TwoWheelConstants;
+import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.localization.localizers.TwoWheelLocalizer;
 
-public class Swerve extends Drivetrain{
+public class Swerve extends CustomDrivetrain {
 
     private final EZTelemetry telem;
 
-    private OTOSSensor sparky;
-
     private final SwerveModule[] mods = new SwerveModule[4];
     private final IMU imu;
-    private OmegaPose2D targetPose;
-
-    private final double[] speeds = new double[4];
-    private final double[] angles = new double[4];
 
     //max theoretical speed is 1.93m/s
     //max theoretical angular velocity is 5.20884002936 radians per seconds;
@@ -32,7 +26,12 @@ public class Swerve extends Drivetrain{
 
     private boolean enableTelemetry;
 
+    private TwoWheelLocalizer localizer;
+
     public Swerve(HardwareMap hardwareMap, EZTelemetry telem){
+
+        localizer = new TwoWheelLocalizer(hardwareMap, new TwoWheelConstants());
+
         this.telem = telem;
 
         mods[0] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants);
@@ -47,8 +46,6 @@ public class Swerve extends Drivetrain{
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        targetPose = new OmegaPose2D(0,0,0);
-
         enableTelemetry = false;
     }
 
@@ -58,6 +55,11 @@ public class Swerve extends Drivetrain{
             mods[i].setModuleSetpoint(mods[i].getDegrees(true));
             mods[i].setTurnSpeed(0);
         }
+    }
+
+    @Override
+    public void arcadeDrive(double forward, double strafe, double rotation) {
+        drive(strafe, forward, rotation, false, false);
     }
 
     public void drive(double xVal, double yVal, double rVal, boolean fieldRelative, boolean slowMode){
@@ -194,38 +196,18 @@ public class Swerve extends Drivetrain{
     }
 
     public double getHeading() {
-        if (sparky == null) {
             double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
             rotation += 360.0;
             rotation %= 360.0;
             return rotation;
-        } else {
-            return sparky.getHeading();
-        }
     }
 
     public void zeroGyro() {
         imu.resetYaw();
     }
 
-    public void setTargetPose(double newX, double newY, double newH) {
-        targetPose = new OmegaPose2D(newX, newY, newH);
-    }
-
-    public void setTargetPose(OmegaPose2D newPose) {
-        targetPose = newPose;
-    }
-
-    public OmegaPose2D getTargetPose() {
-        return targetPose;
-    }
-
-    @Override
-    public double[] calculateDrive(Vector correctivePower, Vector headingPower, Vector pathingPower, double robotHeading) {
-        double x = correctivePower.getXComponent() + headingPower.getXComponent() + pathingPower.getXComponent();
-        double y = correctivePower.getYComponent() + headingPower.getYComponent() + pathingPower.getYComponent();
-        double rot = headingPower.getTheta();
-        return new double[] {x, y, rot};
+    public Pose getPose() {
+        return localizer.getPose();
     }
 
     @Override
@@ -237,11 +219,6 @@ public class Swerve extends Drivetrain{
         for (SwerveModule pod : mods) {
             pod.setDrivePower(0);
         }
-    }
-
-    @Override
-    public void runDrive(double[] drivePowers) {
-        drive(drivePowers[0], drivePowers[1], drivePowers[2], true, false);
     }
 
     @Override
@@ -305,19 +282,17 @@ public class Swerve extends Drivetrain{
 
     public void skadoodle(){
 
-        if(enableTelemetry) {
+        localizer.updateEncoders();
+        localizer.update();
 
-            telem.putTelemetry("Robot Heading", getHeading());
-            telem.putTelemetry("Target Pose X", getTargetPose().x());
-            telem.putTelemetry("Target Pose Y", getTargetPose().y());
-            telem.putTelemetry("Target Pose H", getTargetPose().r());
+//        if(enableTelemetry) {
 
-            telem.putDashboard("Robot Heading", getHeading());
-            telem.putDashboard("Target Pose X", getTargetPose().x());
-            telem.putDashboard("Target Pose Y", getTargetPose().y());
-            telem.putDashboard("Target Pose H", getTargetPose().r());
+            Pose pose = getPose();
+            telem.putTelemetry("X Pose", pose.getX());
+            telem.putTelemetry("Y Pose", pose.getY());
+            telem.putTelemetry("Heading", Math.toDegrees(pose.getHeading()));
 
-        }
+//        }
 
     }
 }

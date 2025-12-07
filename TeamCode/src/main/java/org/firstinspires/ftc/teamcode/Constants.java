@@ -35,9 +35,9 @@ public class Constants {
             .strafeTicksToInches(0.0007)
             .forwardPodY(-1.54921)
             .strafePodX(-5.97835)
-            .IMU_HardwareMapName("IMU")
-            .IMU_Orientation(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT))
-            .customIMU(new RevHubIMU());
+            .IMU_HardwareMapName("imu")
+            .IMU_Orientation(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
+//            .customIMU(new RevHubIMU());
 
     public static Follower createFollower(HardwareMap hardwareMap, Swerve swerve) {
         return new FollowerBuilder(followerConstants, hardwareMap)

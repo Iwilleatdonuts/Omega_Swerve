@@ -126,16 +126,16 @@ public class TwoWheelConstants {
      * This sets the default values for the this.
      */
     public void defaults() {
-        forwardTicksToInches = .001989436789;
-        strafeTicksToInches = .001989436789;
-        forwardPodY = 1;
-        strafePodX = -2.5;
+        forwardTicksToInches = 0.0013;
+        strafeTicksToInches = 0.0007;
+        forwardPodY = -1.54921;
+        strafePodX = -5.97835;
         IMU_HardwareMapName = "imu";
-        forwardEncoder_HardwareMapName = "leftFront";
-        strafeEncoder_HardwareMapName = "rightRear";
-        IMU_Orientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.LEFT);
+        forwardEncoder_HardwareMapName = "intake";
+        strafeEncoder_HardwareMapName = "upperShooter";
+        IMU_Orientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT);
         forwardEncoderDirection = Encoder.REVERSE;
-        strafeEncoderDirection = Encoder.FORWARD;
+        strafeEncoderDirection = Encoder.REVERSE;
         imu = new RevHubIMU();
     }
 }

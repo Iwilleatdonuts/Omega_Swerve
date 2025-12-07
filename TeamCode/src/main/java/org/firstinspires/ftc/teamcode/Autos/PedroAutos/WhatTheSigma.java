@@ -16,20 +16,19 @@ import com.pedropathing.util.Timer;
 @Autonomous(name = "WHAT THE SIGGY SIGMA")
 public class WhatTheSigma extends LinearOpMode {
 
-
     EZTelemetry telem = new EZTelemetry(telemetry);
 
-    Swerve swerve = new Swerve(hardwareMap, telem);
-    Follower follower = Constants.createFollower(hardwareMap, swerve);
+    Swerve swerve;
+    Follower follower;
 
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
 
-    private final Pose startPose = new Pose(28.5, 128, Math.toRadians(180)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(60, 85, Math.toRadians(135)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose pickup1Pose = new Pose(37, 121, Math.toRadians(0)); // Highest (First Set) of Artifacts from the Spike Mark.
-    private final Pose pickup2Pose = new Pose(43, 130, Math.toRadians(0)); // Middle (Second Set) of Artifacts from the Spike Mark.
-    private final Pose pickup3Pose = new Pose(49, 135, Math.toRadians(0));
+    private final Pose startPose = new Pose(23.211028632025453, 119.8727465535525, Math.toRadians(180)); // Start Pose of our robot.
+    private final Pose scorePose = new Pose(37.41251325556733, 106.58748674443267, Math.toRadians(180)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose pickup1Pose = new Pose(44.74231177094379, 83.98727465535524, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
+    private final Pose pickup2Pose = new Pose(44.74231177094379, 60.01272534464476, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
+    private final Pose pickup3Pose = new Pose(44.74231177094379, 36.34358430540827, Math.toRadians(180));
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
@@ -164,6 +163,13 @@ public class WhatTheSigma extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        swerve = new Swerve(hardwareMap, telem);
+        follower = Constants.createFollower(hardwareMap, swerve);
+
+        pathTimer = new Timer();
+        actionTimer = new Timer();
+        opmodeTimer = new Timer();
 
         buildPaths();
 
