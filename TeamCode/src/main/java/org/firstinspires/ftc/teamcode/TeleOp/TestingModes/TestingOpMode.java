@@ -34,9 +34,6 @@ public class TestingOpMode extends LinearOpMode {
         Intake s_Intake = new Intake(hardwareMap, telem);
         Turret s_Turret = new Turret(hardwareMap, telem);
         Shooter s_Shooter = new Shooter(hardwareMap, telem);
-        OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telem);
-
-        s_Sparky.configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
 
 //        AprilVisionOnTurret s_Vision = new AprilVisionOnTurret(hardwareMap, telem, true);
         Limelight s_Lime = new Limelight(hardwareMap, telem, true);
@@ -54,7 +51,6 @@ public class TestingOpMode extends LinearOpMode {
         waitForStart();
 
         if(isStopRequested()) {
-            s_Sparky.disable();
         }
         runtime.reset();
 
@@ -71,7 +67,6 @@ public class TestingOpMode extends LinearOpMode {
                 s_Mod1.toggleTelemetry();
                 s_Mod2.toggleTelemetry();
                 s_Mod3.toggleTelemetry();
-                s_Sparky.toggleTelemetry();
                 s_Intake.toggleTelemetry();
                 s_Turret.toggleTelemetry();
                 s_Shooter.toggleTelemetry();
@@ -199,6 +194,5 @@ public class TestingOpMode extends LinearOpMode {
             telem.updateAll();
 
         }
-        s_Sparky.disable();
     }
 }

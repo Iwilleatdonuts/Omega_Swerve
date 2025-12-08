@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.PedroConstants;
+
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
@@ -24,11 +26,11 @@ public class WhatTheSigma extends LinearOpMode {
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
 
-    private final Pose startPose = new Pose(23.211028632025453, 119.8727465535525, Math.toRadians(180)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(37.41251325556733, 106.58748674443267, Math.toRadians(180)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose pickup1Pose = new Pose(44.74231177094379, 83.98727465535524, Math.toRadians(180)); // Highest (First Set) of Artifacts from the Spike Mark.
-    private final Pose pickup2Pose = new Pose(44.74231177094379, 60.01272534464476, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
-    private final Pose pickup3Pose = new Pose(44.74231177094379, 36.34358430540827, Math.toRadians(180));
+    private final Pose startPose = new Pose(0, 0, 0); // Start Pose of our robot.
+    private final Pose scorePose = new Pose(20, 0, 0); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose pickup1Pose = new Pose(20, 20, 0); // Highest (First Set) of Artifacts from the Spike Mark.
+    private final Pose pickup2Pose = new Pose(20, 40, Math.toRadians(180)); // Middle (Second Set) of Artifacts from the Spike Mark.
+    private final Pose pickup3Pose = new Pose(20, 60, 0);
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
@@ -165,7 +167,9 @@ public class WhatTheSigma extends LinearOpMode {
     public void runOpMode() {
 
         swerve = new Swerve(hardwareMap, telem);
-        follower = Constants.createFollower(hardwareMap, swerve);
+        follower = PedroConstants.createFollower(hardwareMap, swerve);
+
+        follower.updatePose();
 
         pathTimer = new Timer();
         actionTimer = new Timer();

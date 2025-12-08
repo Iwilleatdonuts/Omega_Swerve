@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.Utilities.PedroPathing.Tuning.follower;
+
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,16 +12,15 @@ import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
 import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.PedroConstants;
 
 @TeleOp(name = "Ginger Drive Core", group = "Main")
 public class FunkyGood extends LinearOpMode {
@@ -59,7 +62,6 @@ public class FunkyGood extends LinearOpMode {
     private EZTelemetry telem;
     private OmegaController driver;
     private OmegaController operator;
-
     private Limelight s_Lime;
 
     private Swerve s_Swerve;
@@ -72,6 +74,8 @@ public class FunkyGood extends LinearOpMode {
     private SmartIntake intakeCommand;
     private LimeTurret turretCommand;
     private CoolShooters shooterCommand;
+
+    private Follower follower;
 
     @Override
     public void runOpMode(){
@@ -93,6 +97,8 @@ public class FunkyGood extends LinearOpMode {
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
 
+        follower = PedroConstants.createFollower(hardwareMap, s_Swerve);
+        follower.setStartingPose(new Pose(72,72));
 //        s_Sparky.toggleTelemetry();
 //        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.mediumShotPositionForTeleop));
 
@@ -137,6 +143,12 @@ public class FunkyGood extends LinearOpMode {
 //            shooterCommand.execute();
             s_Lime.skadoodle();
             s_Swerve.skadoodle();
+
+            follower.update();
+            Pose currentPose = follower.getPose();
+            telem.putTelemetry("1 X Pose", currentPose.getX());
+            telem.putTelemetry("1 Y Pose", currentPose.getY());
+            telem.putTelemetry("1 Heading", Math.toDegrees(currentPose.getHeading()));
 
             if(driver.wasJustPressed(GamepadKeys.Button.BACK)) {
                 s_Swerve.zeroGyro();

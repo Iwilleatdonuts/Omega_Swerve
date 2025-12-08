@@ -200,6 +200,7 @@ public class SwerveModule {
 
         telem.putTelemetry(keyRaw, raw);
         telem.putTelemetry(keyDeg, deg);
+        telem.putTelemetry("Module " + modNumber +" Voltage", moduleHeading.getVoltage());
 
         telem.putDashboard(keyRaw, raw);
         telem.putDashboard(keyDeg, deg);

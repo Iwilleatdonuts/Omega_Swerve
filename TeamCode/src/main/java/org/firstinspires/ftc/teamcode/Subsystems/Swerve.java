@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import static com.pedropathing.math.MathFunctions.findNormalizingScaling;
 
 import com.pedropathing.Drivetrain;
-import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,9 +11,6 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.drivetrains.CustomDrivetrain;
-import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.localization.constants.TwoWheelConstants;
-import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.localization.localizers.TwoWheelLocalizer;
 
 public class Swerve extends Drivetrain {
 
@@ -30,9 +26,6 @@ public class Swerve extends Drivetrain {
 
     private boolean enableTelemetry;
 
-    private TwoWheelLocalizer localizer;
-
-
     protected Vector lastTranslationalVector = new Vector();
     protected Vector lastHeadingPower = new Vector();
     protected Vector lastCorrectivePower = new Vector();
@@ -41,8 +34,6 @@ public class Swerve extends Drivetrain {
 
 
     public Swerve(HardwareMap hardwareMap, EZTelemetry telem){
-
-        localizer = new TwoWheelLocalizer(hardwareMap, new TwoWheelConstants());
 
         this.telem = telem;
 
@@ -213,10 +204,6 @@ public class Swerve extends Drivetrain {
         imu.resetYaw();
     }
 
-    public Pose getPose() {
-        return localizer.getPose();
-    }
-
     @Override
     public double[] calculateDrive(Vector correctivePower, Vector headingPower, Vector pathingPower, double robotHeading) {
         if (correctivePower.getMagnitude() >= maxPowerScaling) {
@@ -289,6 +276,7 @@ public class Swerve extends Drivetrain {
     @Deprecated
     @Override
     public void runDrive(double[] drivePowers) {
+
     }
 
     @Override
@@ -314,11 +302,20 @@ public class Swerve extends Drivetrain {
 
     @Override
     public void startTeleopDrive() {
+        for(SwerveModule mod : mods) {
+            mod.setDrivePower(0);
+            mod.setModuleSetpoint(mod.getDegrees(true));
+            mod.setTurnSpeed(0);
+        }
     }
 
     @Override
     public void startTeleopDrive(boolean brakeMode) {
-
+        for(SwerveModule mod : mods) {
+            mod.setDrivePower(0);
+            mod.setModuleSetpoint(mod.getDegrees(true));
+            mod.setTurnSpeed(0);
+        }
     }
 
     @Override
@@ -368,6 +365,8 @@ public class Swerve extends Drivetrain {
         return "Hi";
     }
 
+
+//    @Override
     public void setTeleOpDrive(double forward, double strafe, double turn) {
         drive(forward, strafe, turn, true, false);
     }
@@ -377,18 +376,6 @@ public class Swerve extends Drivetrain {
     }
 
     public void skadoodle(){
-
-        localizer.updateEncoders();
-        localizer.update();
-
-//        if(enableTelemetry) {
-
-            Pose pose = getPose();
-            telem.putTelemetry("X Pose", pose.getX());
-            telem.putTelemetry("Y Pose", pose.getY());
-            telem.putTelemetry("Heading", Math.toDegrees(pose.getHeading()));
-
-//        }
 
     }
 }

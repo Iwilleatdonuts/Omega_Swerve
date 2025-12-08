@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Utilities.PedroPathing.localization.Encoder.REVERSE;
-
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
@@ -29,8 +27,8 @@ public class Constants {
     public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
             .forwardEncoder_HardwareMapName("intake")
             .strafeEncoder_HardwareMapName("upperShooter")
-            .forwardEncoderDirection(REVERSE)
-            .strafeEncoderDirection(REVERSE)
+            .forwardEncoderDirection(-1)
+            .strafeEncoderDirection(-1)
             .forwardTicksToInches(0.0013)
             .strafeTicksToInches(0.0007)
             .forwardPodY(-1.54921)
