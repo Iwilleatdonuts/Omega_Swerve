@@ -25,8 +25,8 @@ public class Constants {
             .strafeEncoder_HardwareMapName("upperShooter")
             .forwardEncoderDirection(-1)
             .strafeEncoderDirection(-1)
-            .forwardTicksToInches(7.6031718e-4)
-            .strafeTicksToInches(7.6205e-4)
+            .forwardTicksToInches(7.579338e-4)
+            .strafeTicksToInches(7.5714066e-4)
             .forwardPodY(-1.54921)
             .strafePodX(-5.97835)
             .IMU_HardwareMapName("imu")
@@ -150,9 +150,9 @@ public class Constants {
 
     public static final class TurretConstants {
 
-        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.6891673382829, 1.6891673382829, 0);
+        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.6256, 1.8288, 0);
         //change the x value to be higher absolute if not hitting properly
-        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.6891673382829, 1.6891673382829, 0);
+        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.6256, 1.8288, 0);
 
         public static final String turretMotor = "turret";
 
