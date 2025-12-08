@@ -5,9 +5,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
+import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
 public class Turret {
 
@@ -33,7 +34,9 @@ public class Turret {
 
         enableTelemetry = false;
 
-        turretController = new PIDController(0.02, 0.01, 0);
+        turretController = new PIDController(0.02, 0.02, 0);
+//        turretController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
+        turretController.setIZone(3);
         turretController.setTolerance(5);
 
         setSetpoint(getDegrees());
@@ -76,7 +79,7 @@ public class Turret {
         double lowerLimit = Constants.TurretConstants.lowerRotationLimit;
         double upperLimit = Constants.TurretConstants.upperRotationLimit;
 
-        double nearestAngle = currentRotation;
+        double nearestAngle = 9999;
         double smallestError = Double.MAX_VALUE;
 
 
@@ -94,8 +97,6 @@ public class Turret {
             }
         }
 
-        nearestAngle = Math.min(Constants.TurretConstants.upperRotationLimit, Math.max(Constants.TurretConstants.lowerRotationLimit, nearestAngle));
-
         setpoint = nearestAngle;
 
     }
@@ -106,10 +107,16 @@ public class Turret {
 
     public void runToSetpoint() {
 
+        double goodSetpoint = getSetpoint();
+
+        if(getSetpoint() == 9999) {
+            goodSetpoint = 0;
+        }
+
         double output = 0;
 
         if(Math.abs(getDegrees() - getSetpoint()) > 1){
-            output = turretController.calculate(getDegrees(), getSetpoint());
+            output = turretController.calculate(getDegrees(), goodSetpoint);
         }
 
         output = Math.max(-1.0, Math.min(1.0, output));

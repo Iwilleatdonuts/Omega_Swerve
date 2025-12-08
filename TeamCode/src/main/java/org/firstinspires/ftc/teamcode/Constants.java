@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
-import com.pedropathing.ftc.localization.RevHubIMU;
 import com.pedropathing.ftc.localization.constants.TwoWheelConstants;
-import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,41 +12,34 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
+import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.SillyCustomDrivetrain;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
 public class Constants {
 
     public static FollowerConstants followerConstants = new FollowerConstants();
 
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
-
     public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
             .forwardEncoder_HardwareMapName("intake")
             .strafeEncoder_HardwareMapName("upperShooter")
             .forwardEncoderDirection(-1)
             .strafeEncoderDirection(-1)
-            .forwardTicksToInches(0.0013)
-            .strafeTicksToInches(0.0007)
+            .forwardTicksToInches(7.6031718e-4)
+            .strafeTicksToInches(7.6205e-4)
             .forwardPodY(-1.54921)
             .strafePodX(-5.97835)
             .IMU_HardwareMapName("imu")
             .IMU_Orientation(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
-//            .customIMU(new RevHubIMU());
 
-    public static Follower createFollower(HardwareMap hardwareMap, Swerve swerve) {
+    public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
-                .pathConstraints(pathConstraints)
                 .twoWheelLocalizer(localizerConstants)
-                .setDrivetrain(swerve)
+                .setDrivetrain(new SillyCustomDrivetrain())
                 .build();
     }
 
     public static final class DriveTrainConstants {
-
-        public static final String forwardsEncoder = "intake";
-        public static final String strafeEncoder = "upperShooter";
 
         public static final double angleKP = 0.009;//0.009
         public static final double angleKI = 0.004;
@@ -159,13 +150,14 @@ public class Constants {
 
     public static final class TurretConstants {
 
-        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.55, 1.55, 0);
-        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.55, 1.55, 0);
+        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.6891673382829, 1.6891673382829, 0);
+        //change the x value to be higher absolute if not hitting properly
+        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.6891673382829, 1.6891673382829, 0);
 
         public static final String turretMotor = "turret";
 
-        public static final double lowerRotationLimit = -100;
-        public static final double upperRotationLimit = 100;
+        public static final double lowerRotationLimit = -105;
+        public static final double upperRotationLimit = 105;
 
     }
 

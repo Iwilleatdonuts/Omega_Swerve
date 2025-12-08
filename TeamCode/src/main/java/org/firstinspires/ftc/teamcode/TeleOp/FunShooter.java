@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
@@ -22,8 +21,6 @@ public class FunShooter extends OpMode {
 
     private EZTelemetry telem;
     private OmegaController driver, operator;
-
-    private OTOSSensor s_Sparky;
 
     private Swerve s_Swerve;
     private Intake s_Intake;
@@ -45,16 +42,11 @@ public class FunShooter extends OpMode {
 
         telem = new EZTelemetry(telemetry);
 
-        s_Sparky = new OTOSSensor(hardwareMap, telem);
-
         s_Swerve = new Swerve(hardwareMap, telem);
         s_Intake = new Intake(hardwareMap, telem);
         s_Feeder = new Feeder(hardwareMap, telem);
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
-
-        s_Sparky.toggleTelemetry();
-        s_Sparky.configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
 
         driveCommand = new TurnToPointDrive(telem, s_Swerve, driver, operator);
 
@@ -125,7 +117,6 @@ public class FunShooter extends OpMode {
 
         if (driver.wasJustPressed(GamepadKeys.Button.BACK)) {
             s_Swerve.zeroGyro();
-            s_Sparky.zeroGyro();
         }
 
         telem.updateTelemetry();
@@ -138,10 +129,5 @@ public class FunShooter extends OpMode {
                 Thread.currentThread().interrupt();
             }
         }
-    }
-
-    @Override
-    public void stop() {
-        s_Sparky.disable();
     }
 }

@@ -24,7 +24,15 @@ public class EZTelemetry {
     }
 
     public void putTelemetry(String key, Object value) {
-        telemetryData.put(key, value);
+        telemetry.addData(key, value);
+    }
+
+    public void putLine(String line) {
+        telemetry.addLine(line);
+    }
+
+    public void putLine() {
+        telemetry.addLine();
     }
 
     public void enableCameraStrea(CameraStreamSource source, double fps) {

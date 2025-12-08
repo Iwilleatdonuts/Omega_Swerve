@@ -13,6 +13,10 @@ public class OmegaPose2D {
         this.x = x;
         this.y = y;
         this.r = r;
+
+        if(r < 0) {
+            this.r+= 360;
+        }
     }
 
     public double x(){

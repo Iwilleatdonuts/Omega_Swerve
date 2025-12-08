@@ -91,9 +91,10 @@ public class TurnToPointDrive {
             }
         }
 
-        s_Swerve.setTeleOpDrive(xLimited, yLimited, rotationOutput);
+        s_Swerve.drive(xLimited, yLimited, rotationOutput, true);
 
         telem.putTelemetry("CLT", timer.milliseconds() - timestamp);
+        telem.putLine();
     }
 
 }

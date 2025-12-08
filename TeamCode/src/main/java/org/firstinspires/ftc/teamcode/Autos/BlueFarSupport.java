@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurret;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoWaitCommand;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
+import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
@@ -33,9 +33,9 @@ public class BlueFarSupport extends LinearOpMode {
         EZTelemetry telem = new EZTelemetry(telemetry);
 
         Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
-        OTOSSensor s_Sparky = new OTOSSensor(hardwareMap, telem);
-        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.farStart));
-        s_Sparky.toggleTelemetry();
+        FusionOdometry s_Lemon = new FusionOdometry(hardwareMap, telem);
+        s_Lemon.setPose(Constants.AutoConstants.BlueConstants.farStart);
+        s_Lemon.toggleTelemetry();
 
         Swerve s_Swerve = new Swerve(hardwareMap, telem);
         Shooter s_Shooter = new Shooter(hardwareMap, telem);
@@ -43,9 +43,9 @@ public class BlueFarSupport extends LinearOpMode {
         Intake s_Intake = new Intake(hardwareMap, telem);
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
-        AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lime, s_Sparky, telem, areWeWinners);
-        AutoCornerIntake cornerIntakeCommand = new AutoCornerIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
-        AutoSwoopyIntake swoopyIntakeCommand = new AutoSwoopyIntake(s_Swerve, s_Intake, s_Feeder, s_Sparky, telem, areWeWinners);
+        AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lime, s_Lemon, telem, areWeWinners);
+        AutoCornerIntake cornerIntakeCommand = new AutoCornerIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
+        AutoSwoopyIntake swoopyIntakeCommand = new AutoSwoopyIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime, areWeWinners, true);
         AutoWaitCommand waitCommand = new AutoWaitCommand();
 
@@ -82,27 +82,21 @@ public class BlueFarSupport extends LinearOpMode {
 
         waitForStart();
 
-        if(isStopRequested()){
-            s_Sparky.disable();
-        }
-
         while (opModeIsActive()) {
 
-            s_Sparky.skadoodle();
+            s_Lemon.skadoodle();
             s_Lime.skadoodle();
             turretCommand.execute();
             telem.updateAll();
 
-            if(phase < autoCommands.size()) {
+            if (phase < autoCommands.size()) {
                 boolean isFinished = autoCommands.get(phase).run();
-                if(isFinished) {
+                if (isFinished) {
                     phase++;
                 }
             }
 
         }
-
-        s_Sparky.disable();
 
     }
 }

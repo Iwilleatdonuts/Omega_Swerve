@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.AutoCommands;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
+import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
@@ -17,7 +17,7 @@ public class AutoCornerIntake {
     private final Swerve s_Swerve;
     private final Intake s_Intake;
     private final Feeder s_Feeder;
-    private final OTOSSensor s_Sparky;
+    private final FusionOdometry s_Lemon;
 
     private OmegaPose2D[] targets;
     private OmegaPose2D finalPose;
@@ -36,7 +36,7 @@ public class AutoCornerIntake {
     private double[] outputs = new double[3];
     private OmegaPose2D[] poses;
 
-    public AutoCornerIntake(Swerve s_Swerve, Intake s_Intake, Feeder s_Feeder, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
+    public AutoCornerIntake(Swerve s_Swerve, Intake s_Intake, Feeder s_Feeder, FusionOdometry s_Lemon, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
 
@@ -45,7 +45,7 @@ public class AutoCornerIntake {
         this.s_Swerve = s_Swerve;
         this.s_Intake = s_Intake;
         this.s_Feeder = s_Feeder;
-        this.s_Sparky = s_Sparky;
+        this.s_Lemon = s_Lemon;
 
         finalPose = areWeWinners? Constants.AutoConstants.RedConstants.cornerPickup : Constants.AutoConstants.BlueConstants.cornerPickup;
 
@@ -78,7 +78,7 @@ public class AutoCornerIntake {
 
     public void execute(){
 
-        OmegaPose2D currentPose = s_Sparky.getPose();
+        OmegaPose2D currentPose = s_Lemon.getCurrentPose();
 
         s_Feeder.closeGate();
         s_Feeder.setFeederSpeed(0);
@@ -99,7 +99,7 @@ public class AutoCornerIntake {
 
                 outputs = driveController.getOutputs();
 
-                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
+                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
 
                 if(isAtRoughSetpoint()) {
                     timestamp = System.nanoTime();
@@ -107,14 +107,14 @@ public class AutoCornerIntake {
                 }
                 break;
             case 2:
-                s_Swerve.drive(0, 0.3, 0, true, false);
+                s_Swerve.drive(0, 0.3, 0, true);
                 if(System.nanoTime() - timestamp > 0.3e9) {
                     timestamp = System.nanoTime();
                     phase++;
                 }
                 break;
             case 3:
-                s_Swerve.drive(0, -0.3, 0, true, false);
+                s_Swerve.drive(0, -0.3, 0, true);
                 if(System.nanoTime() - timestamp > 0.8e9) {
                     timestamp = System.nanoTime();
                     phase++;
@@ -122,9 +122,9 @@ public class AutoCornerIntake {
                 break;
             case 4:
                 if(areWeWinners) {
-                    s_Swerve.drive(0.1, -0.1, 0, true, false);
+                    s_Swerve.drive(0.1, -0.1, 0, true);
                 } else {
-                    s_Swerve.drive(-0.1, -0.1, 0, true, false);
+                    s_Swerve.drive(-0.1, -0.1, 0, true);
                 }
                 if(System.nanoTime() - timestamp > 0.5e9) {
                     timestamp = System.nanoTime();
@@ -137,9 +137,9 @@ public class AutoCornerIntake {
     }
 
     public boolean isAtRoughSetpoint(){
-        double xError = Math.abs(s_Sparky.getPose().x() - finalPose.x());
-        double yError = Math.abs(s_Sparky.getPose().y() - finalPose.y());
-        double rError = Math.abs(s_Sparky.getHeading() - finalPose.r());
+        double xError = Math.abs(s_Lemon.getCurrentPose().x() - finalPose.x());
+        double yError = Math.abs(s_Lemon.getCurrentPose().y() - finalPose.y());
+        double rError = Math.abs(s_Lemon.getHeading() - finalPose.r());
 
         return xError < 0.06 && yError < 0.06 && rError < 6;
     }

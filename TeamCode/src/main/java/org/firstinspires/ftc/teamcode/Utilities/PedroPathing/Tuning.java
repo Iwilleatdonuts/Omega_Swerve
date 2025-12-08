@@ -24,6 +24,7 @@ import com.pedropathing.util.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 
@@ -85,10 +86,10 @@ public class Tuning extends SelectableOpMode {
         EZTelemetry telem = new EZTelemetry(telemetry);
 
         if (follower == null) {
-            follower = PedroConstants.createFollower(hardwareMap, new Swerve(hardwareMap, telem));
+            follower = Constants.createFollower(hardwareMap);
             PanelsConfigurables.INSTANCE.refreshClass(this);
         } else {
-            follower = PedroConstants.createFollower(hardwareMap, new Swerve(hardwareMap, telem));
+            follower = Constants.createFollower(hardwareMap);
         }
 
         follower.setStartingPose(new Pose());

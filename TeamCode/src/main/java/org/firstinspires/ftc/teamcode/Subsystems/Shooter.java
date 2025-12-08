@@ -133,7 +133,10 @@ public class Shooter {
         double foo = -0.355366*distance+1.17768;
         foo = MathUtil.clamp(1, 0, foo);
         return foo;
-//        return 1;
+    }
+
+    public double getTargetVelocity() {
+        return targetVelocity;
     }
 
     public void toggleTelemetry() {

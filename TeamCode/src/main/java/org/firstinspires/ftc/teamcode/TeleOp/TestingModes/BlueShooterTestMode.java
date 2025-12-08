@@ -155,17 +155,14 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
-import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Commands.TestTurret;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
+import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
@@ -215,7 +212,7 @@ public class BlueShooterTestMode extends LinearOpMode {
     private OmegaController operator;
 
     private Limelight s_Lime;
-    private OTOSSensor s_Sparky;
+    private FusionOdometry s_Lemon;
 
     private Swerve s_Swerve;
     private Intake s_Intake;
@@ -241,7 +238,7 @@ public class BlueShooterTestMode extends LinearOpMode {
 
         telem = new EZTelemetry(telemetry);
 
-        s_Sparky = new OTOSSensor(hardwareMap, telem);
+        s_Lemon = new FusionOdometry(hardwareMap, telem);
         s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
         s_Lime.toggleTelemetry();
 
@@ -253,12 +250,12 @@ public class BlueShooterTestMode extends LinearOpMode {
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
 
-        s_Sparky.toggleTelemetry();
-        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.RedConstants.mediumShotPositionForTeleop));
+        s_Lemon.toggleTelemetry();
+        s_Lemon.setPose(new OmegaPose2D(0, 0, 0));
 
         driveCommand = new TurnToPointDrive(telem, s_Swerve, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
-        turretCommand = new TestTurret(s_Swerve, s_Turret, s_Lime, s_Sparky, operator, driver, telem, areWeWinners);
+        turretCommand = new TestTurret(s_Swerve, s_Turret, s_Lime, s_Lemon, operator, driver, telem, areWeWinners);
 
         driveCommand.initialize();
         intakeCommand.initialize();
@@ -276,7 +273,6 @@ public class BlueShooterTestMode extends LinearOpMode {
         waitForStart();
 
         if(isStopRequested()) {
-            s_Sparky.disable();
             s_Lime.stopLime();
         }
 
@@ -330,13 +326,13 @@ public class BlueShooterTestMode extends LinearOpMode {
 
             if(driver.wasJustPressed(GamepadKeys.Button.BACK)) {
                 s_Swerve.zeroGyro();
-                s_Sparky.zeroGyro();
+                s_Lemon.zeroGyro();
             }
 
-            OmegaPose2D currentPose = s_Sparky.getPose();
+            OmegaPose2D currentPose = s_Lemon.getCurrentPose();
             telem.putTelemetry("X pose", currentPose.x());
             telem.putTelemetry("Y pose", currentPose.y());
-            telem.putTelemetry("ODOM DISTANE", Math.hypot(s_Sparky.getPose().x() - Constants.TurretConstants.blueTarget.x(), s_Sparky.getPose().y() - Constants.TurretConstants.blueTarget.y()));
+            telem.putTelemetry("ODOM DISTANE", Math.hypot(s_Lemon.getCurrentPose().x() - Constants.TurretConstants.blueTarget.x(), s_Lemon.getCurrentPose().y() - Constants.TurretConstants.blueTarget.y()));
             telem.putTelemetry("VISION DISTNACE", s_Lime.getFilteredDistance());
             telem.putTelemetry("Shooter Target Percentage", shooterSpeed);
             telem.putDashboard("Shooter Speed", s_Shooter.getShooterVelocity());
@@ -353,7 +349,6 @@ public class BlueShooterTestMode extends LinearOpMode {
                 }
             }
         }
-        s_Sparky.disable();
         s_Lime.stopLime();
         visionRunnable.stop();
 

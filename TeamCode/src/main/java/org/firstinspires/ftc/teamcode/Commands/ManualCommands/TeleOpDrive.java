@@ -62,11 +62,7 @@ public class TeleOpDrive {
         double yLimited = yLimiter.calculate(yVal);
         double rLimited = rLimiter.calculate(rVal);
 
-
-        slowMode = m_Driver.isDown(GamepadKeys.Button.LEFT_STICK_BUTTON) || m_Driver.isDown(GamepadKeys.Button.RIGHT_STICK_BUTTON);
-
-        s_Swerve.drive(xLimited, yLimited, rLimited, true, slowMode);
-
+        s_Swerve.drive(xLimited, yLimited, rLimited, true);
 
         telem.putTelemetry("CLT", timer.milliseconds() - timestamp);
 

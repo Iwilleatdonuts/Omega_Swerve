@@ -8,11 +8,10 @@ import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
 import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
@@ -59,15 +58,14 @@ public class FunkySad extends LinearOpMode {
     private EZTelemetry telem;
     private OmegaController driver;
     private OmegaController operator;
-
     private Limelight s_Lime;
-    private OTOSSensor s_Sparky;
 
     private Swerve s_Swerve;
     private Intake s_Intake;
     private Feeder s_Feeder;
     private Turret s_Turret;
     private Shooter s_Shooter;
+    private FusionOdometry s_Lemon;
 
     private TurnToPointDrive driveCommand;
     private SmartIntake intakeCommand;
@@ -83,26 +81,22 @@ public class FunkySad extends LinearOpMode {
 
         telem = new EZTelemetry(telemetry);
 
-        s_Sparky = new OTOSSensor(hardwareMap, telem);
         s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
-
         s_Lime.startLime();
 
-        s_Swerve = new Swerve(hardwareMap, telem);
+        s_Lemon = new FusionOdometry(hardwareMap, telem);
+        s_Lemon.toggleTelemetry();
+
+        s_Swerve = new Swerve(hardwareMap, telem, s_Lemon);
         s_Intake = new Intake(hardwareMap, telem);
         s_Feeder = new Feeder(hardwareMap, telem);
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
 
-        s_Lime.toggleTelemetry();
-
-        s_Sparky.toggleTelemetry();
-        s_Sparky.configureOTOS(s_Sparky.normiePoseToSparkyPose(Constants.AutoConstants.BlueConstants.mediumShotPositionForTeleop));
-
         driveCommand = new TurnToPointDrive(telem, s_Swerve, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
-        turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, s_Sparky, operator, driver, telem, areWeWinners);
-        shooterCommand = new CoolShooters(s_Shooter, s_Lime, s_Sparky, driver, operator, telem, areWeWinners);
+        turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, s_Lemon, operator, driver, telem, areWeWinners);
+        shooterCommand = new CoolShooters(s_Shooter, s_Lime, s_Lemon, driver, operator, telem, areWeWinners);
 
         driveCommand.initialize();
         intakeCommand.initialize();
@@ -119,7 +113,6 @@ public class FunkySad extends LinearOpMode {
         waitForStart();
 
         if(isStopRequested()) {
-            s_Sparky.disable();
             s_Lime.stopLime();
         }
 
@@ -127,15 +120,17 @@ public class FunkySad extends LinearOpMode {
 
             long loopStart = System.nanoTime();
 
+            s_Lemon.skadoodle();
+
             driveCommand.execute();
             intakeCommand.execute();
             turretCommand.execute();
             shooterCommand.execute();
             s_Lime.skadoodle();
+            s_Swerve.skadoodle();
 
             if(driver.wasJustPressed(GamepadKeys.Button.BACK)) {
                 s_Swerve.zeroGyro();
-                s_Sparky.zeroGyro();
             }
 
             telem.updateTelemetry();
@@ -151,10 +146,8 @@ public class FunkySad extends LinearOpMode {
                 }
             }
         }
-        s_Sparky.disable();
         s_Lime.stopLime();
         visionRunnable.stop();
-
     }
 
 }

@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.Commands;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
@@ -16,7 +16,7 @@ public class CoolShooters {
 
     private final Shooter s_Shooter;
     private final Limelight s_Lime;
-    private final OTOSSensor s_Sparky;
+    private final FusionOdometry s_Lemon;
     private final OmegaController m_Driver;
     private final OmegaController m_Operator;
 
@@ -29,11 +29,11 @@ public class CoolShooters {
     private final OmegaPose2D targetPose;
     private double timestamp;
 
-    public CoolShooters(Shooter s_Shooter, Limelight s_Lime, OTOSSensor s_Sparky, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem, boolean areWeWinners){
+    public CoolShooters(Shooter s_Shooter, Limelight s_Lime, FusionOdometry s_Lemon, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem, boolean areWeWinners){
 
         this.s_Shooter = s_Shooter;
         this.s_Lime = s_Lime;
-        this.s_Sparky = s_Sparky;
+        this.s_Lemon = s_Lemon;
 
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
@@ -85,7 +85,7 @@ public class CoolShooters {
                 shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
                 timestamp = System.nanoTime();
             } else if(System.nanoTime() - timestamp > 1e9){
-                double distance = Math.hypot(s_Sparky.getPose().x() - targetPose.x(), s_Sparky.getPose().y() - targetPose.y());
+                double distance = Math.hypot(s_Lemon.getCurrentPose().x() - targetPose.x(), s_Lemon.getCurrentPose().y() - targetPose.y());
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
                 shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
             }
@@ -96,10 +96,13 @@ public class CoolShooters {
         s_Shooter.setShooterAngle(shooterAngle);
         s_Shooter.setShooterSpeed(shooterPercent);
 
+        telem.putLine("Shooter");
         telem.putTelemetry("Shooter Percentage", shooterPercent);
-        telem.putTelemetry("Shooter Velocity", s_Shooter.getShooterVelocity());
+        telem.putTelemetry("Target Velocity", s_Shooter.getTargetVelocity());
+        telem.putTelemetry("Current Velocity", s_Shooter.getShooterVelocity());
         telem.putTelemetry("Shooter Constant", s_Shooter.getShooterConstant());
         telem.putDashboard("Shooter Velocity", s_Shooter.getShooterVelocity());
+        telem.putLine();
         telem.updateDashboard();
 
     }

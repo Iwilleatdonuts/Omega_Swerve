@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.AutoCommands;
 
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
+import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
@@ -12,7 +12,7 @@ public class AutoGate {
     private final EZTelemetry telem;
 
     private final Swerve s_Swerve;
-    private final OTOSSensor s_Sparky;
+    private final FusionOdometry s_Lemon;
 
     private OmegaPose2D targetPosition;
 
@@ -27,14 +27,14 @@ public class AutoGate {
 
     private boolean isFinished;
 
-    public AutoGate(Swerve s_Swerve, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
+    public AutoGate(Swerve s_Swerve, FusionOdometry s_Lemon, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
 
         this.telem = telem;
 
         this.s_Swerve = s_Swerve;
-        this.s_Sparky = s_Sparky;
+        this.s_Lemon = s_Lemon;
 
         driveController = new AutoDriveController();
     }
@@ -54,7 +54,7 @@ public class AutoGate {
 
     public void execute(){
 
-        OmegaPose2D currentPose = s_Sparky.getPose();
+        OmegaPose2D currentPose = s_Lemon.getCurrentPose();
 
         if(goingToTeleop) {
 
@@ -63,9 +63,9 @@ public class AutoGate {
         switch(phase) {
             case 0:
                 if(areWeWinners && currentPose.x() > 1.21) {
-                    s_Swerve.drive(-0.8, 0, 0, true, false);
+                    s_Swerve.drive(-0.8, 0, 0, true);
                 } else if (!areWeWinners && currentPose.x() < -1.21) {
-                    s_Swerve.drive(0.8, 0, 0, true, false);
+                    s_Swerve.drive(0.8, 0, 0, true);
                 } else {
                     driveController.reset();
                     phase++;
@@ -76,7 +76,7 @@ public class AutoGate {
                 driveController.updateCurrentPose(currentPose);
                 double[] outputs = driveController.getOutputs();
 
-                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
+                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
 
                 if(isAtRoughSetpoint()) {
                     s_Swerve.stop();
@@ -87,7 +87,7 @@ public class AutoGate {
                 break;
             case 2:
 
-                s_Swerve.drive(0.4, 0, 0, true, false);
+                s_Swerve.drive(0.4, 0, 0, true);
 
                 if(System.nanoTime() - timestamp > 1e9 || goingToTeleop) {
                     s_Swerve.stop();
@@ -99,17 +99,17 @@ public class AutoGate {
     }
 
     public boolean isAtSetpoint(){
-        double xError = Math.abs(s_Sparky.getPose().x() - targetPosition.x());
-        double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
-        double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
+        double xError = Math.abs(s_Lemon.getCurrentPose().x() - targetPosition.x());
+        double yError = Math.abs(s_Lemon.getCurrentPose().y() - targetPosition.y());
+        double rError = Math.abs(s_Lemon.getHeading() - targetPosition.r());
 
         return xError < 0.02 && yError < 0.02 && rError < 3;
     }
 
     public boolean isAtRoughSetpoint(){
-        double xError = Math.abs(s_Sparky.getPose().x() - targetPosition.x());
-        double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
-        double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
+        double xError = Math.abs(s_Lemon.getCurrentPose().x() - targetPosition.x());
+        double yError = Math.abs(s_Lemon.getCurrentPose().y() - targetPosition.y());
+        double rError = Math.abs(s_Lemon.getHeading() - targetPosition.r());
 
         return xError < 0.1 && yError < 0.1 && rError < 4;
     }

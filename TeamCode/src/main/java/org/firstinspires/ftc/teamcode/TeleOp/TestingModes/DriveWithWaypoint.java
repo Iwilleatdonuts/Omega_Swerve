@@ -5,10 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Commands.DriveToDashboardPointWithSwerb;
+import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
 //http://192.168.43.1:8080/dash
 //adb connect 192.168.43.1:5555
@@ -19,7 +20,7 @@ public class DriveWithWaypoint extends LinearOpMode {
 
     private Swerve s_Swerve;
     private Intake s_Intake;
-    private OTOSSensor s_Sparky;
+    private FusionOdometry s_Lemon;
 
     private DriveToDashboardPointWithSwerb driveCommand;
 
@@ -28,31 +29,26 @@ public class DriveWithWaypoint extends LinearOpMode {
 
         s_Swerve = new Swerve(hardwareMap, telem);
         s_Intake = new Intake(hardwareMap, telem);
-        s_Sparky = new OTOSSensor(hardwareMap, telem);
+        s_Lemon = new FusionOdometry(hardwareMap, telem);
 
-        s_Sparky.toggleTelemetry();
-        s_Sparky.configureOTOS(new SparkFunOTOS.Pose2D(0, 0, 0));
+        s_Lemon.toggleTelemetry();
+        s_Lemon.setPose(new OmegaPose2D(0, 0, 0));
 
-        driveCommand = new DriveToDashboardPointWithSwerb(s_Swerve, s_Intake, s_Sparky, telem);
+        driveCommand = new DriveToDashboardPointWithSwerb(s_Swerve, s_Intake, s_Lemon, telem);
 
         driveCommand.initialize();
-        s_Sparky.zeroGyro();
+        s_Lemon.zeroGyro();
         s_Swerve.zeroGyro();
 
         waitForStart();
-
-        if(isStopRequested()) {
-            s_Sparky.disable();
-        }
 
         while(opModeIsActive()){
 
             driveCommand.execute();
 
-            s_Sparky.skadoodle();
+            s_Lemon.skadoodle();
 
             telem.updateAll();
         }
-        s_Sparky.disable();
     }
 }

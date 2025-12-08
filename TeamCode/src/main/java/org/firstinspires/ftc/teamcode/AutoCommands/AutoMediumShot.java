@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.AutoCommands;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
+import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
-import org.firstinspires.ftc.teamcode.Subsystems.OTOSSensor;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
@@ -20,7 +20,7 @@ public class AutoMediumShot {
     private final Intake s_Intake;
     private final Feeder s_Feeder;
     private final Limelight s_Lime;
-    private final OTOSSensor s_Sparky;
+    private final FusionOdometry s_Lemon;
 
     private OmegaPose2D targetPosition;
 
@@ -36,7 +36,7 @@ public class AutoMediumShot {
     private double shooterSpeed;
     private double shooterAngle;
 
-    public AutoMediumShot(Swerve s_Swerve, Shooter s_Shooter, Intake s_Intake, Feeder s_Feeder, Limelight s_Lime, OTOSSensor s_Sparky, EZTelemetry telem, boolean areWeWinners){
+    public AutoMediumShot(Swerve s_Swerve, Shooter s_Shooter, Intake s_Intake, Feeder s_Feeder, Limelight s_Lime, FusionOdometry s_Lemon, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
 
@@ -49,7 +49,7 @@ public class AutoMediumShot {
         this.s_Intake = s_Intake;
         this.s_Feeder = s_Feeder;
         this.s_Lime = s_Lime;
-        this.s_Sparky = s_Sparky;
+        this.s_Lemon = s_Lemon;
 
         driveController = new AutoDriveController();
 
@@ -65,7 +65,7 @@ public class AutoMediumShot {
 
     public void execute(){
 
-        OmegaPose2D currentPose = s_Sparky.getPose();
+        OmegaPose2D currentPose = s_Lemon.getCurrentPose();
         double distance = s_Lime.getFilteredDistance();
 
         if(distance != 0) {
@@ -81,9 +81,9 @@ public class AutoMediumShot {
             case 0:
                 s_Feeder.closeGate();
                 if(areWeWinners && currentPose.x() > 1.21) {
-                    s_Swerve.drive(-0.8, 0, 0, true, false);
+                    s_Swerve.drive(-0.8, 0, 0, true);
                 } else if (!areWeWinners && currentPose.x() < -1.21) {
-                    s_Swerve.drive(0.8, 0, 0, true, false);
+                    s_Swerve.drive(0.8, 0, 0, true);
                 } else {
                     driveController.reset();
                     phase++;
@@ -95,7 +95,7 @@ public class AutoMediumShot {
                 driveController.setTargetPose(targetPosition);
                 double[] outputs = driveController.getOutputs();
 
-                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true, false);
+                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
 
                 if(isAtRoughSetpoint() && s_Shooter.shooterAtSpeed()) {
                     timestamp = System.nanoTime();
@@ -119,17 +119,17 @@ public class AutoMediumShot {
     }
 
     public boolean isAtSetpoint(){
-        double xError = Math.abs(s_Sparky.getPose().x() - targetPosition.x());
-        double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
-        double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
+        double xError = Math.abs(s_Lemon.getCurrentPose().x() - targetPosition.x());
+        double yError = Math.abs(s_Lemon.getCurrentPose().y() - targetPosition.y());
+        double rError = Math.abs(s_Lemon.getHeading() - targetPosition.r());
 
         return xError < 0.02 && yError < 0.02 && rError < 3;
     }
 
     public boolean isAtRoughSetpoint(){
-        double xError = Math.abs(s_Sparky.getPose().x() - targetPosition.x());
-        double yError = Math.abs(s_Sparky.getPose().y() - targetPosition.y());
-        double rError = Math.abs(s_Sparky.getHeading() - targetPosition.r());
+        double xError = Math.abs(s_Lemon.getCurrentPose().x() - targetPosition.x());
+        double yError = Math.abs(s_Lemon.getCurrentPose().y() - targetPosition.y());
+        double rError = Math.abs(s_Lemon.getHeading() - targetPosition.r());
 
         return xError < 0.1 && yError < 0.1 && rError < 10;
     }
