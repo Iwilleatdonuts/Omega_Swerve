@@ -6,6 +6,7 @@ import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.localization.constants.TwoWheelConstants;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -20,17 +21,28 @@ public class Constants {
 
     public static FollowerConstants followerConstants = new FollowerConstants();
 
+    public static final String forwardEncoder_HardwareMapName = "intake";
+    public static final String strafeEncoder_HardwareMapName = "upperShooter";
+    public static final DcMotorSimple.Direction forwardEncoderDirection = DcMotorSimple.Direction.REVERSE;
+    public static final DcMotorSimple.Direction strafeEncoderDirection = DcMotorSimple.Direction.REVERSE;
+    public static final double forwardTicksToInches = 7.579338e-4;
+    public static final double strafeTicksToInches = 7.5714066e-4;
+    public static final double forwardPodY = -1.54921;
+    public static final double strafePodX = -5.97835;
+    public static final String IMU_HardwareMapName = "imu";
+    public static final RevHubOrientationOnRobot IMU_ORIENTATION = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT);
+
     public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
-            .forwardEncoder_HardwareMapName("intake")
-            .strafeEncoder_HardwareMapName("upperShooter")
+            .forwardEncoder_HardwareMapName(forwardEncoder_HardwareMapName)
+            .strafeEncoder_HardwareMapName(strafeEncoder_HardwareMapName)
             .forwardEncoderDirection(-1)
             .strafeEncoderDirection(-1)
-            .forwardTicksToInches(7.579338e-4)
-            .strafeTicksToInches(7.5714066e-4)
-            .forwardPodY(-1.54921)
-            .strafePodX(-5.97835)
-            .IMU_HardwareMapName("imu")
-            .IMU_Orientation(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
+            .forwardTicksToInches(forwardTicksToInches)
+            .strafeTicksToInches(strafeTicksToInches)
+            .forwardPodY(forwardPodY)
+            .strafePodX(strafePodX)
+            .IMU_HardwareMapName(IMU_HardwareMapName)
+            .IMU_Orientation(IMU_ORIENTATION);
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
@@ -150,9 +162,9 @@ public class Constants {
 
     public static final class TurretConstants {
 
-        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.6256, 1.8288, 0);
+        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.6, 1.8288, 0);
         //change the x value to be higher absolute if not hitting properly
-        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.6256, 1.8288, 0);
+        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.6, 1.8288, 0);
 
         public static final String turretMotor = "turret";
 

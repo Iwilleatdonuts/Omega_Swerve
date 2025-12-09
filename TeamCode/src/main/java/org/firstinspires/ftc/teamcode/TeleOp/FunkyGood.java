@@ -17,8 +17,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
-@TeleOp(name = "Ginger Drive Core", group = "Main")
+@TeleOp(name = "Red Ginger", group = "Main")
 public class FunkyGood extends LinearOpMode {
 
     private class VisionThread implements Runnable {
@@ -55,6 +56,40 @@ public class FunkyGood extends LinearOpMode {
         }
     }
 
+    private class LemonThread implements Runnable {
+        private volatile boolean runLemonThread = true;
+        private final FusionOdometry s_Lemon;
+        private final long sleepTime;
+
+        public LemonThread(FusionOdometry s_Lemon, long sleepTime) {
+            this.s_Lemon = s_Lemon;
+            this.sleepTime = sleepTime;
+        }
+
+        public void stop() {
+            runLemonThread = false;
+        }
+
+        @Override
+        public void run(){
+
+            if(s_Lemon == null){
+                return;
+            }
+
+            try {
+                while(runLemonThread && !Thread.currentThread().isInterrupted()) {
+                    s_Lemon.skadoodle();
+                    Thread.sleep(sleepTime);
+                }
+            } catch (InterruptedException e) {
+                telem.putTelemetry("lemons are sour now", " :(((");
+                telem.updateTelemetry();
+            }
+
+        }
+    }
+
     private EZTelemetry telem;
     private OmegaController driver;
     private OmegaController operator;
@@ -85,7 +120,7 @@ public class FunkyGood extends LinearOpMode {
         s_Lime.startLime();
 
         s_Lemon = new FusionOdometry(hardwareMap, telem);
-        s_Lemon.toggleTelemetry();
+//        s_Lemon.toggleTelemetry();
 
         s_Swerve = new Swerve(hardwareMap, telem, s_Lemon);
         s_Intake = new Intake(hardwareMap, telem);
@@ -107,7 +142,15 @@ public class FunkyGood extends LinearOpMode {
         Thread visionThread = new Thread(visionRunnable, "Vision Thread");
         visionThread.start();
 
+        LemonThread lemonRunnable = new LemonThread(s_Lemon, 15);
+        Thread lemonThread = new Thread(lemonRunnable, "Lemon Thread");
+        lemonThread.start();
+
         telem.putTelemetry("FPS", s_Lime.getLimeStatus().getFps());
+        telem.putLine();
+//        telem.putTelemetry("X Pose", s_Lemon.getCurrentPose().x());
+//        telem.putTelemetry("Y Pose", s_Lemon.getCurrentPose().y());
+//        telem.putTelemetry("Heading Pose", s_Lemon.getCurrentPose().r());
         telem.updateAll();
 
         waitForStart();
@@ -120,18 +163,22 @@ public class FunkyGood extends LinearOpMode {
 
             long loopStart = System.nanoTime();
 
-            s_Lemon.skadoodle();
-
             driveCommand.execute();
             intakeCommand.execute();
             turretCommand.execute();
             shooterCommand.execute();
-            s_Lime.skadoodle();
             s_Swerve.skadoodle();
 
             if(driver.wasJustPressed(GamepadKeys.Button.BACK)) {
                 s_Swerve.zeroGyro();
             }
+
+            telem.putLine("Odometry");
+            OmegaPose2D currentPose = s_Lemon.getCurrentPose();
+            telem.putTelemetry("X Position ", currentPose.x());
+            telem.putTelemetry("Y Position ", currentPose.y());
+            telem.putTelemetry("Heading ", currentPose.r());
+            telem.putLine();
 
             telem.updateTelemetry();
 
@@ -148,6 +195,7 @@ public class FunkyGood extends LinearOpMode {
         }
         s_Lime.stopLime();
         visionRunnable.stop();
+        lemonRunnable.stop();
     }
 
 }

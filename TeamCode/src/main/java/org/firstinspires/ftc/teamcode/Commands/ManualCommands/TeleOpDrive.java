@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.SlewRateLimiter;
+import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
 public class TeleOpDrive {
 
@@ -15,16 +15,10 @@ public class TeleOpDrive {
     private final OmegaController m_Driver;
     private final OmegaController m_Operator;
 
-    private boolean slowMode;
-
     private final SlewRateLimiter xLimiter;
     private final SlewRateLimiter yLimiter;
 
-    private final SlewRateLimiter rLimiter;
-
     private final ElapsedTime timer;
-
-    private double timestamp;
 
     public TeleOpDrive(EZTelemetry telem, Swerve s_Swerve, OmegaController m_Driver, OmegaController m_Operator){
 
@@ -33,39 +27,43 @@ public class TeleOpDrive {
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;
 
-        slowMode = false;
-
-        xLimiter = new SlewRateLimiter(2);
-        yLimiter = new SlewRateLimiter(2);
-        rLimiter = new SlewRateLimiter(5);
+        xLimiter = new SlewRateLimiter(4);
+        yLimiter = new SlewRateLimiter(4);
 
         timer = new ElapsedTime();
     }
 
-    public void initialize() {
+    public void initialize(){
 
         xLimiter.reset(0);
         yLimiter.reset(0);
-        rLimiter.reset(0);
 
     }
 
     public void execute(){
 
-        timestamp = timer.milliseconds();
+        double timestamp = timer.milliseconds();
+
+        m_Driver.readButtons();
+        m_Operator.readButtons();
 
         double xVal = m_Driver.getLeftX();
         double yVal = m_Driver.getLeftY();
-        double rVal = m_Driver.getRightX();
 
         double xLimited = xLimiter.calculate(xVal);
         double yLimited = yLimiter.calculate(yVal);
-        double rLimited = rLimiter.calculate(rVal);
 
-        s_Swerve.drive(xLimited, yLimited, rLimited, true);
+        double rightX = m_Driver.getRightX();
+
+        double sqrX = Math.pow(Math.abs(rightX), 2);
+
+        rightX = Math.signum(rightX) * sqrX;
+
+        s_Swerve.drive(xLimited, yLimited, rightX, true);
 
         telem.putTelemetry("CLT", timer.milliseconds() - timestamp);
-
+        telem.putTelemetry("Right X Value", rightX);
+        telem.putLine();
     }
 
 }

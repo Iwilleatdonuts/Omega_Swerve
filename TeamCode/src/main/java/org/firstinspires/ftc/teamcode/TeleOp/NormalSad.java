@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
 import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
+import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TeleOpDrive;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
@@ -19,8 +20,8 @@ import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
-@TeleOp(name = "Blue Ginger", group = "Main")
-public class FunkySad extends LinearOpMode {
+@TeleOp(name = "Blue Normie", group = "Main")
+public class NormalSad extends LinearOpMode {
 
     private class VisionThread implements Runnable {
         private volatile boolean runVisionThread = true;
@@ -102,7 +103,7 @@ public class FunkySad extends LinearOpMode {
     private Shooter s_Shooter;
     private FusionOdometry s_Lemon;
 
-    private TurnToPointDrive driveCommand;
+    private TeleOpDrive driveCommand;
     private SmartIntake intakeCommand;
     private LimeTurret turretCommand;
     private CoolShooters shooterCommand;
@@ -128,7 +129,7 @@ public class FunkySad extends LinearOpMode {
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
 
-        driveCommand = new TurnToPointDrive(telem, s_Swerve, driver, operator);
+        driveCommand = new TeleOpDrive(telem, s_Swerve, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
         turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, s_Lemon, operator, driver, telem, areWeWinners);
         shooterCommand = new CoolShooters(s_Shooter, s_Lime, s_Lemon, driver, operator, telem, areWeWinners);
@@ -148,6 +149,7 @@ public class FunkySad extends LinearOpMode {
 
         telem.putTelemetry("FPS", s_Lime.getLimeStatus().getFps());
         telem.putLine();
+        s_Lemon.setPose(new OmegaPose2D(0, 0, 0));
 //        telem.putTelemetry("X Pose", s_Lemon.getCurrentPose().x());
 //        telem.putTelemetry("Y Pose", s_Lemon.getCurrentPose().y());
 //        telem.putTelemetry("Heading Pose", s_Lemon.getCurrentPose().r());

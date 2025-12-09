@@ -1,17 +1,18 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.pedropathing.follower.Follower;
+
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaDeadLocalizer;
 
 public class FusionOdometry {
 
     private final EZTelemetry telem;
-    private final Follower follower;
+//    private final Follower follower;
+    private final OmegaDeadLocalizer localizer;
 
     private boolean enableTelemetry;
 
@@ -22,7 +23,8 @@ public class FusionOdometry {
 
         this.telem = telem;
 
-        follower = Constants.createFollower(hardwareMap);
+//        follower = Constants.createFollower(hardwareMap);
+        localizer = new OmegaDeadLocalizer(hardwareMap, new Pose());
 
     }
 
@@ -39,16 +41,16 @@ public class FusionOdometry {
     }
 
     public void zeroGyro() {
-        follower.setPose(new Pose(pedroPose.getX(), pedroPose.getY(), 0));
+        localizer.setPose(new Pose(pedroPose.getX(), pedroPose.getY(), 0));
     }
 
     public void setPose(OmegaPose2D newPose) {
-        follower.setPose(omegaToPedro(newPose));
+        localizer.setPose(omegaToPedro(newPose));
     }
 
     public void setLinearPose(OmegaPose2D newPose) {
         Pose newPedroPose = omegaToPedro(newPose);
-        follower.setPose(new Pose(newPedroPose.getX(), newPedroPose.getY(), pedroPose.getHeading()));
+        localizer.setPose(new Pose(newPedroPose.getX(), newPedroPose.getY(), pedroPose.getHeading()));
     }
 
     public void toggleTelemetry() {
@@ -57,9 +59,9 @@ public class FusionOdometry {
 
     public void skadoodle(){
 
-        follower.update();
+        localizer.update();
 
-        pedroPose = follower.getPose();
+        pedroPose = localizer.getPose();
         currentPose = pedroToOmega(pedroPose);
 
         if(enableTelemetry) {
