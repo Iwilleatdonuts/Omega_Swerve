@@ -5,6 +5,7 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TeleOpDrive;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
@@ -28,7 +29,7 @@ public class FunShooter extends OpMode {
     private Turret s_Turret;
     private Shooter s_Shooter;
 
-    private TurnToPointDrive driveCommand;
+    private TeleOpDrive driveCommand;
 
     private double shooterAngle;
     private double shooterSpeed;
@@ -48,7 +49,7 @@ public class FunShooter extends OpMode {
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
 
-        driveCommand = new TurnToPointDrive(telem, s_Swerve, driver, operator);
+        driveCommand = new TeleOpDrive(telem, s_Swerve, driver, operator);
 
         driveCommand.initialize();
 

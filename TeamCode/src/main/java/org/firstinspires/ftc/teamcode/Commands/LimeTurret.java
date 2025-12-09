@@ -29,7 +29,14 @@ public class LimeTurret {
 
     private double timestamp;
 
+    private boolean areWeWinners;
+
+    private double closeSkew;
+    private double farSkew;
+
     public LimeTurret(Swerve s_Swerve, Turret s_Turret, Limelight s_Lime, FusionOdometry s_Lemon, OmegaController m_Operator, OmegaController m_Driver, EZTelemetry telem, boolean areWeWinners){
+
+        this.areWeWinners = areWeWinners;
 
         this.s_Swerve = s_Swerve;
         this.s_Turret = s_Turret;
@@ -43,6 +50,9 @@ public class LimeTurret {
         targetPose = areWeWinners ? Constants.TurretConstants.redTarget : Constants.TurretConstants.blueTarget;
         gatePose = new OmegaPose2D(0, 1.39, 0);
         farZonePose = areWeWinners ? new OmegaPose2D(1.36, 0, 0) : new OmegaPose2D(-1.36, 0, 0);
+
+        closeSkew = areWeWinners ? 1 : -1;
+        farSkew = areWeWinners ? -2 : 2;
     }
 
     public void initialize(){
@@ -67,8 +77,24 @@ public class LimeTurret {
         }
 
         if(m_Driver.isDown(GamepadKeys.Button.A)) {
+            if (s_Lime.isValidReaing()) {
 
-            if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
+                aprilBearing = s_Lime.getFilteredBearing();
+                double bearing = s_Turret.getDegrees() - aprilBearing;
+
+                if((s_Lemon.getCurrentPose().x() < -0.4 && !areWeWinners) || (s_Lemon.getCurrentPose().x() > 0.4 && areWeWinners)) {
+                    bearing += farSkew;
+                }
+
+                if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
+                    bearing += closeSkew;
+                }
+
+                s_Turret.setSetpoint(bearing);
+
+                timestamp = System.nanoTime();
+
+            } else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
 
                 double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
                 operatorJoystickAngle += 360;
@@ -81,7 +107,7 @@ public class LimeTurret {
 
                 s_Turret.setSetpoint(operatorJoystickAngle);
 
-            } else {
+            } else if(System.nanoTime() - timestamp > 0.8e9) {
 
                 OmegaPose2D currentPose = s_Lemon.getCurrentPose();
                 //gtes x and Y value on field

@@ -101,7 +101,10 @@ public class CoolShooters {
         telem.putTelemetry("Target Velocity", s_Shooter.getTargetVelocity());
         telem.putTelemetry("Current Velocity", s_Shooter.getShooterVelocity());
         telem.putTelemetry("Shooter Constant", s_Shooter.getShooterConstant());
-        telem.putDashboard("Shooter Velocity", s_Shooter.getShooterVelocity());
+        telem.putDashboard("Shooter Percentage", shooterPercent);
+        telem.putDashboard("Target Velocity", s_Shooter.getTargetVelocity());
+        telem.putDashboard("Current Velocity", s_Shooter.getShooterVelocity());
+        telem.putDashboard("Shooter Constant", s_Shooter.getShooterConstant());
         telem.putLine();
         telem.updateDashboard();
 

@@ -76,7 +76,25 @@ public class TestTurret {
         }
 
 
-        if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
+        if (s_Lime.isValidReaing()) {
+
+            aprilBearing = s_Lime.getFilteredBearing();
+            double bearing = s_Turret.getDegrees() - aprilBearing;
+
+            if((s_Lemon.getCurrentPose().x() < -0.4 && !areWeWinners) || (s_Lemon.getCurrentPose().x() > 0.4 && areWeWinners)) {
+                bearing += farSkew;
+            }
+
+            if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
+               bearing += closeSkew;
+            }
+
+            s_Turret.setSetpoint(bearing);
+
+            timestamp = System.nanoTime();
+
+        } else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
+
             double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
             operatorJoystickAngle += 360;
             operatorJoystickAngle %= 360;
@@ -90,7 +108,7 @@ public class TestTurret {
 
         } else {
 
-            if(System.nanoTime() - timestamp > 0.3e9){
+            if(System.nanoTime() - timestamp > 0.8e9){
 
                 OmegaPose2D currentPose = s_Lemon.getCurrentPose();                    //gtes x and Y value on field
 
