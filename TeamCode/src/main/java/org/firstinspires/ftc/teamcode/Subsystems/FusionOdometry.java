@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.Utilities.OmegaDeadLocalizer;
 public class FusionOdometry {
 
     private final EZTelemetry telem;
-//    private final Follower follower;
     private final OmegaDeadLocalizer localizer;
 
     private boolean enableTelemetry;
@@ -41,7 +40,7 @@ public class FusionOdometry {
     }
 
     public void zeroGyro() {
-        localizer.setPose(new Pose(pedroPose.getX(), pedroPose.getY(), 0));
+        localizer.setPose(new Pose(pedroPose.getX(), pedroPose.getY(), Math.toRadians(90)));
     }
 
     public void setPose(OmegaPose2D newPose) {
@@ -72,17 +71,32 @@ public class FusionOdometry {
             telem.putTelemetry("Current Heading", getHeading());
             telem.putLine();
 
+            telem.putLine("Pedro ");
+            telem.putTelemetry("Pedro X Pose", pedroPose.getX());
+            telem.putTelemetry("Pedro Y Pose", pedroPose.getY());
+            telem.putTelemetry("Pedro Heading", Math.toDegrees(getPedroPose().getHeading()));
+            telem.putLine();
+
         }
     }
 
     public OmegaPose2D pedroToOmega(Pose pedrosPose) {
         double heading = Math.toDegrees(pedrosPose.getHeading());
-        heading %= 360;
-        return new OmegaPose2D(pedrosPose.getY() * -0.0254, pedrosPose.getX() * 0.0254, heading);
+        heading -= 90;
+        heading = (heading + 360) % 360;
+        return new OmegaPose2D(pedrosPose.getX() * 0.0254, pedrosPose.getY() * 0.0254, heading);
     }
 
     public Pose omegaToPedro(OmegaPose2D omegasPose) {
-        return new Pose(omegasPose.y() * 39.3701, omegasPose.x() * -39.3701, Math.toRadians(omegasPose.r()));
+        double heading = Math.toRadians(omegasPose.r());
+        heading += (Math.PI/2);
+        if(heading > Math.PI) {
+            heading -= Math.PI*2;
+        }
+        if(heading < -Math.PI) {
+            heading += Math.PI*2;
+        }
+        return new Pose(omegasPose.x() * 39.3701, omegasPose.y() * 39.3701, heading);
     }
 
 }

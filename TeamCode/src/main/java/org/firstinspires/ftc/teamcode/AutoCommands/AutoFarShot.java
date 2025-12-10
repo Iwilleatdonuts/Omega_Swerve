@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
@@ -17,6 +18,7 @@ public class AutoFarShot {
 
     private final Swerve s_Swerve;
     private final Shooter s_Shooter;
+    private final Turret s_Turret;
     private final Intake s_Intake;
     private final Feeder s_Feeder;
     private final Limelight s_Lime;
@@ -35,7 +37,7 @@ public class AutoFarShot {
     private double timestamp;
     private double shooterSpeed;
 
-    public AutoFarShot(Swerve s_Swerve, Shooter s_Shooter, Intake s_Intake, Feeder s_Feeder, Limelight s_Lime, FusionOdometry s_Lemno, EZTelemetry telem, boolean areWeWinners){
+    public AutoFarShot(Swerve s_Swerve, Shooter s_Shooter, Turret s_Turret, Intake s_Intake, Feeder s_Feeder, Limelight s_Lime, FusionOdometry s_Lemno, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
 
@@ -45,6 +47,7 @@ public class AutoFarShot {
 
         this.s_Swerve = s_Swerve;
         this.s_Shooter = s_Shooter;
+        this.s_Turret = s_Turret;
         this.s_Intake = s_Intake;
         this.s_Feeder = s_Feeder;
         this.s_Lime = s_Lime;
@@ -79,6 +82,7 @@ public class AutoFarShot {
             case 0:
                 s_Feeder.closeGate();
                 driveController.reset();
+                s_Intake.setSpeed(1);
                 phase++;
                 break;
             case 1:
@@ -88,8 +92,9 @@ public class AutoFarShot {
                 double[] outputs = driveController.getOutputs();
 
                 s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
+                s_Intake.setSpeed(1);
 
-                if(isAtRoughSetpoint() && s_Shooter.shooterAtSpeed()) {
+                if(isAtRoughSetpoint() && s_Shooter.shooterAtSpeed() && s_Turret.atRoughSetpoint()) {
                     timestamp = System.nanoTime();
                     s_Swerve.stop();
                     phase++;

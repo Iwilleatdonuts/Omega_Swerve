@@ -113,7 +113,7 @@ public class OmegaDeadLocalizer {
 
     public void update() {
         deltaTimeNano = timer.getElapsedTime();
-        timer.resetTimer();
+        timer.resetTimer();//
 
         updateEncoders();
         Matrix robotDeltas = getRobotDeltas();

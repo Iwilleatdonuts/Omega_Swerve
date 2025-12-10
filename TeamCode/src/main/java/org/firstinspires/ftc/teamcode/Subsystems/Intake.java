@@ -49,6 +49,10 @@ public class Intake {
         return intakeMotor.getCurrent(CurrentUnit.AMPS);
     }
 
+    public boolean hasThreeBalls() {
+        return getIntakeCurrent() > 7;
+    }
+
 
     public void toggleTelemetry() {
         enableTelemetry = !enableTelemetry;

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Commands;
 
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
@@ -52,58 +53,58 @@ public class DriveToDashboardPoint {
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
         int foo = (int) DriveTuner.targetPoseIndex;
         switch(foo) {
-            case 0:
-                targetPosition = new OmegaPose2D(0, 0, 0);
-                break;
-            case 1:
-                targetPosition = new OmegaPose2D(-1.5, 0, 0);
-                break;
-            case 2:
-                targetPosition = new OmegaPose2D(-1.5, 1, 0);
-                break;
-            case 3:
-                targetPosition = new OmegaPose2D(0, 1, 0);
-                break;
-            case 4:
-                targetPosition = new OmegaPose2D(-0.5, 0.5, 270);
-                break;
-            case 5:
-                targetPosition = new OmegaPose2D(-1, 0.5, 90);
-                break;
-
 //            case 0:
 //                targetPosition = new OmegaPose2D(0, 0, 0);
 //                break;
 //            case 1:
-//                targetPosition = Constants.AutoConstants.BlueConstants.closeShot;
+//                targetPosition = new OmegaPose2D(-1.5, 0, 0);
 //                break;
 //            case 2:
-//                targetPosition = Constants.AutoConstants.BlueConstants.closeBallLineup;
+//                targetPosition = new OmegaPose2D(-1.5, 1, 0);
 //                break;
 //            case 3:
-//                targetPosition = Constants.AutoConstants.BlueConstants.closeBallPickup;
+//                targetPosition = new OmegaPose2D(0, 1, 0);
 //                break;
 //            case 4:
-//                targetPosition = Constants.AutoConstants.BlueConstants.mediumBallLineup;
+//                targetPosition = new OmegaPose2D(-0.5, 0.5, 270);
 //                break;
 //            case 5:
-//                targetPosition = Constants.AutoConstants.BlueConstants.mediumBallPickup;
+//                targetPosition = new OmegaPose2D(-1, 0.5, 90);
 //                break;
-//            case 6:
-//                targetPosition = Constants.AutoConstants.BlueConstants.farBallLineup;
-//                break;
-//            case 7:
-//                targetPosition = Constants.AutoConstants.BlueConstants.farBallPickup;
-//                break;
-//            case 8:
-//                targetPosition = Constants.AutoConstants.BlueConstants.gateLineup;
-//                break;
-//            case 9:
-//                targetPosition = Constants.AutoConstants.BlueConstants.gatePush;
-//                break;
-//            case 10:
-//                targetPosition = Constants.AutoConstants.BlueConstants.closeStart;
-//                break;
+
+            case 0:
+                targetPosition = new OmegaPose2D(0, 0, 0);
+                break;
+            case 1:
+                targetPosition = Constants.AutoConstants.RedConstants.closeShot;
+                break;
+            case 2:
+                targetPosition = Constants.AutoConstants.RedConstants.closeBallLineup;
+                break;
+            case 3:
+                targetPosition = Constants.AutoConstants.RedConstants.closeBallPickup;
+                break;
+            case 4:
+                targetPosition = Constants.AutoConstants.RedConstants.mediumBallLineup;
+                break;
+            case 5:
+                targetPosition = Constants.AutoConstants.RedConstants.mediumBallPickup;
+                break;
+            case 6:
+                targetPosition = Constants.AutoConstants.RedConstants.farBallLineup;
+                break;
+            case 7:
+                targetPosition = Constants.AutoConstants.RedConstants.farBallPickup;
+                break;
+            case 8:
+                targetPosition = Constants.AutoConstants.RedConstants.gateLineup;
+                break;
+            case 9:
+                targetPosition = Constants.AutoConstants.RedConstants.gatePush;
+                break;
+            case 10:
+                targetPosition = Constants.AutoConstants.RedConstants.closeStart;
+                break;
         }
 
         if(DriveTuner.runIntakeIndex == 1) {

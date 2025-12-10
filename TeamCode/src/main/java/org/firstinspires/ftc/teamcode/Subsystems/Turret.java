@@ -126,6 +126,10 @@ public class Turret {
         return Math.abs(getDegrees() - getSetpoint()) < 1;
     }
 
+    public boolean atRoughSetpoint() {
+        return Math.abs(getDegrees() - getSetpoint()) < 2.5;
+    }
+
     public boolean isOutOfBounds() {
         double currentAngle = getDegrees();
         return currentAngle < Constants.TurretConstants.lowerRotationLimit || currentAngle > Constants.TurretConstants.upperRotationLimit;

@@ -27,12 +27,12 @@ public class DriveTuner {
         public static double roughAngleI = 0.0;
         public static double roughAngleD = 0.0;
         public static double roughAngleF = 0.06;
-        public static double preciseAngleP = 0.001;
-        public static double preciseAngleI = 0.001;
+        public static double preciseAngleP = 0.0013;
+        public static double preciseAngleI = 0.0016;
         public static double preciseAngleD = 0.0;
-        public static double preciseAngleF = 0.02;
+        public static double preciseAngleF = 0.015;
         public static double preciseAngleTolerance = 30;
-        public static double preciseAngleIZone = 15;
-        public static double preciseAngleIMax = 0.1;
+        public static double preciseAngleIZone = 12;
+        public static double preciseAngleIMax = 0.07;
     }
 }

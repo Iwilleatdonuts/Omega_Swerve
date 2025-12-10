@@ -46,7 +46,7 @@ public class SmartIntake {
 
     public void execute(){
 
-        if(s_Intake.getIntakeCurrent() > 7 && m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
+        if(s_Intake.hasThreeBalls()&& m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
             m_Driver.setRumble(300);
         }
 
@@ -59,7 +59,7 @@ public class SmartIntake {
             allowedToShoot = false;
         } else if (m_Driver.isDown(GamepadKeys.Button.A)) {
 
-            if(s_Shooter.shooterAtRoughSpeed() && s_Turret.atSetpoint() && s_Shooter.getShooterVelocity() > 100) {
+            if(s_Shooter.shooterAtRoughSpeed() && s_Turret.atRoughSetpoint() && s_Shooter.getShooterVelocity() > 100) {
                 s_Feeder.openGate();
                 s_Feeder.setFeederSpeed(1);
                 s_Intake.setSpeed(1);

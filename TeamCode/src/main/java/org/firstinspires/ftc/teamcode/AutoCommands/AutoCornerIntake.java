@@ -20,6 +20,8 @@ public class AutoCornerIntake {
     private final FusionOdometry s_Lemon;
 
     private OmegaPose2D[] targets;
+    private OmegaPose2D lineupPose;
+    private OmegaPose2D midPose;
     private OmegaPose2D finalPose;
 
     private final AutoDriveController driveController;
@@ -47,6 +49,9 @@ public class AutoCornerIntake {
         this.s_Feeder = s_Feeder;
         this.s_Lemon = s_Lemon;
 
+
+        lineupPose = areWeWinners? Constants.AutoConstants.RedConstants.cornerLineup : Constants.AutoConstants.BlueConstants.cornerLineup;
+        midPose = areWeWinners? Constants.AutoConstants.RedConstants.cornerMidPose : Constants.AutoConstants.BlueConstants.cornerMidPose;
         finalPose = areWeWinners? Constants.AutoConstants.RedConstants.cornerPickup : Constants.AutoConstants.BlueConstants.cornerPickup;
 
 //        if(areWeWinners) {
@@ -86,14 +91,12 @@ public class AutoCornerIntake {
 
         switch(phase) {
             case 0:
-//                waypointFollower.resetWaypointFollower();
                 driveController.reset();
-                driveController.setTargetPose(finalPose);
+                driveController.setTargetPose(lineupPose);
+                timestamp = System.nanoTime();
                 phase++;
                 break;
             case 1:
-
-//                outputs = waypointFollower.getWaypointOutputs(currentPose, poses);
 
                 driveController.updateCurrentPose(currentPose);
 
@@ -101,31 +104,43 @@ public class AutoCornerIntake {
 
                 s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
 
-                if(isAtRoughSetpoint()) {
+                if(isAtRoughSetpoint() || s_Intake.hasThreeBalls() || System.nanoTime() - timestamp > 1.5e9) {
                     timestamp = System.nanoTime();
+                    driveController.reset();
+                    driveController.setTargetPose(midPose);
                     phase++;
                 }
                 break;
             case 2:
-                s_Swerve.drive(0, 0.3, 0, true);
-                if(System.nanoTime() - timestamp > 0.3e9) {
+
+                driveController.updateCurrentPose(currentPose);
+
+                outputs = driveController.getOutputs();
+
+                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
+
+                if(isAtRoughSetpoint() || s_Intake.hasThreeBalls() || System.nanoTime() - timestamp > 0.8e9) {
                     timestamp = System.nanoTime();
+                    driveController.reset();
+                    driveController.setTargetPose(finalPose);
                     phase++;
                 }
                 break;
             case 3:
-                s_Swerve.drive(0, -0.3, 0, true);
-                if(System.nanoTime() - timestamp > 0.8e9) {
+
+                driveController.updateCurrentPose(currentPose);
+
+                outputs = driveController.getOutputs();
+
+                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
+
+                if(isAtRoughSetpoint() || s_Intake.hasThreeBalls() || System.nanoTime() - timestamp > 0.8e9) {
                     timestamp = System.nanoTime();
+                    s_Swerve.stop();
                     phase++;
                 }
                 break;
             case 4:
-                if(areWeWinners) {
-                    s_Swerve.drive(0.1, -0.1, 0, true);
-                } else {
-                    s_Swerve.drive(-0.1, -0.1, 0, true);
-                }
                 if(System.nanoTime() - timestamp > 0.5e9) {
                     timestamp = System.nanoTime();
                     isFinished = true;

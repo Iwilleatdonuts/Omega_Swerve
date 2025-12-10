@@ -59,10 +59,14 @@ public class AutoCloseShot {
     public void execute(){
 
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
-        s_Shooter.setShooterSpeed(0.38);
-        s_Shooter.setShooterAngle(Constants.ShooterConstants.closeAngle-0.08);
+        s_Shooter.setShooterSpeed(0.35);
+        s_Shooter.setShooterAngle(Constants.ShooterConstants.closeAngle);
 
         telem.putTelemetry("Phase", phase);
+
+        telem.putTelemetry("X Target", targetPosition.x());
+        telem.putTelemetry("Y Target", targetPosition.y());
+        telem.putTelemetry("R Error", targetPosition.r());
 
         switch(phase) {
             case 0:

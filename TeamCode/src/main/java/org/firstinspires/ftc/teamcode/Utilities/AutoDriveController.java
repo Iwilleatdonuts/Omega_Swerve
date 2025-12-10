@@ -91,31 +91,6 @@ public class AutoDriveController {
         return outputs;
     }
 
-    public double[] getSlowOutputs() {
-
-        double[] outputs = new double[3];
-
-        double xOutput = preciseXController.calculate(currentPose.x(), targetPose.x());
-        double yOutput = preciseYController.calculate(currentPose.y(), targetPose.y());
-
-        double rotationOutput = 0;
-
-        double currentHeading = currentPose.r();
-        if(getRError() > 0.5) {
-            if(xOutput != 0 || yOutput != 0) {
-                rotationOutput = -preciseAngleController.calculate(currentHeading, targetPose.r());
-            } else {
-                rotationOutput = -roughAngleController.calculate(currentHeading, targetPose.r());
-            }
-        }
-
-        outputs[0] = xOutput;
-        outputs[1] = yOutput;
-        outputs[2] = rotationOutput;
-
-        return outputs;
-    }
-
     public void setTargetPose(OmegaPose2D targetPose) {
         this.targetPose = targetPose;
     }

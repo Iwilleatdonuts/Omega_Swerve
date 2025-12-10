@@ -36,13 +36,13 @@ public class BlueFar12Overflow extends LinearOpMode {
         s_Lemon.setPose(Constants.AutoConstants.BlueConstants.farStart);
         s_Lemon.toggleTelemetry();
 
-        Swerve s_Swerve = new Swerve(hardwareMap, telem);
+        Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Lemon);
         Shooter s_Shooter = new Shooter(hardwareMap, telem);
         Turret s_Turret = new Turret(hardwareMap, telem);
         Intake s_Intake = new Intake(hardwareMap, telem);
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
-        AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lime, s_Lemon, telem, areWeWinners);
+        AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Turret, s_Intake, s_Feeder, s_Lime, s_Lemon, telem, areWeWinners);
         AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners, 1);
         AutoGate gateCommand = new AutoGate(s_Swerve, s_Lemon, telem, areWeWinners);
         AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime, areWeWinners, true);

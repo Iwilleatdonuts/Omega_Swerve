@@ -37,7 +37,7 @@ public class BlueClose12Overflow extends LinearOpMode {
         s_Lemin.setPose(Constants.AutoConstants.BlueConstants.closeStart);
         s_Lemin.toggleTelemetry();
 
-        Swerve s_Swerve = new Swerve(hardwareMap, telem);
+        Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Lemin);
         Shooter s_Shooter = new Shooter(hardwareMap, telem);
         Turret s_Turret = new Turret(hardwareMap, telem);
         Intake s_Intake = new Intake(hardwareMap, telem);

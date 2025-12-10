@@ -33,20 +33,20 @@ public class RedClose12Overflow extends LinearOpMode {
         EZTelemetry telem = new EZTelemetry(telemetry);
 
         Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
-        FusionOdometry s_Lemin = new FusionOdometry(hardwareMap, telem);
-        s_Lemin.setPose(Constants.AutoConstants.RedConstants.closeStart);
-        s_Lemin.toggleTelemetry();
+        FusionOdometry s_Lemon = new FusionOdometry(hardwareMap, telem);
+        s_Lemon.setPose(Constants.AutoConstants.RedConstants.closeStart);
+        s_Lemon.toggleTelemetry();
 
-        Swerve s_Swerve = new Swerve(hardwareMap, telem);
+        Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Lemon);
         Shooter s_Shooter = new Shooter(hardwareMap, telem);
         Turret s_Turret = new Turret(hardwareMap, telem);
         Intake s_Intake = new Intake(hardwareMap, telem);
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
-        AutoCloseShot autoShootCommand = new AutoCloseShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lemin, telem, areWeWinners);
-        AutoMediumShot autoMediumShot = new AutoMediumShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lime, s_Lemin, telem, areWeWinners);
-        AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemin, telem, areWeWinners, 1);
-        AutoGate gateCommand = new AutoGate(s_Swerve, s_Lemin, telem, areWeWinners);
+        AutoCloseShot autoShootCommand = new AutoCloseShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
+        AutoMediumShot autoMediumShot = new AutoMediumShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lime, s_Lemon, telem, areWeWinners);
+        AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners, 1);
+        AutoGate gateCommand = new AutoGate(s_Swerve, s_Lemon, telem, areWeWinners);
         AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime, areWeWinners, false);
 
         int phase = 0;
@@ -80,7 +80,7 @@ public class RedClose12Overflow extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            s_Lemin.skadoodle();
+            s_Lemon.skadoodle();
             s_Lime.skadoodle();
             turretCommand.execute();
             telem.updateAll();

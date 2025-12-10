@@ -101,7 +101,7 @@ public class AutoDirectIntake {
 
                 s_Swerve.drivePrep(outputs[0], outputs[1], outputs[2], true);
 
-                if(System.nanoTime() - timestamp > 0.4) {
+                if(System.nanoTime() - timestamp > 0.2) {
                     s_Swerve.stop();
                     timestamp = System.nanoTime();
                     driveController.reset();
@@ -113,13 +113,13 @@ public class AutoDirectIntake {
             case 3:
 
                 driveController.updateCurrentPose(currentPose);
-                outputs = driveController.getSlowOutputs();
+                outputs = driveController.getOutputs();
 
                 s_Intake.setSpeed(1);
 
                 s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
 
-                if(System.nanoTime() - timestamp > 1.5e9) {
+                if(System.nanoTime() - timestamp > 1.5e9 || s_Intake.hasThreeBalls()) {
                     s_Swerve.stop();
 //                    timestamp = System.nanoTime();
 //                    driveController.setTargetPose(pickupTarget);
