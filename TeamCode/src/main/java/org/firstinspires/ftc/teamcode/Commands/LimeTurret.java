@@ -76,57 +76,57 @@ public class LimeTurret {
             s_Lemon.setLinearPose(farZonePose);
         }
 
-        if(m_Driver.isDown(GamepadKeys.Button.A)) {
-            if (s_Lime.isValidReaing()) {
+        if (s_Lime.isValidReaing()) {
 
-                aprilBearing = s_Lime.getFilteredBearing();
-                double bearing = s_Turret.getDegrees() - aprilBearing;
+            aprilBearing = s_Lime.getFilteredBearing();
+            double bearing = s_Turret.getDegrees() - aprilBearing;
 
-                if((s_Lemon.getCurrentPose().x() < -0.4 && !areWeWinners) || (s_Lemon.getCurrentPose().x() > 0.4 && areWeWinners)) {
-                    bearing += farSkew;
-                }
-
-                if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
-                    bearing += closeSkew;
-                }
-
-                s_Turret.setSetpoint(bearing);
-
-                timestamp = System.nanoTime();
-
-            } else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
-
-                double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
-                operatorJoystickAngle += 360;
-                operatorJoystickAngle %= 360;
-
-                operatorJoystickAngle -= s_Swerve.getHeading();
-
-                operatorJoystickAngle += 360;
-                operatorJoystickAngle %= 360;
-
-                s_Turret.setSetpoint(operatorJoystickAngle);
-
-            } else if(System.nanoTime() - timestamp > 0.8e9) {
-
-                OmegaPose2D currentPose = s_Lemon.getCurrentPose();
-                //gtes x and Y value on field
-
-                double theta = Math.toDegrees(Math.atan2(-(targetPose.x() - currentPose.x()), targetPose.y() - currentPose.y()));
-                double turretHeading = theta - s_Lemon.getHeading();
-
-                if(turretHeading < -180) {
-                    turretHeading += 360;
-                }
-
-                if(turretHeading > 180) {
-                    turretHeading -= 360;
-                }
-
-                s_Turret.setSetpoint(turretHeading);
+            if((s_Lemon.getCurrentPose().x() < -0.4 && !areWeWinners) || (s_Lemon.getCurrentPose().x() > 0.4 && areWeWinners)) {
+                bearing += farSkew;
             }
-        } else {
-            s_Turret.setSetpoint(0);
+
+            if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
+                bearing += closeSkew;
+            }
+
+            s_Turret.setSetpoint(bearing);
+
+            timestamp = System.nanoTime();
+
+        } else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
+
+            double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
+            operatorJoystickAngle += 360;
+            operatorJoystickAngle %= 360;
+
+            operatorJoystickAngle -= s_Swerve.getHeading();
+
+            operatorJoystickAngle += 360;
+            operatorJoystickAngle %= 360;
+
+            s_Turret.setSetpoint(operatorJoystickAngle);
+
+        } else if(System.nanoTime() - timestamp > 0.8e9) {
+
+            OmegaPose2D currentPose = s_Lemon.getCurrentPose();
+            //gtes x and Y value on field
+
+            double theta = Math.toDegrees(Math.atan2(-(targetPose.x() - currentPose.x()), targetPose.y() - currentPose.y()));
+            double turretHeading = theta - s_Lemon.getHeading();
+
+            if(turretHeading < -180) {
+                turretHeading += 360;
+            }
+
+            if(turretHeading > 180) {
+                turretHeading -= 360;
+            }
+
+            s_Turret.setSetpoint(turretHeading);
+        }
+
+        if(m_Driver.wasJustPressed(GamepadKeys.Button.A) && !s_Lime.isValidReaing()) {
+            timestamp = System.nanoTime() - 1e9;
         }
 
         s_Turret.runToSetpoint();

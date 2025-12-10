@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
-import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
+import org.firstinspires.ftc.teamcode.Utilities.DriveTuner;
 import org.firstinspires.ftc.teamcode.Utilities.WaypointFollower;
 
 public class DriveToDashboardPointWithSwerb {
@@ -44,11 +44,11 @@ public class DriveToDashboardPointWithSwerb {
     public void execute(){
 
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
-        int foo = (int)PIDTuning.randomVal0;
+        int foo = (int) DriveTuner.targetPoseIndex;
 
-        if(PIDTuning.randomVal1 == 1) {
+        if(DriveTuner.runIntakeIndex == 1) {
             s_Intake.setSpeed(1);
-        } else if (PIDTuning.randomVal1 == 2) {
+        } else if (DriveTuner.runIntakeIndex == 2) {
             s_Intake.setSpeed(-1);
         } else {
             s_Intake.setSpeed(0);

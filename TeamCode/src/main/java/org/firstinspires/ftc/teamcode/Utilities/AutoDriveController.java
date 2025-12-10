@@ -2,42 +2,33 @@ package org.firstinspires.ftc.teamcode.Utilities;
 
 import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
+import static org.firstinspires.ftc.teamcode.Utilities.DriveTuner.AngleTuner.*;
+
+import static org.firstinspires.ftc.teamcode.Utilities.DriveTuner.LinearTuner.*;
+
 public class AutoDriveController {
 
-    private final PIDController xController;
-    private final PIDController yController;
+    private PIDController roughXController;
+    private PIDController roughYController;
 
-    private final PIDController slowXController;
-    private final PIDController slowYController;
+    private PIDController preciseXController;
+    private PIDController preciseYController;
 
-    private final PIDController staticAnglePID;
-    private final PIDController dynamicAnglePID;
+    private PIDController roughAngleController;
+    private PIDController preciseAngleController;
 
     private OmegaPose2D targetPose;
     private OmegaPose2D currentPose;
 
+    private double roughXFF;
+    private double preciseXFF;
+
+    private double roughYFF;
+    private double preciseYFF;
+
     public AutoDriveController() {
 
-        xController = new PIDController(1.2, 0.1, 0.05);
-        yController = new PIDController(1.2, 0.1, 0.05);
-
-        xController.setIZone(0.5);
-        yController.setIZone(0.5);
-
-        slowXController = new PIDController(0.4, 0.1, 0.02);
-        slowYController = new PIDController(0.4, 0.1, 0.02);
-        slowXController.setIZone(0.5);
-        slowYController.setIZone(0.5);
-
-        staticAnglePID = new PIDController(0.006, 0.02, 0.00015);
-//        staticAnglePID = new PIDController(PIDTuning.k2P, PIDTuning.k2I, PIDTuning.k2D);
-        staticAnglePID.setIZone(40);
-        staticAnglePID.enableContinuousInput(0, 360);
-
-        dynamicAnglePID = new PIDController(0.0035, 0.015, 0.0001);
-//        dynamicAnglePID = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
-        dynamicAnglePID.setIZone(40);
-        dynamicAnglePID.enableContinuousInput(0, 360);
+        initializeControllers();
 
         targetPose = new OmegaPose2D(0, 0, 0);
         currentPose = new OmegaPose2D(0, 0, 0);
@@ -45,28 +36,52 @@ public class AutoDriveController {
     }
 
     public void reset() {
-        xController.reset();
-        yController.reset();
-        staticAnglePID.reset();
-        dynamicAnglePID.reset();
+        roughXController.reset();
+        roughYController.reset();
+        preciseXController.reset();
+        preciseYController.reset();
+        roughAngleController.reset();
+        preciseAngleController.reset();
     }
 
     public double[] getOutputs() {
 
         double[] outputs = new double[3];
 
-        double xOutput = xController.calculate(currentPose.x(), targetPose.x());
-        double yOutput = yController.calculate(currentPose.y(), targetPose.y());
+        double xOutput;
+        double yOutput;
 
-        double rotationOutput = 0;
+        if(getXError() < 0.01) {
+            xOutput = 0;
+        } else if(getXError() > preciseLinearTolerance) {
+            xOutput = roughXController.calculate(currentPose.x(), targetPose.x());
+            xOutput += (Math.signum(xOutput) * roughXFF);
+        } else {
+            xOutput = preciseXController.calculate(currentPose.x(), targetPose.x());
+            xOutput += (Math.signum(xOutput) * preciseXFF);
+        }
+
+        if(getYError() < 0.01) {
+            yOutput = 0;
+        } else if(getYError() > preciseLinearTolerance) {
+            yOutput = roughYController.calculate(currentPose.y(), targetPose.y());
+            yOutput += (Math.signum(yOutput) * roughYFF);
+        } else {
+            yOutput = preciseYController.calculate(currentPose.y(), targetPose.y());
+            yOutput += (Math.signum(yOutput) * preciseYFF);
+        }
+
+        double rotationOutput;
 
         double currentHeading = currentPose.r();
-        if(Math.abs(currentHeading - targetPose.r()) > 0.5) {
-            if(xOutput != 0 || yOutput != 0) {
-                rotationOutput = -dynamicAnglePID.calculate(currentHeading, targetPose.r());
-            } else {
-                rotationOutput = -staticAnglePID.calculate(currentHeading, targetPose.r());
-            }
+        if(getRError() < 1) {
+            rotationOutput = 0;
+        } else if(getRError() > preciseAngleTolerance) {
+            rotationOutput = -roughAngleController.calculate(currentHeading, targetPose.r());
+            rotationOutput += Math.signum(rotationOutput) * roughAngleF;
+        } else {
+            rotationOutput = -preciseAngleController.calculate(currentHeading, targetPose.r());
+            rotationOutput += Math.signum(rotationOutput) * preciseAngleF;
         }
 
         outputs[0] = xOutput;
@@ -80,17 +95,17 @@ public class AutoDriveController {
 
         double[] outputs = new double[3];
 
-        double xOutput = slowXController.calculate(currentPose.x(), targetPose.x());
-        double yOutput = slowYController.calculate(currentPose.y(), targetPose.y());
+        double xOutput = preciseXController.calculate(currentPose.x(), targetPose.x());
+        double yOutput = preciseYController.calculate(currentPose.y(), targetPose.y());
 
         double rotationOutput = 0;
 
         double currentHeading = currentPose.r();
-        if(Math.abs(currentHeading - targetPose.r()) > 0.5) {
+        if(getRError() > 0.5) {
             if(xOutput != 0 || yOutput != 0) {
-                rotationOutput = -dynamicAnglePID.calculate(currentHeading, targetPose.r());
+                rotationOutput = -preciseAngleController.calculate(currentHeading, targetPose.r());
             } else {
-                rotationOutput = -staticAnglePID.calculate(currentHeading, targetPose.r());
+                rotationOutput = -roughAngleController.calculate(currentHeading, targetPose.r());
             }
         }
 
@@ -127,6 +142,39 @@ public class AutoDriveController {
 
     public boolean isAtRoughSetpoint() {
         return getXError() < 0.1 && getYError() < 0.1 && getRError() < 10;
+    }
+
+    public void initializeControllers() {
+
+        roughXController = new PIDController(roughLinearP, roughLinearI, roughLinearD);
+        roughYController = new PIDController(roughLinearP, roughLinearI, roughLinearD);
+        preciseXController = new PIDController(preciseLinearP, preciseLinearI, preciseLinearD);
+        preciseYController = new PIDController(preciseLinearP, preciseLinearI, preciseLinearD);
+
+        preciseXController.setIZone(preciseLinearIZone);
+        preciseYController.setIZone(preciseLinearIZone);
+
+        roughXFF = roughLinearF;
+        preciseXFF = preciseLinearF;
+        roughYFF = roughLinearF;
+        preciseYFF = preciseLinearF;
+
+        roughAngleController = new PIDController(roughAngleP, roughAngleI, roughAngleD);
+        preciseAngleController = new PIDController(preciseAngleP, preciseAngleI, preciseAngleD);
+
+        roughAngleController.enableContinuousInput(0, 360);
+        preciseAngleController.enableContinuousInput(0, 360);
+
+        preciseAngleController.setIZone(preciseAngleIZone);
+        preciseAngleController.setIntegratorRange(-preciseAngleIMax, preciseAngleIMax);
+
+//        staticAnglePID = new PIDController(0.006, 0.02, 0.00015);
+//        staticAnglePID.setIZone(40);
+//        staticAnglePID.enableContinuousInput(0, 360);
+//
+//        dynamicAnglePID = new PIDController(0.0035, 0.015, 0.0001);
+//        dynamicAnglePID.setIZone(40);
+//        dynamicAnglePID.enableContinuousInput(0, 360);
     }
 
 }

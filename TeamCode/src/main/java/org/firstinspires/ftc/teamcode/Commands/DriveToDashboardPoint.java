@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
-import org.firstinspires.ftc.teamcode.Constants;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+
 import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
-import org.firstinspires.ftc.teamcode.Utilities.PIDTuning;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
+import org.firstinspires.ftc.teamcode.Utilities.DriveTuner;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
 public class DriveToDashboardPoint {
@@ -19,17 +21,18 @@ public class DriveToDashboardPoint {
 
     private OmegaPose2D targetPosition;
 
-    private final AutoDriveController driveController;
+    private AutoDriveController driveController;
 
-    public DriveToDashboardPoint(Swerve s_Swerve, Intake s_Intake, FusionOdometry s_Lemon, EZTelemetry telem){
+    private final OmegaController controller;
+    public DriveToDashboardPoint(Swerve s_Swerve, Intake s_Intake, FusionOdometry s_Lemon, EZTelemetry telem, OmegaController controller){
+
+        this.controller = controller;
 
         this.telem = telem;
 
         this.s_Swerve = s_Swerve;
         this.s_Intake = s_Intake;
         this.s_Lemon = s_Lemon;
-
-//        targetPosition = s_Swerve.getTargetPose();
 
         driveController = new AutoDriveController();
     }
@@ -40,47 +43,72 @@ public class DriveToDashboardPoint {
 
     public void execute(){
 
+        controller.readButtons();
+
+        if(controller.wasJustPressed(GamepadKeys.Button.A)) {
+            driveController.initializeControllers();
+        }
+
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
-        int foo = (int)PIDTuning.randomVal0;
+        int foo = (int) DriveTuner.targetPoseIndex;
         switch(foo) {
             case 0:
                 targetPosition = new OmegaPose2D(0, 0, 0);
                 break;
             case 1:
-                targetPosition = Constants.AutoConstants.RedConstants.closeShot;
+                targetPosition = new OmegaPose2D(-1.5, 0, 0);
                 break;
             case 2:
-                targetPosition = Constants.AutoConstants.RedConstants.closeBallLineup;
+                targetPosition = new OmegaPose2D(-1.5, 1, 0);
                 break;
             case 3:
-                targetPosition = Constants.AutoConstants.RedConstants.closeBallPickup;
+                targetPosition = new OmegaPose2D(0, 1, 0);
                 break;
             case 4:
-                targetPosition = Constants.AutoConstants.RedConstants.mediumBallLineup;
+                targetPosition = new OmegaPose2D(-0.5, 0.5, 270);
                 break;
             case 5:
-                targetPosition = Constants.AutoConstants.RedConstants.mediumBallPickup;
+                targetPosition = new OmegaPose2D(-1, 0.5, 90);
                 break;
-            case 6:
-                targetPosition = Constants.AutoConstants.RedConstants.farBallLineup;
-                break;
-            case 7:
-                targetPosition = Constants.AutoConstants.RedConstants.farBallPickup;
-                break;
-            case 8:
-                targetPosition = Constants.AutoConstants.RedConstants.gateLineup;
-                break;
-            case 9:
-                targetPosition = Constants.AutoConstants.RedConstants.gatePush;
-                break;
-            case 10:
-                targetPosition = Constants.AutoConstants.RedConstants.closeStart;
-                break;
+
+//            case 0:
+//                targetPosition = new OmegaPose2D(0, 0, 0);
+//                break;
+//            case 1:
+//                targetPosition = Constants.AutoConstants.BlueConstants.closeShot;
+//                break;
+//            case 2:
+//                targetPosition = Constants.AutoConstants.BlueConstants.closeBallLineup;
+//                break;
+//            case 3:
+//                targetPosition = Constants.AutoConstants.BlueConstants.closeBallPickup;
+//                break;
+//            case 4:
+//                targetPosition = Constants.AutoConstants.BlueConstants.mediumBallLineup;
+//                break;
+//            case 5:
+//                targetPosition = Constants.AutoConstants.BlueConstants.mediumBallPickup;
+//                break;
+//            case 6:
+//                targetPosition = Constants.AutoConstants.BlueConstants.farBallLineup;
+//                break;
+//            case 7:
+//                targetPosition = Constants.AutoConstants.BlueConstants.farBallPickup;
+//                break;
+//            case 8:
+//                targetPosition = Constants.AutoConstants.BlueConstants.gateLineup;
+//                break;
+//            case 9:
+//                targetPosition = Constants.AutoConstants.BlueConstants.gatePush;
+//                break;
+//            case 10:
+//                targetPosition = Constants.AutoConstants.BlueConstants.closeStart;
+//                break;
         }
 
-        if(PIDTuning.randomVal1 == 1) {
+        if(DriveTuner.runIntakeIndex == 1) {
             s_Intake.setSpeed(1);
-        } else if (PIDTuning.randomVal1 == 2) {
+        } else if (DriveTuner.runIntakeIndex == 2) {
             s_Intake.setSpeed(-1);
         } else {
             s_Intake.setSpeed(0);
@@ -90,15 +118,12 @@ public class DriveToDashboardPoint {
         driveController.updateCurrentPose(currentPose);
 
         double[] outputs;
-        double[] xOutputs;
 
-        if(foo == 3 || foo == 5 || foo == 7 || foo == 8 || foo == 9) {
-            outputs = driveController.getSlowOutputs();
-//            xOutputs = driveController.getSlowOutputs();
-//            outputs = new double[]{xOutputs[0], 0, 0};
-        } else {
+//        if(foo == 3 || foo == 5 || foo == 7 || foo == 8 || foo == 9) {
+//            outputs = driveController.getSlowOutputs();
+//        } else {
             outputs = driveController.getOutputs();
-        }
+//        }
 
         s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
     }

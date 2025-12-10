@@ -129,7 +129,7 @@ public class AutoSwoopyIntake {
         double yError = Math.abs(s_Lemon.getCurrentPose().y() - finalPose.y());
         double rError = Math.abs(s_Lemon.getHeading() - finalPose.r());
 
-        return xError < 0.06 && yError < 0.06 && rError < 6;
+        return xError < 0.06 && yError < 0.06 && rError < 4;
     }
 
     public boolean isFinished() {

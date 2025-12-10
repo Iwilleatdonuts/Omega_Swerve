@@ -5,6 +5,7 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Commands.ManualCommands.JoystickTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TeleOpDrive;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
 import org.firstinspires.ftc.teamcode.Constants;
@@ -30,10 +31,10 @@ public class FunShooter extends OpMode {
     private Shooter s_Shooter;
 
     private TeleOpDrive driveCommand;
+    private JoystickTurret turretCommand;
 
     private double shooterAngle;
     private double shooterSpeed;
-    private double turretAngle;
 
     @Override
     public void init() {
@@ -50,12 +51,13 @@ public class FunShooter extends OpMode {
         s_Shooter = new Shooter(hardwareMap, telem);
 
         driveCommand = new TeleOpDrive(telem, s_Swerve, driver, operator);
+        turretCommand = new JoystickTurret(s_Swerve, s_Turret, operator);
 
         driveCommand.initialize();
+        turretCommand.initialize();
 
         shooterAngle = Constants.ShooterConstants.closeAngle;
         shooterSpeed = 0;
-        turretAngle = 0;
 
     }
 
@@ -68,7 +70,7 @@ public class FunShooter extends OpMode {
 
         s_Intake.setSpeed(driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
-        if(driver.isDown(GamepadKeys.Button.A)) {
+        if(driver.isDown(GamepadKeys.Button.A) || operator.isDown(GamepadKeys.Button.A)) {
             s_Intake.setSpeed(1);
             s_Feeder.setFeederSpeed(1);
             s_Feeder.openGate();
@@ -80,20 +82,6 @@ public class FunShooter extends OpMode {
             s_Feeder.closeGate();
         }
 
-        if(driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-            if(driver.isDown(GamepadKeys.Button.X)) {
-                shooterSpeed += 0.2;
-            }
-
-            if(driver.isDown(GamepadKeys.Button.Y)) {
-                shooterAngle -= 0.2;
-            }
-
-            if(driver.isDown(GamepadKeys.Button.B)) {
-                turretAngle += 20;
-            }
-        }
-
         if(driver.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
             if(driver.isDown(GamepadKeys.Button.X)) {
                 shooterSpeed -= 0.2;
@@ -102,19 +90,26 @@ public class FunShooter extends OpMode {
             if(driver.isDown(GamepadKeys.Button.Y)) {
                 shooterAngle += 0.2;
             }
+        }
 
-            if(driver.isDown(GamepadKeys.Button.B)) {
-                turretAngle -= 20;
+
+        if(driver.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            if(driver.isDown(GamepadKeys.Button.X)) {
+                shooterSpeed += 0.2;
+            }
+
+            if(driver.isDown(GamepadKeys.Button.Y)) {
+                shooterAngle -= 0.2;
             }
         }
 
         shooterSpeed = MathUtil.clamp(1, 0, shooterSpeed);
         shooterAngle = MathUtil.clamp(1, 0, shooterAngle);
-        turretAngle = MathUtil.clamp(100, -100, turretAngle);
+
+        turretCommand.execute();
 
         s_Shooter.setShooterSpeed(shooterSpeed);
         s_Shooter.setShooterAngle(shooterAngle);
-        s_Turret.setSetpoint(turretAngle);
 
         if (driver.wasJustPressed(GamepadKeys.Button.BACK)) {
             s_Swerve.zeroGyro();

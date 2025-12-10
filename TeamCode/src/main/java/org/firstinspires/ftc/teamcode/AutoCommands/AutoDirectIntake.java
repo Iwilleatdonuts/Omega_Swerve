@@ -144,7 +144,7 @@ public class AutoDirectIntake {
         double yError = Math.abs(s_Lemion.getCurrentPose().y() - lineupTarget.y());
         double rError = Math.abs(s_Lemion.getHeading() - lineupTarget.r());
 
-        return xError < 0.06 && yError < 0.06 && rError < 6;
+        return xError < 0.06 && yError < 0.06 && rError < 4;
     }
 
     public boolean isFinished() {

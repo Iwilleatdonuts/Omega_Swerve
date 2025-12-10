@@ -69,19 +69,20 @@ public class FusionOdometry {
             telem.putLine("Odometry ");
             telem.putTelemetry("Current X Pose", currentPose.x());
             telem.putTelemetry("Current Y Pose", currentPose.y());
-            telem.putTelemetry("Current Heading", currentPose.r());
+            telem.putTelemetry("Current Heading", getHeading());
             telem.putLine();
 
         }
-
     }
 
     public OmegaPose2D pedroToOmega(Pose pedrosPose) {
-        return new OmegaPose2D(pedrosPose.getY() * -0.0254, pedrosPose.getX() * 0.0254, Math.toDegrees(pedrosPose.getHeading()));
+        double heading = Math.toDegrees(pedrosPose.getHeading());
+        heading %= 360;
+        return new OmegaPose2D(pedrosPose.getY() * -0.0254, pedrosPose.getX() * 0.0254, heading);
     }
 
     public Pose omegaToPedro(OmegaPose2D omegasPose) {
-        return new Pose(omegasPose.y() * 39.3701, omegasPose.x() * 39.3701, Math.toRadians(omegasPose.r()));
+        return new Pose(omegasPose.y() * 39.3701, omegasPose.x() * -39.3701, Math.toRadians(omegasPose.r()));
     }
 
 }
