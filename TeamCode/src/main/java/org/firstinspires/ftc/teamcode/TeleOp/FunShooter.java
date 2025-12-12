@@ -108,7 +108,7 @@ public class FunShooter extends OpMode {
 
         turretCommand.execute();
 
-        s_Shooter.setShooterSpeed(shooterSpeed);
+        s_Shooter.setShooterPower(shooterSpeed);
         s_Shooter.setShooterAngle(shooterAngle);
 
         if (driver.wasJustPressed(GamepadKeys.Button.BACK)) {

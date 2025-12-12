@@ -52,7 +52,7 @@ public class SmartIntake {
 
         s_Intake.setSpeed(m_Driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - m_Driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
-        if (m_Operator.isDown(GamepadKeys.Button.A)) {
+        if (m_Operator.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.9) {
             s_Feeder.openGate();
             s_Feeder.setFeederSpeed(1);
             s_Intake.setSpeed(1);

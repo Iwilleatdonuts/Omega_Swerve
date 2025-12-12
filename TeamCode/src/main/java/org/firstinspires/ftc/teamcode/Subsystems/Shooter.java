@@ -82,6 +82,11 @@ public class Shooter {
         upperShooterMotor.setPower(output);
     }
 
+    public void setShooterPower(double power) {
+        lowerShooterMotor.setPower(power);
+        upperShooterMotor.setPower(power);
+    }
+
     public double getShooterVelocity() {
         return lowerShooterMotor.getVelocity();
     }

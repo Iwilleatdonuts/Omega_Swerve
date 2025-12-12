@@ -70,7 +70,7 @@ public class CoolShooters {
             shooterAngle = Constants.ShooterConstants.closeAngle;
         }
 
-        if(m_Driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || m_Operator.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+        if(m_Driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
             shootersGunnaShoot = true;
         }
 
@@ -79,7 +79,19 @@ public class CoolShooters {
         }
 
         if(shootersGunnaShoot){
-            if(s_Lime.isValidReaing()){
+                //MANUAL CLOSE SHOT
+            if (m_Operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
+                shooterPercent = 0.38 + s_Shooter.getShooterConstant();
+                shooterAngle = Constants.ShooterConstants.closeAngle;
+                //MANUAL MEDOIUM SHOT
+            } else if(m_Operator.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
+                shooterPercent = 0.45 + s_Shooter.getShooterConstant();
+                shooterAngle = Constants.ShooterConstants.closeAngle-0.5;
+                //MANUAL FAR SHOT
+            } else if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) {
+                shooterPercent = 0.56 + s_Shooter.getShooterConstant();
+                shooterAngle = Constants.ShooterConstants.farAngle;
+            } else if(s_Lime.isValidReaing()){
                 double distance = s_Lime.getFilteredDistance();
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
                 shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
