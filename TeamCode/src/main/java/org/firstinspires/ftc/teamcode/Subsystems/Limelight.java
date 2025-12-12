@@ -93,6 +93,14 @@ public class Limelight {
         return filteredDistance;
     }
 
+    public double getSkewedBearing(double swerveHeading, double turretHeading) {
+        if(isValidReaing()) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
     public boolean isValidReaing() {
         return latestResult.isValid();
     }

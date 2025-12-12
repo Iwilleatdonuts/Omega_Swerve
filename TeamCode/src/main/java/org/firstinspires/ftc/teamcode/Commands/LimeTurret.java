@@ -43,6 +43,8 @@ public class LimeTurret {
 
     private double heading;
 
+    private double totalSkew;
+
     public LimeTurret(Swerve s_Swerve, Turret s_Turret, Limelight s_Lime, FusionOdometry s_Lemon, OmegaController m_Operator, OmegaController m_Driver, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
@@ -70,6 +72,7 @@ public class LimeTurret {
         farManualSetpoint = areWeWinners? 57.26 : -57.26;
         mediumManualSetpoint = areWeWinners? 41.63 : -41.63;
         closeManualSetpoint = areWeWinners ? 37.75 : -37.75;
+        totalSkew = 0;
     }
 
     public void initialize(){
@@ -98,13 +101,7 @@ public class LimeTurret {
 
             double heading = closeManualSetpoint - s_Lemon.getHeading();
 
-            if(heading < -180) {
-                heading += 360;
-            }
-
-            if(heading > 180) {
-                heading -= 360;
-            }
+            heading = wrapTo180(heading);
             this.heading = heading;
 
             //MANUAL MEDOIUM SHOT
@@ -112,13 +109,7 @@ public class LimeTurret {
 
             double heading = mediumManualSetpoint - s_Lemon.getHeading();
 
-            if(heading < -180) {
-                heading += 360;
-            }
-
-            if(heading > 180) {
-                heading -= 360;
-            }
+            heading = wrapTo180(heading);
             this.heading = heading;
 
             //MANUAL FAR SHOT
@@ -126,18 +117,24 @@ public class LimeTurret {
 
             double heading = farManualSetpoint - s_Lemon.getHeading();
 
-            if(heading < -180) {
-                heading += 360;
-            }
-
-            if(heading > 180) {
-                heading -= 360;
-            }
+            heading = wrapTo180(heading);
             this.heading = heading;
 
         } else if (s_Lime.isValidReaing()) {
 
+            totalSkew = 0;
+
+            double turretOnField = wrapTo360(s_Lemon.getHeading() + s_Turret.getDegrees());
+
+            double theta = wrapTo180(turretOnField - s_Lime.getFilteredBearing());
+
+            if((areWeWinners && theta > 45) || (!areWeWinners && theta < -45)) {
+                double foo = 0.933308 * theta + (areWeWinners ? 0.0292659 : -0.0292659);
+                totalSkew = foo - theta;
+            }
+
             aprilBearing = s_Lime.getFilteredBearing();
+
             double bearing = s_Turret.getDegrees() - aprilBearing;
 
             if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
@@ -151,13 +148,11 @@ public class LimeTurret {
         } else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
 
             double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
-            operatorJoystickAngle += 360;
-            operatorJoystickAngle %= 360;
+            operatorJoystickAngle = wrapTo360(operatorJoystickAngle);
 
             operatorJoystickAngle -= s_Swerve.getHeading();
 
-            operatorJoystickAngle += 360;
-            operatorJoystickAngle %= 360;
+            operatorJoystickAngle = wrapTo360(operatorJoystickAngle);
 
             heading = operatorJoystickAngle;
 
@@ -169,13 +164,7 @@ public class LimeTurret {
             double theta = Math.toDegrees(Math.atan2(-(targetPose.x() - currentPose.x()), targetPose.y() - currentPose.y()));
             double turretHeading = theta - s_Lemon.getHeading();
 
-            if(turretHeading < -180) {
-                turretHeading += 360;
-            }
-
-            if(turretHeading > 180) {
-                turretHeading -= 360;
-            }
+            turretHeading = wrapTo180(turretHeading);
 
             heading = turretHeading;
         }
@@ -184,32 +173,32 @@ public class LimeTurret {
             timestamp = System.nanoTime() - 1e9;
         }
 
-        double skewCounter = 0;
-        double totalSkew = 0;
-
-        if(m_Operator.isDown(GamepadKeys.Button.Y)) {
-            totalSkew += farSkew;
-            skewCounter++;
-        }
-
-        if(m_Operator.isDown(GamepadKeys.Button.X)) {
-            totalSkew += areWeWinners ? mediumCloseSkew : mediumFarSkew;
-            heading++;
-        }
-
-        if(m_Operator.isDown(GamepadKeys.Button.B)) {
-            totalSkew += areWeWinners ? mediumFarSkew : mediumCloseSkew;
-            heading++;
-        }
-
-        if(m_Operator.isDown(GamepadKeys.Button.A)) {
-            totalSkew += closeSkew;
-            heading++;
-        }
-
-        if(skewCounter != 0) {
-            totalSkew/=skewCounter;
-        }
+//        double skewCounter = 0;
+//        double totalSkew = 0;
+//
+//        if(m_Operator.isDown(GamepadKeys.Button.Y)) {
+//            totalSkew += farSkew;
+//            skewCounter++;
+//        }
+//
+//        if(m_Operator.isDown(GamepadKeys.Button.X)) {
+//            totalSkew += areWeWinners ? mediumCloseSkew : mediumFarSkew;
+//            heading++;
+//        }
+//
+//        if(m_Operator.isDown(GamepadKeys.Button.B)) {
+//            totalSkew += areWeWinners ? mediumFarSkew : mediumCloseSkew;
+//            heading++;
+//        }
+//
+//        if(m_Operator.isDown(GamepadKeys.Button.A)) {
+//            totalSkew += closeSkew;
+//            heading++;
+//        }
+//
+//        if(skewCounter != 0) {
+//            totalSkew/=skewCounter;
+//        }
 
         s_Turret.setSetpoint(heading + totalSkew);
         s_Turret.runToSetpoint();
@@ -223,5 +212,17 @@ public class LimeTurret {
     public void end() {
         s_Turret.setSetpoint(s_Turret.getDegrees());
         s_Turret.setSpeed(0);
+    }
+
+    public static double wrapTo360(double deg) {
+        deg = deg % 360.0;
+        if (deg < 0) deg += 360.0;
+        return deg;
+    }
+
+    public static double wrapTo180(double deg) {
+        deg = ((deg + 180.0) % 360.0);
+        if (deg <= 0) deg += 360.0;
+        return deg - 180.0;
     }
 }
