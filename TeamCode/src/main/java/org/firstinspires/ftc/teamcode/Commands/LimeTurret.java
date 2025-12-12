@@ -57,8 +57,8 @@ public class LimeTurret {
         this.telem = telem;
 
         targetPose = areWeWinners ? Constants.TurretConstants.redTarget : Constants.TurretConstants.blueTarget;
-        gatePose = new OmegaPose2D(0, 1.39, 0);
-        farZonePose = areWeWinners ? new OmegaPose2D(1.36, 0, 0) : new OmegaPose2D(-1.36, 0, 0);
+        gatePose = new OmegaPose2D(0, 1.42377413355856, 0);
+        farZonePose = areWeWinners ? new OmegaPose2D(1.4478, 0, 0) : new OmegaPose2D(-1.4478, 0, 0);
 
         closeCloseSkew = areWeWinners ? 1 : -1;
 
@@ -213,8 +213,11 @@ public class LimeTurret {
 
         s_Turret.setSetpoint(heading + totalSkew);
         s_Turret.runToSetpoint();
+
+        telem.putLine("Turret");
         telem.putTelemetry("Skew", totalSkew);
         telem.putLine();
+
     }
 
     public void end() {
