@@ -78,7 +78,7 @@ public class Turret {
         double lowerLimit = Constants.TurretConstants.lowerRotationLimit;
         double upperLimit = Constants.TurretConstants.upperRotationLimit;
 
-        double nearestAngle = 9999;
+        double nearestAngle = getDegrees();
         double smallestError = Double.MAX_VALUE;
 
 
@@ -106,16 +106,10 @@ public class Turret {
 
     public void runToSetpoint() {
 
-        double goodSetpoint = getSetpoint();
-
-        if(getSetpoint() == 9999) {
-            goodSetpoint = 0;
-        }
-
         double output = 0;
 
         if(Math.abs(getDegrees() - getSetpoint()) > 1){
-            output = turretController.calculate(getDegrees(), goodSetpoint);
+            output = turretController.calculate(getDegrees(), getSetpoint());
         }
 
         output = Math.max(-1.0, Math.min(1.0, output));
@@ -139,7 +133,11 @@ public class Turret {
 
         if(enableTelemetry) {
 
+            telem.putLine("Turret");
             telem.putTelemetry("Turret Angle", getDegrees());
+            telem.putTelemetry("Turret Setpoint", getSetpoint());
+            telem.putTelemetry("Turret STate", turretMotor.getMode().toString());
+//            telem.putLine();
 
             telem.putDashboard("Turret Angle", getDegrees());
 

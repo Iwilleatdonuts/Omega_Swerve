@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Blue Far Support")
-public class BlueFarSupport extends LinearOpMode {
+@Autonomous(name = "Blue Far Support Spike")
+public class BlueFarSupportSpike extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -58,12 +58,12 @@ public class BlueFarSupport extends LinearOpMode {
 //                waitCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
-                () -> {cornerIntakeCommand.reset(); return true;},
-                cornerIntakeCommand::runCommand,
+                () -> {intakeCommand.reset(3); return true;},
+                intakeCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
-                () -> {swoopyIntakeCommand.reset(); return true;},
-                swoopyIntakeCommand::runCommand,
+                () -> {cornerIntakeCommand.reset(); return true;},
+                cornerIntakeCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
                 () -> {swoopyIntakeCommand.reset(); return true;},

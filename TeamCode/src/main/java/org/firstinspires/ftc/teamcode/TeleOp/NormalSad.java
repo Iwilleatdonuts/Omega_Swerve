@@ -129,6 +129,8 @@ public class NormalSad extends LinearOpMode {
         s_Turret = new Turret(hardwareMap, telem);
         s_Shooter = new Shooter(hardwareMap, telem);
 
+        s_Turret.toggleTelemetry();
+
         driveCommand = new TeleOpDrive(telem, s_Swerve, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
         turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, s_Lemon, operator, driver, telem, areWeWinners);

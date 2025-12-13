@@ -71,9 +71,9 @@ public class AutoCloseShot {
         switch(phase) {
             case 0:
                 s_Feeder.closeGate();
-                if(areWeWinners && currentPose.x() > 1.15) {
+                if(areWeWinners && currentPose.x() > 1.3) {
                     s_Swerve.drive(-0.8, 0, 0, true);
-                } else if (!areWeWinners && currentPose.x() < -1.15) {
+                } else if (!areWeWinners && currentPose.x() < -1.3) {
                     s_Swerve.drive(0.8, 0, 0, true);
                 } else {
                     driveController.reset();

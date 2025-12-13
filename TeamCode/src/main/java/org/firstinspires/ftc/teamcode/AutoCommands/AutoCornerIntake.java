@@ -141,9 +141,14 @@ public class AutoCornerIntake {
                 }
                 break;
             case 4:
+
+                double xSpeed = areWeWinners ? 0.1 : -0.1;
+                s_Swerve.drive(xSpeed, -1, 0, true);
+
                 if(System.nanoTime() - timestamp > 0.5e9) {
                     timestamp = System.nanoTime();
                     isFinished = true;
+                    s_Swerve.stop();
                     phase++;
                 }
                 break;

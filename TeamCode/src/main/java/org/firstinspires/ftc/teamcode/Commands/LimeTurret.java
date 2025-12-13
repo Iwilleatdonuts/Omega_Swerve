@@ -194,17 +194,17 @@ public class LimeTurret {
 
         if(m_Operator.isDown(GamepadKeys.Button.X)) {
             totalSkew += areWeWinners ? mediumCloseSkew : mediumFarSkew;
-            heading++;
+            skewCounter++;
         }
 
         if(m_Operator.isDown(GamepadKeys.Button.B)) {
             totalSkew += areWeWinners ? mediumFarSkew : mediumCloseSkew;
-            heading++;
+            skewCounter++;
         }
 
         if(m_Operator.isDown(GamepadKeys.Button.A)) {
             totalSkew += closeSkew;
-            heading++;
+            skewCounter++;
         }
 
         if(skewCounter != 0) {
@@ -214,7 +214,8 @@ public class LimeTurret {
         s_Turret.setSetpoint(heading + totalSkew);
         s_Turret.runToSetpoint();
 
-        telem.putLine("Turret");
+        s_Turret.skadoodle();
+//        telem.putLine("Turret");
         telem.putTelemetry("Skew", totalSkew);
         telem.putLine();
 

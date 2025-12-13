@@ -20,6 +20,7 @@ public class AutoSwoopyIntake {
     private final FusionOdometry s_Lemon;
 
     private OmegaPose2D[] targets;
+    private OmegaPose2D firstPost;
     private OmegaPose2D finalPose;
 
     private final AutoDriveController driveController;
@@ -47,25 +48,8 @@ public class AutoSwoopyIntake {
         this.s_Feeder = s_Feeder;
         this.s_Lemon = s_Lemon;
 
-        finalPose = areWeWinners? Constants.AutoConstants.RedConstants.swoopyIntake : Constants.AutoConstants.BlueConstants.swoopyIntake;
-
-//        if(areWeWinners) {
-//            poses = new OmegaPose2D[]{
-//                    new OmegaPose2D(
-//                            Constants.AutoConstants.RedConstants.cornerPickup.x()-0.5,
-//                            Constants.AutoConstants.RedConstants.cornerPickup.y()+0.05,
-//                            Constants.AutoConstants.RedConstants.cornerPickup.r()),
-//                    Constants.AutoConstants.RedConstants.cornerPickup
-//            };
-//        } else {
-//            poses = new OmegaPose2D[]{
-//                    new OmegaPose2D(
-//                            Constants.AutoConstants.BlueConstants.cornerPickup.x()+0.5,
-//                            Constants.AutoConstants.BlueConstants.cornerPickup.y()+0.05,
-//                            Constants.AutoConstants.BlueConstants.cornerPickup.r()),
-//                    Constants.AutoConstants.BlueConstants.cornerPickup
-//            };
-//        }
+        firstPost = areWeWinners? Constants.AutoConstants.RedConstants.cornerPickup : Constants.AutoConstants.BlueConstants.cornerPickup;
+        finalPose = new OmegaPose2D(firstPost.x(), firstPost.y()+0.5, firstPost.r());
 
         driveController = new AutoDriveController();
         waypointFollower = new WaypointFollower(driveController);
@@ -88,34 +72,38 @@ public class AutoSwoopyIntake {
             case 0:
 //                waypointFollower.resetWaypointFollower();
                 driveController.reset();
-                driveController.setTargetPose(finalPose);
+                driveController.setTargetPose(firstPost);
+                timestamp = System.nanoTime();
                 phase++;
                 break;
             case 1:
-
-//                outputs = waypointFollower.getWaypointOutputs(currentPose, poses);
-
                 driveController.updateCurrentPose(currentPose);
 
                 outputs = driveController.getOutputs();
 
                 s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
 
-                if(isAtRoughSetpoint()) {
+                if(isAtRoughSetpoint() || System.nanoTime() - timestamp > 2e9) {
                     timestamp = System.nanoTime();
                     phase++;
                 }
                 break;
             case 2:
-                s_Swerve.drive(0, 0.3, 0, true);
-                if(System.nanoTime() - timestamp > 0.3e9) {
+                s_Swerve.drive(areWeWinners ? -1 : 1, 0.3, 0, true);
+                if(System.nanoTime() - timestamp > 0.4e9) {
                     timestamp = System.nanoTime();
+                    driveController.setTargetPose(finalPose);
                     phase++;
                 }
                 break;
             case 3:
-                s_Swerve.drive(0, -0.3, 0, true);
-                if(System.nanoTime() - timestamp > 0.3e9) {
+                driveController.updateCurrentPose(currentPose);
+
+                outputs = driveController.getOutputs();
+
+                s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
+
+                if(isAtRoughSetpoint() || System.nanoTime() - timestamp > 2e9) {
                     timestamp = System.nanoTime();
                     isFinished = true;
                     phase++;
@@ -125,9 +113,9 @@ public class AutoSwoopyIntake {
     }
 
     public boolean isAtRoughSetpoint(){
-        double xError = Math.abs(s_Lemon.getCurrentPose().x() - finalPose.x());
-        double yError = Math.abs(s_Lemon.getCurrentPose().y() - finalPose.y());
-        double rError = Math.abs(s_Lemon.getHeading() - finalPose.r());
+        double xError = Math.abs(s_Lemon.getCurrentPose().x() - firstPost.x());
+        double yError = Math.abs(s_Lemon.getCurrentPose().y() - firstPost.y());
+        double rError = Math.abs(s_Lemon.getHeading() - firstPost.r());
 
         return xError < 0.06 && yError < 0.06 && rError < 4;
     }

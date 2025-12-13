@@ -211,7 +211,7 @@ public class Constants {
     public static final class AutoConstants {
 
         public static final class RedConstants {
-            public static final OmegaPose2D closeStart = new OmegaPose2D(1.24088, 1.22156, 270);
+            public static final OmegaPose2D closeStart = new OmegaPose2D(1.24088, 1.2, 270);
             public static final OmegaPose2D farStart = new OmegaPose2D(0.504, -1.6029, 270);
             public static final OmegaPose2D closeShot = new OmegaPose2D(0.95, 0.95, 270);
             public static final OmegaPose2D mediumShot = new OmegaPose2D(0.2, 0.95, 270);
