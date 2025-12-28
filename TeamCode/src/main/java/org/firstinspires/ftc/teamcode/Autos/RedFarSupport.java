@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCornerIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoFarShot;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoLeaveFarZone;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoSwoopyIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurret;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoWaitCommand;
@@ -48,14 +49,13 @@ public class RedFarSupport extends LinearOpMode {
         AutoCornerIntake cornerIntakeCommand = new AutoCornerIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoSwoopyIntake swoopyIntakeCommand = new AutoSwoopyIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime, areWeWinners, true);
+        AutoLeaveFarZone leaveCommand = new AutoLeaveFarZone(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners, 1);
         AutoWaitCommand waitCommand = new AutoWaitCommand();
 
         int phase = 0;
 
         List<AutoManager> autoCommands = Arrays.asList(
-//                () -> {waitCommand.reset(25e9); return true;},
-//                waitCommand::runCommand,
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
                 () -> {cornerIntakeCommand.reset(); return true;},
@@ -68,12 +68,8 @@ public class RedFarSupport extends LinearOpMode {
                 autoShootCommand::runCommand,
                 () -> {swoopyIntakeCommand.reset(); return true;},
                 swoopyIntakeCommand::runCommand,
-                () -> {autoShootCommand.reset(); return true;},
-                autoShootCommand::runCommand,
-                () -> {swoopyIntakeCommand.reset(); return true;},
-                swoopyIntakeCommand::runCommand,
-                () -> {autoShootCommand.reset(); return true;},
-                autoShootCommand::runCommand
+                () -> {leaveCommand.reset(); return true;},
+                leaveCommand::runCommand
         );
 
         telem.updateTelemetry();

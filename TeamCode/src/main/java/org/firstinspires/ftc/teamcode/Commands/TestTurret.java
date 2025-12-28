@@ -110,7 +110,7 @@ public class TestTurret {
 
             if(System.nanoTime() - timestamp > 0.8e9){
 
-                OmegaPose2D currentPose = s_Lemon.getCurrentPose();                    //gtes x and Y value on field
+                OmegaPose2D currentPose = s_Lemon.getCurrentPose();//gtes x and Y value on field
 
                 double theta = Math.toDegrees(Math.atan2(-(targetPose.x() - currentPose.x()), targetPose.y() - currentPose.y()));
                 double turretHeading = theta - s_Lemon.getHeading();

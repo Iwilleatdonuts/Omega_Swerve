@@ -62,8 +62,8 @@ public class LimeTurret {
 
         closeCloseSkew = areWeWinners ? 1 : -1;
 
-        farSkew = areWeWinners ? -4 : 4;
-        mediumFarSkew = areWeWinners ? -3.5 : 3.5;
+        farSkew = areWeWinners ? -3.6 : 3.6;
+        mediumFarSkew = areWeWinners ? -3.4 : 3.4;
         mediumCloseSkew = areWeWinners ? -3.2 : 3.2;
         closeSkew = areWeWinners ? -2 : 2;
 
@@ -86,11 +86,11 @@ public class LimeTurret {
         }
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.START)) {
-            s_Lemon.setLinearPose(gatePose);
+            s_Lemon.setLinearPose(areWeWinners ? farZonePose : gatePose);
         }
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.BACK)) {
-            s_Lemon.setLinearPose(farZonePose);
+            s_Lemon.setLinearPose(areWeWinners ? gatePose: farZonePose);
         }
 
         //MANUAL CLOSE SHOT
@@ -140,9 +140,9 @@ public class LimeTurret {
             aprilBearing = s_Lime.getFilteredBearing();
             double bearing = s_Turret.getDegrees() - aprilBearing;
 
-            if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
-                bearing += closeCloseSkew;
-            }
+//            if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
+//                bearing += closeCloseSkew;
+//            }
 
             heading = bearing;
 

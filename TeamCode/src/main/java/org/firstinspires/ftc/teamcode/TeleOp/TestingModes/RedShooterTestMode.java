@@ -156,7 +156,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
-import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
+import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TeleOpDrive;
 import org.firstinspires.ftc.teamcode.Commands.TestTurret;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
@@ -220,7 +220,7 @@ public class RedShooterTestMode extends LinearOpMode {
     private Turret s_Turret;
     private Shooter s_Shooter;
 
-    private TurnToPointDrive driveCommand;
+    private TeleOpDrive driveCommand;
     private SmartIntake intakeCommand;
     private TestTurret turretCommand;
     private boolean shootersGunnaShoot = false;
@@ -253,7 +253,7 @@ public class RedShooterTestMode extends LinearOpMode {
         s_Lemon.toggleTelemetry();
         s_Lemon.setPose(new OmegaPose2D(0, 0, 0));
 
-        driveCommand = new TurnToPointDrive(telem, s_Swerve, driver, operator);
+        driveCommand = new TeleOpDrive(telem, s_Swerve, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
         turretCommand = new TestTurret(s_Swerve, s_Turret, s_Lime, s_Lemon, operator, driver, telem, areWeWinners);
 
