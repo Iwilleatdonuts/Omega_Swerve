@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.PIDTuner;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 import org.firstinspires.ftc.teamcode.Utilities.math.controller.PIDController;
 
@@ -35,9 +36,11 @@ public class SwerveModule {
     private double lastVelocity = 0.0;
     private double targetVelocityTicksPerSec;
 
-    private static final double kS = 0.05;
-    private static final double kA = 0.0;
-    private static final double kV = 1.0 / Constants.DriveTrainConstants.MAX_TICKS_PER_SEC;
+    private final double kS = 0.05;
+    private final double kA = 0.0;
+    private final double kV = 1.0 / Constants.DriveTrainConstants.MAX_TICKS_PER_SEC;
+
+    private final double moduleFF;
 
     private final String keyRaw, keyDeg;
 
@@ -47,6 +50,8 @@ public class SwerveModule {
 
         this.telem = telem;
         this.modNumber = moduleConstants.modNumber;
+
+        moduleFF = moduleConstants.kF;
 
         drive = hardwareMap.get(DcMotorEx.class, moduleConstants.driveMotor);
         angle = hardwareMap.get(CRServoImplEx.class, moduleConstants.angleServo);
@@ -63,13 +68,20 @@ public class SwerveModule {
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
         angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
+//        angleController = new PIDController(
+//                Constants.DriveTrainConstants.angleKP,
+//                Constants.DriveTrainConstants.angleKI,
+//                Constants.DriveTrainConstants.angleKD
+//        );
+
         angleController = new PIDController(
-                Constants.DriveTrainConstants.angleKP,
-                Constants.DriveTrainConstants.angleKI,
-                Constants.DriveTrainConstants.angleKD
+                PIDTuner.PIDTuner1.kP,
+                PIDTuner.PIDTuner1.kI,
+                PIDTuner.PIDTuner1.kD
         );
         angleController.enableContinuousInput(0, 360);
         angleController.setIZone(30);
+        angleController.setIntegratorRange(-0.8, 0.8);
 
         moduleSetpoint = getDegrees(true);
 

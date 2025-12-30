@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
+import org.firstinspires.ftc.teamcode.Utilities.PIDTuner;
 import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.SillyCustomDrivetrain;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
@@ -84,7 +85,7 @@ public class Constants {
             public static final double angleKP = 0;
             public static final double angleKI = 0;
             public static final double angleKD = 0;
-            public static final double angleKF = 0.055;
+            public static final double angleKF = PIDTuner.PIDTuner1.kF;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(0, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
 
@@ -100,7 +101,7 @@ public class Constants {
             public static final double angleKP = 0;
             public static final double angleKI = 0;
             public static final double angleKD = 0;
-            public static final double angleKF = 0.055;
+            public static final double angleKF = PIDTuner.PIDTuner2.kF;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(1, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
 
@@ -116,7 +117,7 @@ public class Constants {
             public static final double angleKP = 0;
             public static final double angleKI = 0;
             public static final double angleKD = 0;
-            public static final double angleKF = 0.055;
+            public static final double angleKF = PIDTuner.PIDTuner3.kF;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(2, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
 
@@ -132,7 +133,7 @@ public class Constants {
             public static final double angleKP = 0;//0.02
             public static final double angleKI = 0;
             public static final double angleKD = 0;//0.001
-            public static final double angleKF = 0.07;
+            public static final double angleKF = PIDTuner.PIDTuner4.kF;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(3, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
 
