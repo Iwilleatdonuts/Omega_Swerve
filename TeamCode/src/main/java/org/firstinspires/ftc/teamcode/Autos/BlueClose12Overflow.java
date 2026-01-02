@@ -47,7 +47,7 @@ public class BlueClose12Overflow extends LinearOpMode {
         AutoMediumShot autoMediumShot = new AutoMediumShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lime, s_Lemin, telem, areWeWinners);
         AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemin, telem, areWeWinners, 1);
         AutoGate gateCommand = new AutoGate(s_Swerve, s_Lemin, telem, areWeWinners);
-        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime, areWeWinners, false);
+        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lemin, s_Lime, areWeWinners, false);
 
         int phase = 0;
 

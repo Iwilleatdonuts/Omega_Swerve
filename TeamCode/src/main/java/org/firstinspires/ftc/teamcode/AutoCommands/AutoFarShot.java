@@ -21,7 +21,6 @@ public class AutoFarShot {
     private final Turret s_Turret;
     private final Intake s_Intake;
     private final Feeder s_Feeder;
-    private final Limelight s_Lime;
     private final FusionOdometry s_Lemon;
 
     private OmegaPose2D targetPosition;
@@ -37,7 +36,7 @@ public class AutoFarShot {
     private double timestamp;
     private double shooterSpeed;
 
-    public AutoFarShot(Swerve s_Swerve, Shooter s_Shooter, Turret s_Turret, Intake s_Intake, Feeder s_Feeder, Limelight s_Lime, FusionOdometry s_Lemno, EZTelemetry telem, boolean areWeWinners){
+    public AutoFarShot(Swerve s_Swerve, Shooter s_Shooter, Turret s_Turret, Intake s_Intake, Feeder s_Feeder, FusionOdometry s_Lemno, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
 
@@ -50,7 +49,6 @@ public class AutoFarShot {
         this.s_Turret = s_Turret;
         this.s_Intake = s_Intake;
         this.s_Feeder = s_Feeder;
-        this.s_Lime = s_Lime;
         this.s_Lemon = s_Lemno;
 
         driveController = new AutoDriveController();
@@ -58,7 +56,7 @@ public class AutoFarShot {
     }
 
     public void reset(){
-        shooterSpeed = 0.58;
+        shooterSpeed = 0.6;
         isFinished = false;
         phase = 0;
         driveController.reset();
@@ -67,11 +65,9 @@ public class AutoFarShot {
     public void execute(){
 
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
-        double distance = s_Lime.getFilteredDistance();
+//        double distance = s_Lemon.getDistanceFromTarget(areWeWinners);
 
-        if(distance != 0) {
-            shooterSpeed = s_Shooter.getShooterSpeedFromDistance(distance);
-        }
+//        shooterSpeed = s_Shooter.getShooterSpeedFromDistance(distance);
 
         s_Shooter.setShooterSpeed(shooterSpeed);
         s_Shooter.setShooterAngle(Constants.ShooterConstants.farAngle);

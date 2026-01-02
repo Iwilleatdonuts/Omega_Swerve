@@ -81,7 +81,7 @@ public class AutoCornerIntake {
 
                 s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
 
-                if(isAtRoughSetpoint() || s_Intake.hasThreeBalls() || System.nanoTime() - timestamp > 1.5e9) {
+                if(isAtRoughSetpoint() || System.nanoTime() - timestamp > 1.5e9) {
                     timestamp = System.nanoTime();
                     phase++;
                 }
@@ -90,7 +90,7 @@ public class AutoCornerIntake {
 
                 s_Swerve.drive(areWeWinners ? -1 : 1, 0, 0, true);
 
-                if(s_Intake.hasThreeBalls() || System.nanoTime() - timestamp > 0.4e9) {
+                if(System.nanoTime() - timestamp > 0.4e9) {
                     timestamp = System.nanoTime();
                     driveController.reset();
                     driveController.setTargetPose(finalPose);
@@ -105,7 +105,7 @@ public class AutoCornerIntake {
 
                 s_Swerve.drive(outputs[0], outputs[1], outputs[2], true);
 
-                if(isAtRoughSetpoint() || s_Intake.hasThreeBalls() || System.nanoTime() - timestamp > 0.8e9) {
+                if(isAtRoughSetpoint() || System.nanoTime() - timestamp > 0.8e9) {
                     timestamp = System.nanoTime();
                     s_Swerve.stop();
                     isFinished = true;

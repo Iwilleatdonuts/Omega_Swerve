@@ -68,17 +68,17 @@ public class SwerveModule {
         angle.setDirection(DcMotorSimple.Direction.FORWARD);
         angle.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
-//        angleController = new PIDController(
-//                Constants.DriveTrainConstants.angleKP,
-//                Constants.DriveTrainConstants.angleKI,
-//                Constants.DriveTrainConstants.angleKD
-//        );
-
         angleController = new PIDController(
-                PIDTuner.PIDTuner1.kP,
-                PIDTuner.PIDTuner1.kI,
-                PIDTuner.PIDTuner1.kD
+                Constants.DriveTrainConstants.angleKP,
+                Constants.DriveTrainConstants.angleKI,
+                Constants.DriveTrainConstants.angleKD
         );
+
+//        angleController = new PIDController(
+//                PIDTuner.PIDTuner1.kP,
+//                PIDTuner.PIDTuner1.kI,
+//                PIDTuner.PIDTuner1.kD
+//        );
         angleController.enableContinuousInput(0, 360);
         angleController.setIZone(30);
         angleController.setIntegratorRange(-0.8, 0.8);

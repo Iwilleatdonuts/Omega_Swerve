@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaDeadLocalizer;
@@ -33,6 +34,13 @@ public class FusionOdometry {
 
     public OmegaPose2D getCurrentPose() {
         return currentPose;
+    }
+
+    public double getDistanceFromTarget(boolean areWeWinners) {
+
+        OmegaPose2D targetPose = areWeWinners ? Constants.TurretConstants.redTarget : Constants.TurretConstants.blueTarget;
+
+        return Math.hypot(getCurrentPose().x() - targetPose.x(), getCurrentPose().y() - targetPose.y());
     }
 
     public double getHeading() {

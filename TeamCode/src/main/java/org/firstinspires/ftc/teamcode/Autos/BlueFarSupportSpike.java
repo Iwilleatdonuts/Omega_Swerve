@@ -45,10 +45,10 @@ public class BlueFarSupportSpike extends LinearOpMode {
         Intake s_Intake = new Intake(hardwareMap, telem);
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
-        AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Turret, s_Intake, s_Feeder, s_Lime, s_Lemon, telem, areWeWinners);
+        AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Turret, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoCornerIntake cornerIntakeCommand = new AutoCornerIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoSwoopyIntake swoopyIntakeCommand = new AutoSwoopyIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
-        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lime, areWeWinners, true);
+        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lemon, s_Lime, areWeWinners, true);
         AutoLeaveFarZone leaveCommand = new AutoLeaveFarZone(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners, 1);
         AutoWaitCommand waitCommand = new AutoWaitCommand();
