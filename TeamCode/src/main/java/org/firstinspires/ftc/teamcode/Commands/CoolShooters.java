@@ -91,12 +91,14 @@ public class CoolShooters {
             } else if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) {
                 shooterPercent = 0.56 + s_Shooter.getShooterConstant();
                 shooterAngle = Constants.ShooterConstants.farAngle;
-            } else if(s_Lime.isValidReaing()){
-                double distance = s_Lime.getFilteredDistance();
-                shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
-                shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
-                timestamp = System.nanoTime();
-            } else if(System.nanoTime() - timestamp > 1e9){
+            }
+//            else if(s_Lime.isValidReaing()){
+//                double distance = s_Lime.getFilteredDistance();
+//                shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
+//                shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
+//                timestamp = System.nanoTime();
+//            }
+            else if(System.nanoTime() - timestamp > 1e9){
                 double distance = Math.hypot(s_Lemon.getCurrentPose().x() - targetPose.x(), s_Lemon.getCurrentPose().y() - targetPose.y());
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
                 shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);

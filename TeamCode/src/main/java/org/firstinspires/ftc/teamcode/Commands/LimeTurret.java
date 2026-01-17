@@ -135,20 +135,22 @@ public class LimeTurret {
             }
             this.heading = heading;
 
-        } else if (s_Lime.isValidReaing()) {
-
-            aprilBearing = s_Lime.getFilteredBearing();
-            double bearing = s_Turret.getDegrees() - aprilBearing;
-
-//            if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
-//                bearing += closeCloseSkew;
-//            }
-
-            heading = bearing;
-
-            timestamp = System.nanoTime();
-
-        } else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
+        }
+//        else if (s_Lime.isValidReaing()) {
+//
+//            aprilBearing = s_Lime.getFilteredBearing();
+//            double bearing = s_Turret.getDegrees() - aprilBearing;
+//
+////            if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
+////                bearing += closeCloseSkew;
+////            }
+//
+//            heading = bearing;
+//
+//            timestamp = System.nanoTime();
+//
+//        }
+        else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
 
             double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
             operatorJoystickAngle += 360;

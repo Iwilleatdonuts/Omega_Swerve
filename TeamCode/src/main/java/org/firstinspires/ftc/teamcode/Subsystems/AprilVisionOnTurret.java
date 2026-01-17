@@ -37,12 +37,6 @@ public class AprilVisionOnTurret {
 
     private double goalYaw;
 
-    private double filteredBearing;
-    private double filteredDistance;
-
-    private final Kalman bearingFilter;
-    private final Kalman distanceFilter;
-
     private final boolean areWeWinners;
 
     private boolean exposureConfigured = false;
@@ -56,11 +50,6 @@ public class AprilVisionOnTurret {
         this.telem = telem;
 
         this.areWeWinners = areWeWinners;
-//
-//        bearingFilter = new Kalman(KalmanTuning.q1, KalmanTuning.r1, 0);
-//        distanceFilter = new Kalman(KalmanTuning.q2, KalmanTuning.r2, 0);
-        bearingFilter = new Kalman(1.5, 0.75, 0);
-        distanceFilter = new Kalman(0.1, 0.15, 0);
 
     }
 
@@ -180,8 +169,6 @@ public class AprilVisionOnTurret {
                             allianceGoalTag = tag;
                             rawBearing = allianceGoalTag.ftcPose.bearing;
                             rawDistance = allianceGoalTag.ftcPose.range;
-                            filteredBearing = bearingFilter.update(rawBearing);
-                            filteredDistance = distanceFilter.update(rawDistance);
                             goalYaw = allianceGoalTag.ftcPose.yaw;
                             adjustedBearing = getGoalBearing() + (getGoalYaw() * 0.05);
                         } catch(Exception ignored) {

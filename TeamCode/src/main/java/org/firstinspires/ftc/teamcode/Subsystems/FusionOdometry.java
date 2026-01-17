@@ -7,12 +7,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
-import org.firstinspires.ftc.teamcode.Utilities.OmegaDeadLocalizer;
+import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.OmegaCoolConstants;
+import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.OmegaCoolLocalizer;
+import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.OmegaDeadLocalizer;
 
 public class FusionOdometry {
 
     private final EZTelemetry telem;
-    private final OmegaDeadLocalizer localizer;
+    private final OmegaCoolLocalizer localizer;
 
     private boolean enableTelemetry;
 
@@ -24,7 +26,7 @@ public class FusionOdometry {
         this.telem = telem;
 
 //        follower = Constants.createFollower(hardwareMap);
-        localizer = new OmegaDeadLocalizer(hardwareMap, new Pose());
+        localizer = new OmegaCoolLocalizer(hardwareMap, new OmegaCoolConstants(), new Pose());
 
     }
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Utilities;
+package org.firstinspires.ftc.teamcode.Utilities.PedroPathing;
 
 import com.pedropathing.ftc.localization.Encoder;
 import com.pedropathing.ftc.localization.RevHubIMU;
@@ -31,8 +31,6 @@ public class OmegaDeadLocalizer {
     private long deltaTimeNano;
     private final Encoder forwardEncoder;
     private final Encoder strafeEncoder;
-//    private final OverflopEncoder forwardEncoder;
-//    private final OverflopEncoder strafeEncoder;
     private final double strafePodX;
     private final double forwardPodY;
     private double previousIMUOrientation;
@@ -59,9 +57,6 @@ public class OmegaDeadLocalizer {
 
         forwardEncoder = new Encoder(map.get(DcMotorEx.class, Constants.forwardEncoder_HardwareMapName));
         strafeEncoder = new Encoder(map.get(DcMotorEx.class, Constants.strafeEncoder_HardwareMapName));
-
-//        forwardEncoder = new OverflopEncoder(map.get(DcMotorEx.class, Constants.forwardEncoder_HardwareMapName));
-//        strafeEncoder = new OverflopEncoder(map.get(DcMotorEx.class, Constants.strafeEncoder_HardwareMapName));
 
         forwardEncoder.setDirection(-1);
         strafeEncoder.setDirection(-1);
