@@ -48,15 +48,15 @@ public class OmegaCoolConstants {
 
     /** The Encoder Resolution for the Pinpoint. Unused by default, but can be used if you want to use a custom encoder resolution. */
     @SuppressLint("NewApi")
-    public OptionalDouble customEncoderResolution = OptionalDouble.of(7.575e-4);
+    public OptionalDouble customEncoderResolution = OptionalDouble.of(3);
 
     /** The Encoder Direction for the Forward Encoder (Deadwheel)
      * Default Value: GoBildaPinpointDriver.EncoderDirection.REVERSED */
-    public  GoBildaPinpointDriver.EncoderDirection forwardEncoderDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
+    public  GoBildaPinpointDriver.EncoderDirection forwardEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
 
     /** The Encoder Direction for the Strafe Encoder (Deadwheel)
      * Default Value: GoBildaPinpointDriver.EncoderDirection.FORWARD */
-    public  GoBildaPinpointDriver.EncoderDirection strafeEncoderDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
+    public  GoBildaPinpointDriver.EncoderDirection strafeEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
 
     /**
      * This creates a new PinpointConstants with default values.
@@ -117,8 +117,8 @@ public class OmegaCoolConstants {
         hardwareMapName = "pine";
         yawScalar = OptionalDouble.empty();
         encoderResolution = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
-        customEncoderResolution = OptionalDouble.empty();
-        forwardEncoderDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
-        strafeEncoderDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
+        customEncoderResolution = OptionalDouble.of(2);
+        forwardEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
+        strafeEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
     }
 }

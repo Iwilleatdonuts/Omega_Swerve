@@ -169,8 +169,8 @@ public class Constants {
 
         public static final String turretMotor = "turret";
 
-        public static final double lowerRotationLimit = -105;
-        public static final double upperRotationLimit = 105;
+        public static final double lowerRotationLimit = -135;
+        public static final double upperRotationLimit = 135;
 
     }
 
