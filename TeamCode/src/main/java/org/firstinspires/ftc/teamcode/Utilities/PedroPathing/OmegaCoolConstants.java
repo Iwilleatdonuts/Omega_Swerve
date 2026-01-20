@@ -44,11 +44,11 @@ public class OmegaCoolConstants {
 
     /** The Encoder Resolution for the Pinpoint. Used by default, but can be changed to a custom resolution.
      * Default Value: GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD */
-    public GoBildaPinpointDriver.GoBildaOdometryPods encoderResolution = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
+//    public GoBildaPinpointDriver.GoBildaOdometryPods encoderResolution = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
 
     /** The Encoder Resolution for the Pinpoint. Unused by default, but can be used if you want to use a custom encoder resolution. */
     @SuppressLint("NewApi")
-    public OptionalDouble customEncoderResolution = OptionalDouble.of(3);
+    public double customEncoderResolution = 2;
 
     /** The Encoder Direction for the Forward Encoder (Deadwheel)
      * Default Value: GoBildaPinpointDriver.EncoderDirection.REVERSED */
@@ -90,13 +90,13 @@ public class OmegaCoolConstants {
         return this;
     }
 
-    public OmegaCoolConstants encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods encoderResolution) {
-        this.encoderResolution = encoderResolution;
-        return this;
-    }
+//    public OmegaCoolConstants encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods encoderResolution) {
+//        this.encoderResolution = encoderResolution;
+//        return this;
+//    }
 
     public OmegaCoolConstants customEncoderResolution(double customEncoderResolution) {
-        this.customEncoderResolution = OptionalDouble.of(customEncoderResolution);
+        this.customEncoderResolution = customEncoderResolution;
         return this;
     }
 
@@ -116,8 +116,8 @@ public class OmegaCoolConstants {
         distanceUnit = DistanceUnit.INCH;
         hardwareMapName = "pine";
         yawScalar = OptionalDouble.empty();
-        encoderResolution = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
-        customEncoderResolution = OptionalDouble.of(2);
+//        encoderResolution = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD;
+        customEncoderResolution = 2;
         forwardEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
         strafeEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
     }

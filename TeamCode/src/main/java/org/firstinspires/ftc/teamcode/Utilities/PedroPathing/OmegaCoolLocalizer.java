@@ -60,11 +60,8 @@ public class OmegaCoolLocalizer {
             odo.setYawScalar(constants.yawScalar.getAsDouble());
         }
 
-        if(constants.customEncoderResolution.isPresent()) {
-            odo.setEncoderResolution(constants.customEncoderResolution.getAsDouble(), constants.distanceUnit);
-        } else {
-            odo.setEncoderResolution(constants.encoderResolution);
-        }
+        odo.setEncoderResolution(constants.customEncoderResolution, constants.distanceUnit);
+
 
         odo.setEncoderDirections(constants.forwardEncoderDirection, constants.strafeEncoderDirection);
 
