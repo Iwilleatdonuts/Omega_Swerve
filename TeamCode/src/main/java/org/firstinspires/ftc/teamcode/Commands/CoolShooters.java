@@ -45,7 +45,7 @@ public class CoolShooters {
 
     public void initialize(){
 
-        shootersGunnaShoot = false;
+        shootersGunnaShoot = true;
         shooterPercent = 0;
         shooterAngle = 1;
         timestamp = System.nanoTime();

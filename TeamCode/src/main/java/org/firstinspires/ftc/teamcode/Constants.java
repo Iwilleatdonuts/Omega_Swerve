@@ -29,7 +29,7 @@ public class Constants {
     public static final DcMotorSimple.Direction strafeEncoderDirection = DcMotorSimple.Direction.REVERSE;
     public static final double forwardTicksToInches = 7.579338e-4;
     public static final double strafeTicksToInches = 7.5714066e-4;
-    public static final double forwardPodY = -1.54921;
+    public static final double forwardPodY = 1.54921;
     public static final double strafePodX = -5.97835;
     public static final String IMU_HardwareMapName = "imu";
     public static final RevHubOrientationOnRobot IMU_ORIENTATION = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT);
@@ -164,9 +164,9 @@ public class Constants {
 
     public static final class TurretConstants {
 
-        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.6, 1.8288, 0);
+        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.8288, 1.8288, 0);
         //change the x value to be higher absolute if not hitting properly
-        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.6, 1.8288, 0);
+        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.8288, 1.8288, 0);
 
         public static final String turretMotor = "turret";
 
