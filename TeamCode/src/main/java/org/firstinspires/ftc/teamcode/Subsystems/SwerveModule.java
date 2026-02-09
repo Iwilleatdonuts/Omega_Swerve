@@ -117,6 +117,35 @@ public class SwerveModule {
         drive.setPower(clamp(ff));
     }
 
+//    public void setDrivePower(double power) {
+//
+//        targetVelocityTicksPerSec =
+//                power * Constants.DriveTrainConstants.MAX_MOTOR_RPM *
+//                        Constants.DriveTrainConstants.TICKS_PER_REV / 60.0;
+//
+//        if (isModuleBackwards) {
+//            targetVelocityTicksPerSec = -targetVelocityTicksPerSec;
+//        }
+//
+//        double currentVelocity = drive.getVelocity();
+//        double acceleration = (currentVelocity - lastVelocity) * 50;  // 1/0.02 = 50
+//        lastVelocity = currentVelocity;
+//
+//        double ff =
+//                (kS * Math.signum(targetVelocityTicksPerSec)) +
+//                        (kV * targetVelocityTicksPerSec) +
+//                        (kA * acceleration);
+//
+//        double output = clamp(ff);
+//        double currentCurrentLMAO = getMotorCurrent();
+//
+//        if(Math.abs(currentCurrentLMAO) > 40) {
+//            output *= (40 / currentCurrentLMAO);
+//        }
+//
+//        drive.setPower(output);
+//    }
+
     public double getVelocity() {
         return drive.getVelocity();
     }
