@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+import com.arcrobotics.ftclib.geometry.Vector2d;
+
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.MathFunctions;
 import com.pedropathing.math.Vector;
@@ -89,6 +91,12 @@ public class OmegaCoolLocalizer {
      */
     public Pose getVelocity() {
         return currentVelocity;
+    }
+    public Vector2d getVelocityVector2d() {
+        Pose velocityPose = getVelocity();
+        double vxMeters = velocityPose.getX();
+        double vyMeters = velocityPose.getY();
+        return new Vector2d(vxMeters, vyMeters);
     }
 
     /**

@@ -131,6 +131,10 @@ public class Shooter {
         return foo;
     }
 
+    public double getTimeOfFlightFromDistance(double distance) {
+        return 0.182055 * distance + 0.657087;
+    }
+
     public double getTargetVelocity() {
         return targetVelocity;
     }

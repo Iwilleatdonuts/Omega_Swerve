@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
+import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
 public class Swerve {
 
@@ -60,6 +62,22 @@ public class Swerve {
         mods[3] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod3.modConstants); // back-right
 
         enableTelemetry = false;
+    }
+
+    public OmegaPose2D getPose() {
+        if(odom != null) {
+            return odom.getCurrentPose();
+        } else {
+            return new OmegaPose2D(0, 0, 0);
+        }
+    }
+
+    public Vector2d getFieldRelativeVelocity() {
+        return odom.getFieldRelativeVelocity();
+    }
+
+    public double getAngularVelocity() {
+        return odom.getAngularVelocity();
     }
 
     public void stop() {

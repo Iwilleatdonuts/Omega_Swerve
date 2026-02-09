@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 
+import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -9,7 +10,6 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.OmegaCoolConstants;
 import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.OmegaCoolLocalizer;
-import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.OmegaDeadLocalizer;
 
 public class FusionOdometry {
 
@@ -36,6 +36,14 @@ public class FusionOdometry {
 
     public OmegaPose2D getCurrentPose() {
         return currentPose;
+    }
+
+    public Vector2d getFieldRelativeVelocity() {
+        return localizer.getVelocityVector2d();
+    }
+
+    public double getAngularVelocity() {
+        return localizer.getVelocity().getHeading();
     }
 
     public double getDistanceFromTarget(boolean areWeWinners) {
