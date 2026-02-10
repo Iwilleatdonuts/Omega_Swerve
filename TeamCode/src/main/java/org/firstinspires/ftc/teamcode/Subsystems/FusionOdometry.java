@@ -57,6 +57,15 @@ public class FusionOdometry {
         return currentPose.r();
     }
 
+    public double getReversedHeading() {
+        double reversed = getHeading();
+        reversed += 180;
+        if(reversed > 360) {
+            reversed -= 360;
+        }
+        return reversed;
+    }
+
     public void zeroGyro() {
         localizer.setPose(new Pose(pedroPose.getX(), pedroPose.getY(), Math.toRadians(90)));
     }

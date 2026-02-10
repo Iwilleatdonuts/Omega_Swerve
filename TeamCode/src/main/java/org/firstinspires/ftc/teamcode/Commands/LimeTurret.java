@@ -96,7 +96,7 @@ public class LimeTurret {
         //MANUAL CLOSE SHOT
         if (m_Operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
 
-            double heading = closeManualSetpoint - s_Lemon.getHeading();
+            double heading = closeManualSetpoint - s_Lemon.getReversedHeading();
 
             if(heading < -180) {
                 heading += 360;
@@ -110,7 +110,7 @@ public class LimeTurret {
             //MANUAL MEDOIUM SHOT
         } else if(m_Operator.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
 
-            double heading = mediumManualSetpoint - s_Lemon.getHeading();
+            double heading = mediumManualSetpoint - s_Lemon.getReversedHeading();
 
             if(heading < -180) {
                 heading += 360;
@@ -124,7 +124,7 @@ public class LimeTurret {
             //MANUAL FAR SHOT
         } else if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) {
 
-            double heading = farManualSetpoint - s_Lemon.getHeading();
+            double heading = farManualSetpoint - s_Lemon.getReversedHeading();
 
             if(heading < -180) {
                 heading += 360;
@@ -136,27 +136,27 @@ public class LimeTurret {
             this.heading = heading;
 
         }
-        else if (s_Lime.isValidReaing() && m_Driver.isDown(GamepadKeys.Button.A)) {
-
-            aprilBearing = s_Lime.getFilteredBearing();
-            double bearing = s_Turret.getDegrees() - aprilBearing;
-
-//            if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
-//                bearing += closeCloseSkew;
-//            }
-
-            heading = bearing;
-
-            timestamp = System.nanoTime();
-
-        }
+//        else if (s_Lime.isValidReaing() && m_Driver.isDown(GamepadKeys.Button.A)) {
+//
+//            aprilBearing = s_Lime.getFilteredBearing();
+//            double bearing = s_Turret.getDegrees() - aprilBearing;
+//
+////            if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
+////                bearing += closeCloseSkew;
+////            }
+//
+//            heading = bearing;
+//
+//            timestamp = System.nanoTime();
+//
+//        }
         else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
 
             double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
             operatorJoystickAngle += 360;
             operatorJoystickAngle %= 360;
 
-            operatorJoystickAngle -= s_Swerve.getHeading();
+            operatorJoystickAngle -= s_Lemon.getReversedHeading();
 
             operatorJoystickAngle += 360;
             operatorJoystickAngle %= 360;
@@ -169,7 +169,7 @@ public class LimeTurret {
             //gtes x and Y value on field
 
             double theta = Math.toDegrees(Math.atan2(-(targetPose.x() - currentPose.x()), targetPose.y() - currentPose.y()));
-            double turretHeading = theta - s_Lemon.getHeading();
+            double turretHeading = theta - s_Lemon.getReversedHeading();
 
             if(turretHeading < -180) {
                 turretHeading += 360;
