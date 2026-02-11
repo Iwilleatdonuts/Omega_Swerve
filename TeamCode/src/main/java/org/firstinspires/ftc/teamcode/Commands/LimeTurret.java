@@ -182,10 +182,6 @@ public class LimeTurret {
             heading = turretHeading;
         }
 
-        if(m_Driver.wasJustPressed(GamepadKeys.Button.A) && !s_Lime.isValidReaing()) {
-            timestamp = System.nanoTime() - 1e9;
-        }
-
         double skewCounter = 0;
         double totalSkew = 0;
 
