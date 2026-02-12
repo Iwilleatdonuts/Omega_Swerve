@@ -16,7 +16,7 @@ public class Swerve {
 
     private final SwerveModule[] mods = new SwerveModule[4];
     private FusionOdometry odom = null;
-    private IMU imu = null;
+    private IMU imu;
 
     // max theoretical speed is 1.93m/s
     // max theoretical angular velocity is ~5.20884 rad/s
@@ -55,6 +55,13 @@ public class Swerve {
 
         this.telem = telem;
         this.odom = odometry;
+
+        RevHubOrientationOnRobot.LogoFacingDirection logo = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection usb = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logo, usb);
+
+        imu = hardwareMap.get(IMU.class, "imu");
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         mods[0] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod0.modConstants); // front-left
         mods[1] = new SwerveModule(hardwareMap, telem, Constants.DriveTrainConstants.Mod1.modConstants); // front-right
@@ -218,22 +225,28 @@ public class Swerve {
     }
 
     public double getHeading() {
-        if(imu != null ){
+        if(odom != null ){
+            return odom.getHeading();
+        } else {
             double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
             rotation += 360.0;
             rotation %= 360.0;
             return rotation;
-        } else {
-            return odom.getHeading();
         }
     }
 
+    public double getIMUHeading() {
+        double rotation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        rotation += 360.0;
+        rotation %= 360.0;
+        return rotation;
+    }
+
     public void zeroGyro() {
-        if(imu != null) {
-            imu.resetYaw();
-        } else {
+        if(odom != null) {
             odom.zeroGyro();
         }
+        imu.resetYaw();
     }
 
     public void toggleTelemetry() {
@@ -241,5 +254,9 @@ public class Swerve {
     }
 
     public void skadoodle() {
+
+        telem.putTelemetry("IMU HEADING", getIMUHeading());
+        telem.putLine();
+
     }
 }
