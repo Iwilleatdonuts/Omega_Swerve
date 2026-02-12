@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Commands.ManualCommands;
 
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
@@ -59,6 +60,11 @@ public class TeleOpDrive {
 
         rightX = Math.signum(rightX) * sqrX;
 
+        if(m_Driver.isDown(GamepadKeys.Button.A)) {
+            xLimited*=0.5;
+            yLimited*=0.5;
+            rightX*=0.5;
+        }
         s_Swerve.drive(xLimited, yLimited, rightX, true);
 
         telem.putTelemetry("CLT", timer.milliseconds() - timestamp);
