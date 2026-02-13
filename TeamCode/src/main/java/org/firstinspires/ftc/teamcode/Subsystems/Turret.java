@@ -33,7 +33,7 @@ public class Turret {
 
         enableTelemetry = false;
 
-        turretController = new PIDController(0.02, 0.02, 0);
+        turretController = new PIDController(0.023, 0.032, 0);
 //        turretController = new PIDController(PIDTuning.k1P, PIDTuning.k1I, PIDTuning.k1D);
         turretController.setIZone(3);
         turretController.setTolerance(5);
