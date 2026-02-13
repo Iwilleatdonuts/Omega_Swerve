@@ -55,8 +55,12 @@ public class Constants {
     
     public static final class DriveTrainConstants {
 
-        public static final double angleKP = 0.009;//0.009
-        public static final double angleKI = 0.004;
+//        public static final double angleKP = PIDTuner.PIDTuner1.kP;//0.009
+//        public static final double angleKI = PIDTuner.PIDTuner1.kI;//0.004
+//        public static final double angleKD = PIDTuner.PIDTuner1.kD;
+//
+        public static final double angleKP = 0.004;
+        public static final double angleKI = 0.002;
         public static final double angleKD = 0;
 
         //unit in MM
@@ -86,7 +90,7 @@ public class Constants {
             public static final double angleKP = 0;
             public static final double angleKI = 0;
             public static final double angleKD = 0;
-            public static final double angleKF = PIDTuner.PIDTuner1.kF;
+            public static final double angleKF = 0.16;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(0, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
 
@@ -102,7 +106,7 @@ public class Constants {
             public static final double angleKP = 0;
             public static final double angleKI = 0;
             public static final double angleKD = 0;
-            public static final double angleKF = PIDTuner.PIDTuner2.kF;
+            public static final double angleKF = 0.15;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(1, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
 
@@ -118,7 +122,7 @@ public class Constants {
             public static final double angleKP = 0;
             public static final double angleKI = 0;
             public static final double angleKD = 0;
-            public static final double angleKF = PIDTuner.PIDTuner3.kF;
+            public static final double angleKF = 0.16;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(2, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
 
@@ -134,7 +138,7 @@ public class Constants {
             public static final double angleKP = 0;//0.02
             public static final double angleKI = 0;
             public static final double angleKD = 0;//0.001
-            public static final double angleKF = PIDTuner.PIDTuner4.kF;
+            public static final double angleKF = 0.13;
 
             public  static final SwerveModuleConstants modConstants = new SwerveModuleConstants(3, driveMotor, angleServo, feedback, moduleOffset, angleKP, angleKI, angleKD, angleKF);
 

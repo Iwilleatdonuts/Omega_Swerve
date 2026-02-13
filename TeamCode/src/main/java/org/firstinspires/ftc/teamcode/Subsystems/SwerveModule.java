@@ -51,7 +51,24 @@ public class SwerveModule {
         this.telem = telem;
         this.modNumber = moduleConstants.modNumber;
 
-        moduleFF = moduleConstants.kF;
+        moduleFF = moduleConstants.kF * 0.75;
+//        switch(modNumber) {
+//            case 0:
+//                moduleFF = PIDTuner.PIDTuner1.kF;
+//                break;
+//            case 1:
+//                moduleFF = PIDTuner.PIDTuner2.kF;
+//                break;
+//            case 2:
+//                moduleFF = PIDTuner.PIDTuner3.kF;
+//                break;
+//            case 3:
+//                moduleFF = PIDTuner.PIDTuner4.kF;
+//                break;
+//            default:
+//                moduleFF = 0;
+//                break;
+//        }
 
         drive = hardwareMap.get(DcMotorEx.class, moduleConstants.driveMotor);
         angle = hardwareMap.get(CRServoImplEx.class, moduleConstants.angleServo);
@@ -72,6 +89,9 @@ public class SwerveModule {
                 Constants.DriveTrainConstants.angleKP,
                 Constants.DriveTrainConstants.angleKI,
                 Constants.DriveTrainConstants.angleKD
+//                PIDTuner.PIDTuner1.kP,
+//                PIDTuner.PIDTuner1.kI,
+//                PIDTuner.PIDTuner1.kD
         );
 
 //        angleController = new PIDController(
@@ -213,7 +233,8 @@ public class SwerveModule {
         double measurement = getDegrees(true);
         double output = angleController.calculate(measurement, moduleSetpoint);
 
-        double ff = Math.signum(output) * 0.045;
+        double ff = Math.signum(output) * moduleFF;
+//        double ff = Math.signum(output) * 0.045;
 
         output += ff;
 
