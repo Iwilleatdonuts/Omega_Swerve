@@ -4,7 +4,6 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.localization.constants.TwoWheelConstants;
-import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,7 +14,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
-import org.firstinspires.ftc.teamcode.Utilities.PIDTuner;
 import org.firstinspires.ftc.teamcode.Utilities.PedroPathing.SillyCustomDrivetrain;
 import org.firstinspires.ftc.teamcode.Utilities.SwerveModuleConstants;
 
@@ -190,19 +188,8 @@ public class Constants {
         public static final double TICKS_PER_REV = 28;
         public static final double MAX_TICKS_PER_SEC = (MAX_TRUE_RPM * TICKS_PER_REV) / 60;
 
-//        public static final double MAX_MOTOR_RPM_THEORETICAL = 6000.0;
-//        public static final double MAX_TICKS_PER_SEC = (MAX_MOTOR_RPM_THEORETICAL * TICKS_PER_REV) / 60.0;
-
         public static final double farAngle = 0;
         public static final double closeAngle = 1;
-
-
-        public static final double smallBig = 0.85;
-        public static final double smallSmall = 0.83;
-
-        public static final double bigBig = 0.7;
-        public static final double bigMedium = 0.65;
-        public static final double bigSmall = 0.6;
 
     }
 
@@ -214,7 +201,66 @@ public class Constants {
 
     }
 
-    public static final class AutoConstants {
+    public static final class NewAutoConstants {
+
+        public static final class RedConstants {
+
+            //Starts and shots
+            public static final OmegaPose2D closeStart = new OmegaPose2D(1.23063, 1.20049, 270);
+            public static final OmegaPose2D farStart = new OmegaPose2D(0.40491, -1.58721, 270);
+            public static final OmegaPose2D closeShot = new OmegaPose2D(0.56799, 0.40199, 260);
+            public static final OmegaPose2D farShot = new OmegaPose2D(0.40491, -1.47621, 270);
+            public static final OmegaPose2D finalCloseShot = new OmegaPose2D(0.39055, 1.00344, 180);
+            public static final OmegaPose2D finalCloseShotTeleopPose = new OmegaPose2D(-1.00344, 0.39055, 270);
+
+            //Spike Marks
+            public static final OmegaPose2D firstSpikeLineup = new OmegaPose2D(0.70389, 0.30335, 270);
+            public static final OmegaPose2D secondSpikeLineup = new OmegaPose2D(0.70389, -0.30665, 270);
+            public static final OmegaPose2D thirdSpikeLineup = new OmegaPose2D(0.70389, -0.88965, 270);
+            public static final OmegaPose2D firstSpikePickup = new OmegaPose2D(1.31419, 0.30335, 270);
+            public static final OmegaPose2D secondSpikePickup = new OmegaPose2D(1.31419, -0.30665, 270);
+            public static final OmegaPose2D thirdSpikePickup = new OmegaPose2D(1.47489, -0.88965, 270);
+
+            //Support balls
+            public static final OmegaPose2D cornerLineup = new OmegaPose2D(1.36233, -1.55573, 270);
+            public static final OmegaPose2D cornerPickup = new OmegaPose2D(1.47489, -1.55573, 270);
+            public static final OmegaPose2D firstSupportLineup = new OmegaPose2D(1.36233, -1, 270);
+            public static final OmegaPose2D firstSupportPickup = new OmegaPose2D(1.47489, -1, 270);
+            public static final OmegaPose2D secondSupportLineup = new OmegaPose2D(1.36233, -0.55, 270);
+            public static final OmegaPose2D secondSupportPickup = new OmegaPose2D(1.47489, -0.55, 270);
+
+        }
+
+        public static final class BlueConstants {
+
+            //Starts and shots
+            public static final OmegaPose2D closeStart = new OmegaPose2D(-1.23063, 1.20049, 90);
+            public static final OmegaPose2D farStart = new OmegaPose2D(-0.40491, -1.58721, 90);
+            public static final OmegaPose2D closeShot = new OmegaPose2D(-0.56799, 0.40199, 100);
+            public static final OmegaPose2D farShot = new OmegaPose2D(-0.40491, -1.47621, 90);
+            public static final OmegaPose2D finalCloseShot = new OmegaPose2D(-0.39055, 1.00344, 180);
+            public static final OmegaPose2D finalCloseShotTeleopPose = new OmegaPose2D(1.00344, 0.39055, 90);
+
+            //Spike Marks
+            public static final OmegaPose2D firstSpikeLineup = new OmegaPose2D(-0.70389, 0.30335, 90);
+            public static final OmegaPose2D secondSpikeLineup = new OmegaPose2D(-0.70389, -0.30665, 90);
+            public static final OmegaPose2D thirdSpikeLineup = new OmegaPose2D(-0.70389, -0.88965, 90);
+            public static final OmegaPose2D firstSpikePickup = new OmegaPose2D(-1.31419, 0.30335, 90);
+            public static final OmegaPose2D secondSpikePickup = new OmegaPose2D(-1.31419, -0.30665, 90);
+            public static final OmegaPose2D thirdSpikePickup = new OmegaPose2D(-1.47489, -0.88965, 90);
+
+            //Support balls
+            public static final OmegaPose2D cornerLineup = new OmegaPose2D(-1.36233, -1.55573, 90);
+            public static final OmegaPose2D cornerPickup = new OmegaPose2D(-1.47489, -1.55573, 90);
+            public static final OmegaPose2D firstSupportLineup = new OmegaPose2D(-1.36233, -1, 90);
+            public static final OmegaPose2D firstSupportPickup = new OmegaPose2D(-1.47489, -1, 90);
+            public static final OmegaPose2D secondSupportLineup = new OmegaPose2D(-1.36233, -0.55, 90);
+            public static final OmegaPose2D secondSupportPickup = new OmegaPose2D(-1.47489, -0.55, 90);
+        }
+
+    }
+
+    public static final class OldAutoConstants {
 
         public static final class RedConstants {
             public static final OmegaPose2D closeStart = new OmegaPose2D(1.24088, 1.2, 270);

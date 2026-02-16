@@ -20,7 +20,7 @@ public class AutoCloseShot {
     private final Feeder s_Feeder;
     private final FusionOdometry s_Lemon;
 
-    private OmegaPose2D targetPosition;
+    private final OmegaPose2D targetPosition;
 
     private final AutoDriveController driveController;
 
@@ -38,7 +38,7 @@ public class AutoCloseShot {
 
         this.telem = telem;
 
-        targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.closeShot : Constants.AutoConstants.BlueConstants.closeShot;
+        targetPosition = areWeWinners? Constants.NewAutoConstants.RedConstants.closeShot : Constants.NewAutoConstants.BlueConstants.closeShot;
 
         this.s_Swerve = s_Swerve;
         this.s_Shooter = s_Shooter;
@@ -59,8 +59,9 @@ public class AutoCloseShot {
     public void execute(){
 
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
-        s_Shooter.setShooterSpeed(0.35);
-        s_Shooter.setShooterAngle(Constants.ShooterConstants.closeAngle);
+        double distance = s_Lemon.getDistanceFromTarget(areWeWinners);
+        s_Shooter.setShooterSpeed(s_Shooter.getShooterSpeedFromDistance(distance));
+        s_Shooter.setShooterAngle(s_Shooter.getShooterAngleFromDistance(distance));
 
         telem.putTelemetry("Phase", phase);
 
@@ -124,7 +125,6 @@ public class AutoCloseShot {
         double yError = Math.abs(s_Lemon.getCurrentPose().y() - targetPosition.y());
         double rError = Math.abs(s_Lemon.getHeading() - targetPosition.r());
 
-//        return xError < 0.1 && yError < 0.1 && rError < 10;
         return xError < 0.1 && yError < 0.1;
     }
 

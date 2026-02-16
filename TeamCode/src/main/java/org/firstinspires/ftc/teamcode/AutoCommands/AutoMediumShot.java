@@ -42,7 +42,7 @@ public class AutoMediumShot {
 
         this.telem = telem;
 
-        targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.mediumShot : Constants.AutoConstants.BlueConstants.mediumShot;
+        targetPosition = areWeWinners? Constants.NewAutoConstants.RedConstants.finalCloseShot : Constants.NewAutoConstants.BlueConstants.finalCloseShot;
 
         this.s_Swerve = s_Swerve;
         this.s_Shooter = s_Shooter;

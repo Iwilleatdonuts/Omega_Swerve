@@ -4,7 +4,6 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
@@ -39,7 +38,7 @@ public class AutoLeaveFarZone {
 
         this.telem = telem;
 
-        targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.farBallLineup : Constants.AutoConstants.BlueConstants.farBallLineup;
+        targetPosition = areWeWinners? Constants.NewAutoConstants.RedConstants.thirdSpikeLineup : Constants.NewAutoConstants.BlueConstants.thirdSpikeLineup;
 
         this.s_Swerve = s_Swerve;
         this.s_Shooter = s_Shooter;

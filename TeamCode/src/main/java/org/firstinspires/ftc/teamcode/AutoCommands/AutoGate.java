@@ -42,9 +42,9 @@ public class AutoGate {
     public void reset(boolean teleopNext){
         goingToTeleop = teleopNext;
         if(goingToTeleop) {
-            targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.gateLineupAutoTeleop : Constants.AutoConstants.BlueConstants.gateLineupAutoTeleop;
+            targetPosition = areWeWinners? Constants.OldAutoConstants.RedConstants.gateLineupAutoTeleop : Constants.OldAutoConstants.BlueConstants.gateLineupAutoTeleop;
         } else {
-            targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.gateLineup : Constants.AutoConstants.BlueConstants.gateLineup;
+            targetPosition = areWeWinners? Constants.OldAutoConstants.RedConstants.gateLineup : Constants.OldAutoConstants.BlueConstants.gateLineup;
         }
         isFinished = false;
         phase = 0;

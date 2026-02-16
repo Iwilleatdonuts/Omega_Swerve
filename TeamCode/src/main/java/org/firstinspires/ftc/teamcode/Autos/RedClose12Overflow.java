@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCloseShot;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
+@Disabled
 @Autonomous(name = "Red Close 12 Overflow")
 public class RedClose12Overflow extends LinearOpMode {
 
@@ -34,7 +36,7 @@ public class RedClose12Overflow extends LinearOpMode {
 
         Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
         FusionOdometry s_Lemon = new FusionOdometry(hardwareMap, telem);
-        s_Lemon.setPose(Constants.AutoConstants.RedConstants.closeStart);
+        s_Lemon.setPose(Constants.OldAutoConstants.RedConstants.closeStart);
         s_Lemon.toggleTelemetry();
 
         Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Lemon);

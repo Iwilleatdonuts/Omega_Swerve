@@ -48,7 +48,7 @@ public class AutoSwoopyIntake {
         this.s_Feeder = s_Feeder;
         this.s_Lemon = s_Lemon;
 
-        firstPost = areWeWinners? Constants.AutoConstants.RedConstants.cornerPickup : Constants.AutoConstants.BlueConstants.cornerPickup;
+        firstPost = areWeWinners? Constants.NewAutoConstants.RedConstants.cornerPickup : Constants.NewAutoConstants.BlueConstants.cornerPickup;
         finalPose = new OmegaPose2D(firstPost.x(), firstPost.y()+0.5, firstPost.r());
 
         driveController = new AutoDriveController();

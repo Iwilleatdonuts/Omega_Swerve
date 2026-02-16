@@ -47,7 +47,7 @@ public class AutoCornerIntake {
         this.s_Feeder = s_Feeder;
         this.s_Lemon = s_Lemon;
 
-        finalPose = areWeWinners? Constants.AutoConstants.RedConstants.cornerPickup : Constants.AutoConstants.BlueConstants.cornerPickup;
+        finalPose = areWeWinners? Constants.NewAutoConstants.RedConstants.cornerPickup : Constants.NewAutoConstants.BlueConstants.cornerPickup;
 
         driveController = new AutoDriveController();
         waypointFollower = new WaypointFollower(driveController);

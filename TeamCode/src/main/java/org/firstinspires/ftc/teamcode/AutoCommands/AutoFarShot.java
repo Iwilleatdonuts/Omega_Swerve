@@ -4,7 +4,6 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
@@ -42,7 +41,7 @@ public class AutoFarShot {
 
         this.telem = telem;
 
-        targetPosition = areWeWinners? Constants.AutoConstants.RedConstants.farShot : Constants.AutoConstants.BlueConstants.farShot;
+        targetPosition = areWeWinners? Constants.NewAutoConstants.RedConstants.farShot : Constants.NewAutoConstants.BlueConstants.farShot;
 
         this.s_Swerve = s_Swerve;
         this.s_Shooter = s_Shooter;
@@ -65,9 +64,9 @@ public class AutoFarShot {
     public void execute(){
 
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
-//        double distance = s_Lemon.getDistanceFromTarget(areWeWinners);
+        double distance = s_Lemon.getDistanceFromTarget(areWeWinners);
 
-//        shooterSpeed = s_Shooter.getShooterSpeedFromDistance(distance);
+        shooterSpeed = s_Shooter.getShooterSpeedFromDistance(distance);
 
         s_Shooter.setShooterSpeed(shooterSpeed);
         s_Shooter.setShooterAngle(Constants.ShooterConstants.farAngle);

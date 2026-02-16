@@ -155,31 +155,31 @@ public class AutoDirectIntake {
         if(areWeWinners) {
             switch(targetRow) {
                 case 1:
-                    lineupTarget = Constants.AutoConstants.RedConstants.closeBallLineup;
-                    pickupTarget = Constants.AutoConstants.RedConstants.closeBallPickup;
+                    lineupTarget = Constants.NewAutoConstants.RedConstants.firstSpikeLineup;
+                    pickupTarget = Constants.NewAutoConstants.RedConstants.firstSpikePickup;
                     break;
                 case 2:
-                    lineupTarget = Constants.AutoConstants.RedConstants.mediumBallLineup;
-                    pickupTarget = Constants.AutoConstants.RedConstants.mediumBallPickup;
+                    lineupTarget = Constants.NewAutoConstants.RedConstants.secondSpikeLineup;
+                    pickupTarget = Constants.NewAutoConstants.RedConstants.secondSpikePickup;
                     break;
                 case 3:
-                    lineupTarget = Constants.AutoConstants.RedConstants.farBallLineup;
-                    pickupTarget = Constants.AutoConstants.RedConstants.farBallPickup;
+                    lineupTarget = Constants.NewAutoConstants.RedConstants.thirdSpikeLineup;
+                    pickupTarget = Constants.NewAutoConstants.RedConstants.thirdSpikePickup;
                     break;
             }
         } else {
             switch(targetRow) {
                 case 1:
-                    lineupTarget = Constants.AutoConstants.BlueConstants.closeBallLineup;
-                    pickupTarget = Constants.AutoConstants.BlueConstants.closeBallPickup;
+                    lineupTarget = Constants.NewAutoConstants.BlueConstants.firstSpikeLineup;
+                    pickupTarget = Constants.NewAutoConstants.BlueConstants.firstSpikePickup;
                     break;
                 case 2:
-                    lineupTarget = Constants.AutoConstants.BlueConstants.mediumBallLineup;
-                    pickupTarget = Constants.AutoConstants.BlueConstants.mediumBallPickup;
+                    lineupTarget = Constants.NewAutoConstants.BlueConstants.secondSpikeLineup;
+                    pickupTarget = Constants.NewAutoConstants.BlueConstants.secondSpikePickup;
                     break;
                 case 3:
-                    lineupTarget = Constants.AutoConstants.BlueConstants.farBallLineup;
-                    pickupTarget = Constants.AutoConstants.BlueConstants.farBallPickup;
+                    lineupTarget = Constants.NewAutoConstants.BlueConstants.thirdSpikeLineup;
+                    pickupTarget = Constants.NewAutoConstants.BlueConstants.thirdSpikePickup;
                     break;
             }
         }

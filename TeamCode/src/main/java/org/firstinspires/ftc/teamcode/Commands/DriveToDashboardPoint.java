@@ -76,34 +76,34 @@ public class DriveToDashboardPoint {
                 targetPosition = new OmegaPose2D(0, 0, 0);
                 break;
             case 1:
-                targetPosition = Constants.AutoConstants.RedConstants.closeShot;
+                targetPosition = Constants.OldAutoConstants.RedConstants.closeShot;
                 break;
             case 2:
-                targetPosition = Constants.AutoConstants.RedConstants.closeBallLineup;
+                targetPosition = Constants.OldAutoConstants.RedConstants.closeBallLineup;
                 break;
             case 3:
-                targetPosition = Constants.AutoConstants.RedConstants.closeBallPickup;
+                targetPosition = Constants.OldAutoConstants.RedConstants.closeBallPickup;
                 break;
             case 4:
-                targetPosition = Constants.AutoConstants.RedConstants.mediumBallLineup;
+                targetPosition = Constants.OldAutoConstants.RedConstants.mediumBallLineup;
                 break;
             case 5:
-                targetPosition = Constants.AutoConstants.RedConstants.mediumBallPickup;
+                targetPosition = Constants.OldAutoConstants.RedConstants.mediumBallPickup;
                 break;
             case 6:
-                targetPosition = Constants.AutoConstants.RedConstants.farBallLineup;
+                targetPosition = Constants.OldAutoConstants.RedConstants.farBallLineup;
                 break;
             case 7:
-                targetPosition = Constants.AutoConstants.RedConstants.farBallPickup;
+                targetPosition = Constants.OldAutoConstants.RedConstants.farBallPickup;
                 break;
             case 8:
-                targetPosition = Constants.AutoConstants.RedConstants.gateLineup;
+                targetPosition = Constants.OldAutoConstants.RedConstants.gateLineup;
                 break;
             case 9:
-                targetPosition = Constants.AutoConstants.RedConstants.gatePush;
+                targetPosition = Constants.OldAutoConstants.RedConstants.gatePush;
                 break;
             case 10:
-                targetPosition = Constants.AutoConstants.RedConstants.closeStart;
+                targetPosition = Constants.OldAutoConstants.RedConstants.closeStart;
                 break;
         }
 
