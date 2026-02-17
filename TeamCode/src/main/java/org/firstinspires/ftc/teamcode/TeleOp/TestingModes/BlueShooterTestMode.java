@@ -305,9 +305,7 @@ public class BlueShooterTestMode extends LinearOpMode {
                 shooterAngle = Constants.ShooterConstants.farAngle;
             }
 
-            if (s_Lime.isValidReaing()) {
-                shooterAngle = s_Shooter.getShooterAngleFromDistance(s_Lime.getGoalDistance());
-            }
+            shooterAngle = s_Shooter.getShooterAngleFromDistance(s_Lemon.getDistanceFromTarget(areWeWinners));
 
             s_Shooter.setShooterAngle(shooterAngle);
             s_Shooter.setShooterSpeed(output);
