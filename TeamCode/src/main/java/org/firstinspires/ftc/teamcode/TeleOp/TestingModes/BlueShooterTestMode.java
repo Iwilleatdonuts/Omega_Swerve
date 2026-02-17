@@ -266,6 +266,8 @@ public class BlueShooterTestMode extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            s_Lemon.skadoodle();
+
 //            s_Lime.updateRobotYawFromGyro(s_Sparky.getHeading());
 //
 //            telem.putTelemetry("Tag X", s_Lime.getLimePose().getPosition().x);
@@ -309,8 +311,6 @@ public class BlueShooterTestMode extends LinearOpMode {
 
             s_Shooter.setShooterAngle(shooterAngle);
             s_Shooter.setShooterSpeed(output);
-
-            s_Lime.skadoodle();
 
             if(driver.wasJustPressed(GamepadKeys.Button.BACK)) {
                 s_Swerve.zeroGyro();

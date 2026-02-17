@@ -266,6 +266,8 @@ public class RedShooterTestMode extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            s_Lemon.skadoodle();
+
 //            s_Lime.updateRobotYawFromGyro(s_Sparky.getHeading());
 //
 //            telem.putTelemetry("Tag X", s_Lime.getLimePose().getPosition().x);
