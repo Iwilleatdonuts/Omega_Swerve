@@ -155,6 +155,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TeleOpDrive;
 import org.firstinspires.ftc.teamcode.Commands.TestTurret;
@@ -173,39 +174,39 @@ import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 @TeleOp(name = "Shooter Manual - Red", group = "Testing")
 public class RedShooterTestMode extends LinearOpMode {
 
-    private class VisionThread implements Runnable {
-        private volatile boolean runVisionThread = true;
-        private final Limelight s_Lime;
-        private final long sleepTime;
-
-        public VisionThread(Limelight s_Lime, long sleepTime) {
-            this.s_Lime = s_Lime;
-            this.sleepTime = sleepTime;
-        }
-
-        public void stop() {
-            runVisionThread = false;
-        }
-
-        @Override
-        public void run(){
-
-            if(s_Lime == null){
-                return;
-            }
-
-            try {
-                while(runVisionThread && !Thread.currentThread().isInterrupted()) {
-                    s_Lime.skadoodle();
-                    Thread.sleep(sleepTime);
-                }
-            } catch (InterruptedException e) {
-                telem.putTelemetry("vision go bye bye", " hahahah");
-                telem.updateTelemetry();
-            }
-
-        }
-    }
+//    private class VisionThread implements Runnable {
+//        private volatile boolean runVisionThread = true;
+//        private final Limelight s_Lime;
+//        private final long sleepTime;
+//
+//        public VisionThread(Limelight s_Lime, long sleepTime) {
+//            this.s_Lime = s_Lime;
+//            this.sleepTime = sleepTime;
+//        }
+//
+//        public void stop() {
+//            runVisionThread = false;
+//        }
+//
+//        @Override
+//        public void run(){
+//
+//            if(s_Lime == null){
+//                return;
+//            }
+//
+//            try {
+//                while(runVisionThread && !Thread.currentThread().isInterrupted()) {
+//                    s_Lime.skadoodle();
+//                    Thread.sleep(sleepTime);
+//                }
+//            } catch (InterruptedException e) {
+//                telem.putTelemetry("vision go bye bye", " hahahah");
+//                telem.updateTelemetry();
+//            }
+//
+//        }
+//    }
 
     private EZTelemetry telem;
     private OmegaController driver;
@@ -222,7 +223,7 @@ public class RedShooterTestMode extends LinearOpMode {
 
     private TeleOpDrive driveCommand;
     private SmartIntake intakeCommand;
-    private TestTurret turretCommand;
+    private LimeTurret turretCommand;
     private boolean shootersGunnaShoot = false;
 
     private double shooterSpeed = 0;
@@ -255,26 +256,13 @@ public class RedShooterTestMode extends LinearOpMode {
 
         driveCommand = new TeleOpDrive(telem, s_Swerve, driver, operator);
         intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
-        turretCommand = new TestTurret(s_Swerve, s_Turret, s_Lime, s_Lemon, operator, driver, telem, areWeWinners);
+        turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, s_Lemon, operator, driver, telem, areWeWinners);
 
         driveCommand.initialize();
         intakeCommand.initialize();
         turretCommand.initialize();
 
-        VisionThread visionRunnable = new VisionThread(s_Lime, 15);
-        Thread visionThread = new Thread(visionRunnable, "Vision Thread");
-        visionThread.start();
-
-//        telem.enableCameraStrea(s_Lime.);
-
-        telem.putTelemetry("FPS", s_Lime.getLimeStatus().getFps());
-        telem.updateAll();
-
         waitForStart();
-
-        if(isStopRequested()) {
-            s_Lime.stopLime();
-        }
 
         while (opModeIsActive()) {
 
@@ -332,25 +320,12 @@ public class RedShooterTestMode extends LinearOpMode {
             OmegaPose2D currentPose = s_Lemon.getCurrentPose();
             telem.putTelemetry("X pose", currentPose.x());
             telem.putTelemetry("Y pose", currentPose.y());
-            telem.putTelemetry("ODOM DISTANE", Math.hypot(s_Lemon.getCurrentPose().x() - Constants.TurretConstants.blueTarget.x(), s_Lemon.getCurrentPose().y() - Constants.TurretConstants.blueTarget.y()));
-            telem.putTelemetry("VISION DISTNACE", s_Lime.getFilteredDistance());
+            telem.putTelemetry("ODOM DISTANCE", s_Lemon.getDistanceFromTarget(areWeWinners));
             telem.putTelemetry("Shooter Target Percentage", shooterSpeed);
             telem.putDashboard("Shooter Speed", s_Shooter.getShooterVelocity());
             telem.updateAll();
-
-            long mainThreadSleep = 20 - ((System.nanoTime() - loopStart) / 1000000);
-
-            if(mainThreadSleep > 0) {
-                try {
-                    Thread.sleep(mainThreadSleep);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
         }
         s_Lime.stopLime();
-        visionRunnable.stop();
 
     }
 
