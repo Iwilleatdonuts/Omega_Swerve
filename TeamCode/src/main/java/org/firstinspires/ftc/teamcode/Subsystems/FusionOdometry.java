@@ -50,7 +50,7 @@ public class FusionOdometry {
 
         OmegaPose2D targetPose = areWeWinners ? Constants.TurretConstants.redTarget : Constants.TurretConstants.blueTarget;
 
-        return Math.hypot(Math.abs(getCurrentPose().x() - targetPose.x()), Math.abs(getCurrentPose().y() - targetPose.y()));
+        return Math.hypot(getCurrentPose().x() - targetPose.x(), getCurrentPose().y() - targetPose.y());
     }
 
     public double getHeading() {

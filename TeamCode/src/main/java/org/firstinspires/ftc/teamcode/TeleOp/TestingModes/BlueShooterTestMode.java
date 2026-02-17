@@ -320,7 +320,7 @@ public class BlueShooterTestMode extends LinearOpMode {
             OmegaPose2D currentPose = s_Lemon.getCurrentPose();
             telem.putTelemetry("X pose", currentPose.x());
             telem.putTelemetry("Y pose", currentPose.y());
-            telem.putTelemetry("ODOM DISTANCE", s_Lemon.getDistanceFromTarget(areWeWinners));
+            telem.putTelemetry("ODOM DISTANCE", Math.hypot(s_Lemon.getCurrentPose().x() - Constants.TurretConstants.blueTarget.x(), s_Lemon.getCurrentPose().y() - Constants.TurretConstants.blueTarget.y()));
             telem.putTelemetry("Shooter Target Percentage", shooterSpeed);
             telem.putDashboard("Shooter Speed", s_Shooter.getShooterVelocity());
             telem.updateAll();
