@@ -51,7 +51,7 @@ public class SwerveModule {
         this.telem = telem;
         this.modNumber = moduleConstants.modNumber;
 
-        moduleFF = moduleConstants.kF * 0.75;
+        moduleFF = moduleConstants.kF * 0.70;
 //        switch(modNumber) {
 //            case 0:
 //                moduleFF = PIDTuner.PIDTuner1.kF;
