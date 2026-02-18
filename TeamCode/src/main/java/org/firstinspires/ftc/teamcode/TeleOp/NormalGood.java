@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Commands.CoolShooters;
-import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
+import org.firstinspires.ftc.teamcode.Commands.LemonTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TeleOpDrive;
-import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TurnToPointDrive;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -22,74 +22,6 @@ import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
 @TeleOp(name = "Red Normie", group = "Main")
 public class NormalGood extends LinearOpMode {
-
-    private class VisionThread implements Runnable {
-        private volatile boolean runVisionThread = true;
-        private final Limelight s_Lime;
-        private final long sleepTime;
-
-        public VisionThread(Limelight s_Lime, long sleepTime) {
-            this.s_Lime = s_Lime;
-            this.sleepTime = sleepTime;
-        }
-
-        public void stop() {
-            runVisionThread = false;
-        }
-
-        @Override
-        public void run(){
-
-            if(s_Lime == null){
-                return;
-            }
-
-            try {
-                while(runVisionThread && !Thread.currentThread().isInterrupted()) {
-                    s_Lime.skadoodle();
-                    Thread.sleep(sleepTime);
-                }
-            } catch (InterruptedException e) {
-                telem.putTelemetry("vision go bye bye", " hahahah");
-                telem.updateTelemetry();
-            }
-
-        }
-    }
-
-    private class LemonThread implements Runnable {
-        private volatile boolean runLemonThread = true;
-        private final FusionOdometry s_Lemon;
-        private final long sleepTime;
-
-        public LemonThread(FusionOdometry s_Lemon, long sleepTime) {
-            this.s_Lemon = s_Lemon;
-            this.sleepTime = sleepTime;
-        }
-
-        public void stop() {
-            runLemonThread = false;
-        }
-
-        @Override
-        public void run(){
-
-            if(s_Lemon == null){
-                return;
-            }
-
-            try {
-                while(runLemonThread && !Thread.currentThread().isInterrupted()) {
-                    s_Lemon.skadoodle();
-                    Thread.sleep(sleepTime);
-                }
-            } catch (InterruptedException e) {
-                telem.putTelemetry("lemons are sour now", " :(((");
-                telem.updateTelemetry();
-            }
-
-        }
-    }
 
     private EZTelemetry telem;
     private OmegaController driver;
@@ -105,7 +37,7 @@ public class NormalGood extends LinearOpMode {
 
     private TeleOpDrive driveCommand;
     private SmartIntake intakeCommand;
-    private LimeTurret turretCommand;
+    private LemonTurret turretCommand;
     private CoolShooters shooterCommand;
 
     @Override
@@ -132,28 +64,18 @@ public class NormalGood extends LinearOpMode {
         s_Turret.toggleTelemetry();
 
         driveCommand = new TeleOpDrive(telem, s_Swerve, driver, operator);
-        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
-        turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, s_Lemon, operator, driver, telem, areWeWinners);
-        shooterCommand = new CoolShooters(s_Shooter, s_Lime, s_Lemon, driver, operator, telem, areWeWinners);
+        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, driver, operator, telem);
+        turretCommand = new LemonTurret(s_Swerve, s_Turret, s_Lemon, operator, driver, telem, areWeWinners);
+        shooterCommand = new CoolShooters(s_Shooter, s_Lemon, driver, operator, telem, areWeWinners);
 
         driveCommand.initialize();
         intakeCommand.initialize();
         turretCommand.initialize();
         shooterCommand.initialize();
 
-        VisionThread visionRunnable = new VisionThread(s_Lime, 15);
-        Thread visionThread = new Thread(visionRunnable, "Vision Thread");
-        visionThread.start();
-
-        LemonThread lemonRunnable = new LemonThread(s_Lemon, 15);
-        Thread lemonThread = new Thread(lemonRunnable, "Lemon Thread");
-        lemonThread.start();
-
-        telem.putTelemetry("FPS", s_Lime.getLimeStatus().getFps());
+        telem.putLine("TS IS READY TO RUMBAH");
         telem.putLine();
-//        telem.putTelemetry("X Pose", s_Lemon.getCurrentPose().x());
-//        telem.putTelemetry("Y Pose", s_Lemon.getCurrentPose().y());
-//        telem.putTelemetry("Heading Pose", s_Lemon.getCurrentPose().r());
+        s_Lemon.setPose(Constants.NewAutoConstants.RedConstants.finalCloseShotTeleopPose);
         telem.updateAll();
 
         waitForStart();
@@ -164,7 +86,7 @@ public class NormalGood extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            long loopStart = System.nanoTime();
+            s_Lemon.skadoodle();
 
             driveCommand.execute();
             intakeCommand.execute();
@@ -185,20 +107,8 @@ public class NormalGood extends LinearOpMode {
 
             telem.updateTelemetry();
 
-            long mainThreadSleep = 20 - ((System.nanoTime() - loopStart) / 1000000);
-
-            if(mainThreadSleep > 0) {
-                try {
-                    Thread.sleep(mainThreadSleep);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
         }
         s_Lime.stopLime();
-        visionRunnable.stop();
-        lemonRunnable.stop();
     }
 
 }

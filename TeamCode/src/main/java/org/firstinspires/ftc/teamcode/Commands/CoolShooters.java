@@ -15,7 +15,6 @@ public class CoolShooters {
     private final EZTelemetry telem;
 
     private final Shooter s_Shooter;
-    private final Limelight s_Lime;
     private final FusionOdometry s_Lemon;
     private final OmegaController m_Driver;
     private final OmegaController m_Operator;
@@ -29,10 +28,9 @@ public class CoolShooters {
     private final OmegaPose2D targetPose;
     private double timestamp;
 
-    public CoolShooters(Shooter s_Shooter, Limelight s_Lime, FusionOdometry s_Lemon, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem, boolean areWeWinners){
+    public CoolShooters(Shooter s_Shooter, FusionOdometry s_Lemon, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem, boolean areWeWinners){
 
         this.s_Shooter = s_Shooter;
-        this.s_Lime = s_Lime;
         this.s_Lemon = s_Lemon;
 
         this.m_Driver = m_Driver;
@@ -48,7 +46,6 @@ public class CoolShooters {
         shootersGunnaShoot = true;
         shooterPercent = 0;
         shooterAngle = 1;
-        timestamp = System.nanoTime();
 
     }
 
@@ -70,39 +67,32 @@ public class CoolShooters {
             shooterAngle = Constants.ShooterConstants.closeAngle;
         }
 
-        if(m_Driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)){
+        if(m_Driver.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) || m_Operator.wasJustPressed(GamepadKeys.Button.START)){
             shootersGunnaShoot = true;
         }
 
-        if(m_Driver.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) || m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+        if(m_Driver.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) || m_Operator.wasJustPressed(GamepadKeys.Button.BACK)) {
             shootersGunnaShoot = false;
         }
 
         if(shootersGunnaShoot){
                 //MANUAL CLOSE SHOT
-            if (m_Operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-                shooterPercent = 0.38 + s_Shooter.getShooterConstant();
-                shooterAngle = Constants.ShooterConstants.closeAngle;
-                //MANUAL MEDOIUM SHOT
-            } else if(m_Operator.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
-                shooterPercent = 0.45 + s_Shooter.getShooterConstant();
-                shooterAngle = Constants.ShooterConstants.closeAngle-0.5;
-                //MANUAL FAR SHOT
-            } else if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) {
-                shooterPercent = 0.56 + s_Shooter.getShooterConstant();
-                shooterAngle = Constants.ShooterConstants.farAngle;
-            }
-//            else if(s_Lime.isValidReaing()){
-//                double distance = s_Lime.getFilteredDistance();
-//                shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
-//                shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
-//                timestamp = System.nanoTime();
-//            }
-            else if(System.nanoTime() - timestamp > 1e9){
+//            if (m_Operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
+//                shooterPercent = 0.38 + s_Shooter.getShooterConstant();
+//                shooterAngle = Constants.ShooterConstants.closeAngle;
+//                //MANUAL MEDOIUM SHOT
+//            } else if(m_Operator.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
+//                shooterPercent = 0.45 + s_Shooter.getShooterConstant();
+//                shooterAngle = Constants.ShooterConstants.closeAngle-0.5;
+//                //MANUAL FAR SHOT
+//            } else if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) {
+//                shooterPercent = 0.56 + s_Shooter.getShooterConstant();
+//                shooterAngle = Constants.ShooterConstants.farAngle;
+//            } else
                 double distance = Math.hypot(s_Lemon.getCurrentPose().x() - targetPose.x(), s_Lemon.getCurrentPose().y() - targetPose.y());
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
                 shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
-            }
+
         } else {
             shooterPercent = 0;
         }

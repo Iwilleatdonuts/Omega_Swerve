@@ -22,7 +22,6 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Disabled
 @Autonomous(name = "Red Far 12 Overflow")
 public class RedFar12Overflow extends LinearOpMode {
 
@@ -72,6 +71,7 @@ public class RedFar12Overflow extends LinearOpMode {
 
         );
 
+        telem.putLine("RED FAR 12 IS READY");
         telem.updateTelemetry();
 
         waitForStart();

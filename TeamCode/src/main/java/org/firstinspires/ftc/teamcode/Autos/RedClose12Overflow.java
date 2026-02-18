@@ -23,7 +23,6 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Disabled
 @Autonomous(name = "Red Close 12 Overflow")
 public class RedClose12Overflow extends LinearOpMode {
 
@@ -76,6 +75,7 @@ public class RedClose12Overflow extends LinearOpMode {
 
         );
 
+        telem.putLine("RED CLOSE 12 IS READY");
         telem.updateTelemetry();
 
         waitForStart();

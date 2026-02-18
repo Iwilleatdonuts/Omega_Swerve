@@ -19,7 +19,6 @@ public class SmartIntake {
     private final Shooter s_Shooter;
     private final Turret s_Turret;
 
-    private final Limelight s_Lime;
     private final OmegaController m_Driver;
     private final OmegaController m_Operator;
 
@@ -27,14 +26,13 @@ public class SmartIntake {
     private double loseTagTimestamp;
     private boolean allowedToShoot;
 
-    public SmartIntake(Intake s_Intake, Feeder s_Feeder, Shooter s_Shooter, Turret s_Turret, Limelight s_Lime, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem){
+    public SmartIntake(Intake s_Intake, Feeder s_Feeder, Shooter s_Shooter, Turret s_Turret, OmegaController m_Driver, OmegaController m_Operator, EZTelemetry telem){
 
         this.telem = telem;
         this.s_Intake = s_Intake;
         this.s_Feeder = s_Feeder;
         this.s_Shooter = s_Shooter;
         this.s_Turret = s_Turret;
-        this.s_Lime = s_Lime;
 
         this.m_Driver = m_Driver;
         this.m_Operator = m_Operator;

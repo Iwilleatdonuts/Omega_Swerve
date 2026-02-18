@@ -155,10 +155,9 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Commands.LimeTurret;
+import org.firstinspires.ftc.teamcode.Commands.LemonTurret;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.SmartIntake;
 import org.firstinspires.ftc.teamcode.Commands.ManualCommands.TeleOpDrive;
-import org.firstinspires.ftc.teamcode.Commands.TestTurret;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
@@ -223,7 +222,7 @@ public class BlueShooterTestMode extends LinearOpMode {
 
     private TeleOpDrive driveCommand;
     private SmartIntake intakeCommand;
-    private LimeTurret turretCommand;
+    private LemonTurret turretCommand;
     private boolean shootersGunnaShoot = false;
 
     private double shooterSpeed = 0;
@@ -255,8 +254,8 @@ public class BlueShooterTestMode extends LinearOpMode {
         s_Lemon.setPose(new OmegaPose2D(0, 0, 0));
 
         driveCommand = new TeleOpDrive(telem, s_Swerve, driver, operator);
-        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, s_Lime, driver, operator, telem);
-        turretCommand = new LimeTurret(s_Swerve, s_Turret, s_Lime, s_Lemon, operator, driver, telem, areWeWinners);
+        intakeCommand = new SmartIntake(s_Intake, s_Feeder, s_Shooter, s_Turret, driver, operator, telem);
+        turretCommand = new LemonTurret(s_Swerve, s_Turret, s_Lemon, operator, driver, telem, areWeWinners);
 
         driveCommand.initialize();
         intakeCommand.initialize();

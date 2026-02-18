@@ -47,14 +47,22 @@ public class TeleOpDrive {
 
         m_Driver.readButtons();
         m_Operator.readButtons();
+//
+//        double xVal = m_Driver.getLeftX();
+//        double yVal = m_Driver.getLeftY();
+//
+//        double xLimited = xLimiter.calculate(xVal);
+//        double yLimited = yLimiter.calculate(yVal);
+//
+//        double rightX = m_Driver.getRightX();
 
-        double xVal = m_Driver.getLeftX();
-        double yVal = m_Driver.getLeftY();
+        double xVal = m_Driver.getRightX();
+        double yVal = m_Driver.getRightY();
 
         double xLimited = xLimiter.calculate(xVal);
         double yLimited = yLimiter.calculate(yVal);
 
-        double rightX = m_Driver.getRightX();
+        double rightX = m_Driver.getRightY();
 
         double sqrX = Math.pow(Math.abs(rightX), 2);
 

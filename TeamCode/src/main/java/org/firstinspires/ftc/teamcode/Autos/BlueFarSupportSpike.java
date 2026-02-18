@@ -25,7 +25,6 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Disabled
 @Autonomous(name = "Blue Far Support Spike")
 public class BlueFarSupportSpike extends LinearOpMode {
 
@@ -74,6 +73,7 @@ public class BlueFarSupportSpike extends LinearOpMode {
                 leaveCommand::runCommand
         );
 
+        telem.putLine("BLUE FAR SUPPORT WITH SPIKE IS READY");
         telem.updateTelemetry();
 
         waitForStart();

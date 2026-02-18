@@ -25,7 +25,6 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Disabled
 @Autonomous(name = "Red Far Support")
 public class RedFarSupport extends LinearOpMode {
 
@@ -74,6 +73,7 @@ public class RedFarSupport extends LinearOpMode {
                 leaveCommand::runCommand
         );
 
+        telem.putLine("RED FAR SUPPORT IS READY");
         telem.updateTelemetry();
 
         waitForStart();

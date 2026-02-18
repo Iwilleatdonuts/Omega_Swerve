@@ -11,13 +11,11 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaController.OmegaController;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
-public class LimeTurret {
+public class LemonTurret {
 
     private final Swerve s_Swerve;
     private final Turret s_Turret;
-    private final Limelight s_Lime;
     private final FusionOdometry s_Lemon;
-    private double aprilBearing;
 
     private final OmegaController m_Operator;
     private final OmegaController m_Driver;
@@ -43,13 +41,12 @@ public class LimeTurret {
 
     private double heading;
 
-    public LimeTurret(Swerve s_Swerve, Turret s_Turret, Limelight s_Lime, FusionOdometry s_Lemon, OmegaController m_Operator, OmegaController m_Driver, EZTelemetry telem, boolean areWeWinners){
+    public LemonTurret(Swerve s_Swerve, Turret s_Turret, FusionOdometry s_Lemon, OmegaController m_Operator, OmegaController m_Driver, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
 
         this.s_Swerve = s_Swerve;
         this.s_Turret = s_Turret;
-        this.s_Lime = s_Lime;
         this.s_Lemon = s_Lemon;
 
         this.m_Operator = m_Operator;
@@ -74,80 +71,67 @@ public class LimeTurret {
 
     public void initialize(){
 
-        aprilBearing = s_Lime.getFilteredBearing();
         timestamp = System.nanoTime();
 
     }
 
     public void execute(){
 
+        OmegaPose2D currentPose = s_Lemon.getCurrentPose();
+
         if(m_Driver.wasJustPressed(GamepadKeys.Button.Y)) {
             s_Lemon.setLinearPose(new OmegaPose2D(0, 0, 0));
         }
 
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.START)) {
-            s_Lemon.setLinearPose(areWeWinners ? farZonePose : gatePose);
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+            s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() + 0.1));
         }
 
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.BACK)) {
-            s_Lemon.setLinearPose(areWeWinners ? gatePose: farZonePose);
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+            s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() - 0.1));
         }
-
-        //MANUAL CLOSE SHOT
-        if (m_Operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-
-            double heading = closeManualSetpoint - s_Lemon.getReversedHeading();
-
-            if(heading < -180) {
-                heading += 360;
-            }
-
-            if(heading > 180) {
-                heading -= 360;
-            }
-            this.heading = heading;
-
-            //MANUAL MEDOIUM SHOT
-        } else if(m_Operator.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
-
-            double heading = mediumManualSetpoint - s_Lemon.getReversedHeading();
-
-            if(heading < -180) {
-                heading += 360;
-            }
-
-            if(heading > 180) {
-                heading -= 360;
-            }
-            this.heading = heading;
-
-            //MANUAL FAR SHOT
-        } else if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) {
-
-            double heading = farManualSetpoint - s_Lemon.getReversedHeading();
-
-            if(heading < -180) {
-                heading += 360;
-            }
-
-            if(heading > 180) {
-                heading -= 360;
-            }
-            this.heading = heading;
-
-        }
-//        else if (s_Lime.isValidReaing() && m_Driver.isDown(GamepadKeys.Button.A)) {
 //
-//            aprilBearing = s_Lime.getFilteredBearing();
-//            double bearing = s_Turret.getDegrees() - aprilBearing;
+//        //MANUAL CLOSE SHOT
+//        if (m_Operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
 //
-////            if((s_Lemon.getCurrentPose().x() > 1.3 && !areWeWinners) || (s_Lemon.getCurrentPose().x() < -1.3 && areWeWinners)) {
-////                bearing += closeCloseSkew;
-////            }
+//            double heading = closeManualSetpoint - s_Lemon.getReversedHeading();
 //
-//            heading = bearing;
+//            if(heading < -180) {
+//                heading += 360;
+//            }
 //
-//            timestamp = System.nanoTime();
+//            if(heading > 180) {
+//                heading -= 360;
+//            }
+//            this.heading = heading;
+//
+//            //MANUAL MEDOIUM SHOT
+//        } else if(m_Operator.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
+//
+//            double heading = mediumManualSetpoint - s_Lemon.getReversedHeading();
+//
+//            if(heading < -180) {
+//                heading += 360;
+//            }
+//
+//            if(heading > 180) {
+//                heading -= 360;
+//            }
+//            this.heading = heading;
+//
+//            //MANUAL FAR SHOT
+//        } else if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) {
+//
+//            double heading = farManualSetpoint - s_Lemon.getReversedHeading();
+//
+//            if(heading < -180) {
+//                heading += 360;
+//            }
+//
+//            if(heading > 180) {
+//                heading -= 360;
+//            }
+//            this.heading = heading;
 //
 //        }
         else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
@@ -165,7 +149,6 @@ public class LimeTurret {
 
         } else if(System.nanoTime() - timestamp > 0.5e9) {
 
-            OmegaPose2D currentPose = s_Lemon.getCurrentPose();
             //gtes x and Y value on field
 
             double theta = Math.toDegrees(Math.atan2(-(targetPose.x() - currentPose.x()), targetPose.y() - currentPose.y()));
@@ -182,39 +165,39 @@ public class LimeTurret {
             heading = turretHeading;
         }
 
-        double skewCounter = 0;
-        double totalSkew = 0;
+//        double skewCounter = 0;
+//        double totalSkew = 0;
+//
+//        if(m_Operator.isDown(GamepadKeys.Button.Y)) {
+//            totalSkew += farSkew;
+//            skewCounter++;
+//        }
+//
+//        if(m_Operator.isDown(GamepadKeys.Button.X)) {
+//            totalSkew += areWeWinners ? mediumCloseSkew : mediumFarSkew;
+//            skewCounter++;
+//        }
+//
+//        if(m_Operator.isDown(GamepadKeys.Button.B)) {
+//            totalSkew += areWeWinners ? mediumFarSkew : mediumCloseSkew;
+//            skewCounter++;
+//        }
+//
+//        if(m_Operator.isDown(GamepadKeys.Button.A)) {
+//            totalSkew += closeSkew;
+//            skewCounter++;
+//        }
+//
+//        if(skewCounter != 0) {
+//            totalSkew/=skewCounter;
+//        }
 
-        if(m_Operator.isDown(GamepadKeys.Button.Y)) {
-            totalSkew += farSkew;
-            skewCounter++;
-        }
-
-        if(m_Operator.isDown(GamepadKeys.Button.X)) {
-            totalSkew += areWeWinners ? mediumCloseSkew : mediumFarSkew;
-            skewCounter++;
-        }
-
-        if(m_Operator.isDown(GamepadKeys.Button.B)) {
-            totalSkew += areWeWinners ? mediumFarSkew : mediumCloseSkew;
-            skewCounter++;
-        }
-
-        if(m_Operator.isDown(GamepadKeys.Button.A)) {
-            totalSkew += closeSkew;
-            skewCounter++;
-        }
-
-        if(skewCounter != 0) {
-            totalSkew/=skewCounter;
-        }
-
-        s_Turret.setSetpoint(heading + totalSkew);
+//        s_Turret.setSetpoint(heading + totalSkew);
         s_Turret.runToSetpoint();
 
         s_Turret.skadoodle();
 //        telem.putLine("Turret");
-        telem.putTelemetry("Skew", totalSkew);
+//        telem.putTelemetry("Skew", totalSkew);
         telem.putLine();
 
     }
