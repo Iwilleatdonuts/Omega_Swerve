@@ -37,7 +37,7 @@ public class RedFarSupport extends LinearOpMode {
 
         Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
         FusionOdometry s_Lemon = new FusionOdometry(hardwareMap, telem);
-        s_Lemon.setPose(Constants.OldAutoConstants.RedConstants.farStart);
+        s_Lemon.setPose(Constants.NewAutoConstants.RedConstants.farStart);
         s_Lemon.toggleTelemetry();
 
         Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Lemon);

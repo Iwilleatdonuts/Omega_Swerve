@@ -43,38 +43,6 @@ public class AutoTurret {
 
     public void execute(){
 
-//        if(s_Lime.isValidReaing()){
-//
-//            aprilBearing = s_Lime.getFilteredBearing();
-//            double bearing = s_Turret.getDegrees() - aprilBearing;
-//
-//            if(areWeFar) {
-//                bearing-= turretOffset;
-//            }
-//
-//            s_Turret.setSetpoint(bearing);
-//
-//        } else {
-//
-//            s_Turret.setSetpoint(turretDefault);
-
-//            OmegaPose2D currentPose = s_Lemon.getCurrentPose();
-//            //gtes x and Y value on field
-//
-//            double theta = Math.toDegrees(Math.atan2(-(targetPose.x() - currentPose.x()), targetPose.y() - currentPose.y()));
-//            double turretHeading = theta - s_Lemon.getHeading();
-//
-//            if(turretHeading < -180) {
-//                turretHeading += 360;
-//            }
-//
-//            if(turretHeading > 180) {
-//                turretHeading -= 360;
-//            }
-//
-//            s_Turret.setSetpoint(turretHeading);
-
-//        }
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
         //gtes x and Y value on field
 
