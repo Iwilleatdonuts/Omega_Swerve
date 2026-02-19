@@ -83,6 +83,17 @@ public class LemonTurret {
             s_Lemon.setLinearPose(new OmegaPose2D(0, 0, 0));
         }
 
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.Y)) {
+            s_Lemon.setLinearPose(new OmegaPose2D(0, 1.25, 0));
+        }
+
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.X) && !areWeWinners) {
+            s_Lemon.setLinearPose(new OmegaPose2D(-1.4, 0, 0));
+        }
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.B) && areWeWinners) {
+            s_Lemon.setLinearPose(new OmegaPose2D(1.4, 0, 0));
+        }
+
         if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
             s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() + 0.1));
         }
@@ -90,10 +101,10 @@ public class LemonTurret {
         if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
             s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() - 0.1));
         }
-//
-//        //MANUAL CLOSE SHOT
-//        if (m_Operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-//
+
+        //MANUAL CLOSE SHOT
+        if (m_Operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
+
 //            double heading = closeManualSetpoint - s_Lemon.getReversedHeading();
 //
 //            if(heading < -180) {
@@ -103,11 +114,11 @@ public class LemonTurret {
 //            if(heading > 180) {
 //                heading -= 360;
 //            }
-//            this.heading = heading;
-//
-//            //MANUAL MEDOIUM SHOT
-//        } else if(m_Operator.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
-//
+            this.heading = 0;
+
+            //MANUAL MEDOIUM SHOT
+        } else if(m_Operator.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
+
 //            double heading = mediumManualSetpoint - s_Lemon.getReversedHeading();
 //
 //            if(heading < -180) {
@@ -117,11 +128,11 @@ public class LemonTurret {
 //            if(heading > 180) {
 //                heading -= 360;
 //            }
-//            this.heading = heading;
-//
-//            //MANUAL FAR SHOT
-//        } else if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) {
-//
+            this.heading = 0;
+
+            //MANUAL FAR SHOT
+        } else if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) {
+
 //            double heading = farManualSetpoint - s_Lemon.getReversedHeading();
 //
 //            if(heading < -180) {
@@ -131,9 +142,9 @@ public class LemonTurret {
 //            if(heading > 180) {
 //                heading -= 360;
 //            }
-//            this.heading = heading;
-//
-//        }
+            this.heading = 0;
+
+        }
         else if (Math.hypot(m_Operator.getLeftX(), m_Operator.getLeftY()) > 0.9){
 
             double operatorJoystickAngle = Math.toDegrees(Math.atan2(-m_Operator.getLeftX(), m_Operator.getLeftY()));
@@ -192,7 +203,7 @@ public class LemonTurret {
 //            totalSkew/=skewCounter;
 //        }
 
-//        s_Turret.setSetpoint(heading + totalSkew);
+        s_Turret.setSetpoint(heading);
         s_Turret.runToSetpoint();
 
         s_Turret.skadoodle();

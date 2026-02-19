@@ -56,13 +56,13 @@ public class TeleOpDrive {
 //
 //        double rightX = m_Driver.getRightX();
 
-        double xVal = m_Driver.getRightX();
-        double yVal = m_Driver.getRightY();
+        double xVal = m_Driver.getLeftX();
+        double yVal = m_Driver.getLeftY();
 
         double xLimited = xLimiter.calculate(xVal);
         double yLimited = yLimiter.calculate(yVal);
 
-        double rightX = m_Driver.getRightY();
+        double rightX = m_Driver.getRightX();
 
         double sqrX = Math.pow(Math.abs(rightX), 2);
 

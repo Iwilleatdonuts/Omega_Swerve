@@ -77,22 +77,22 @@ public class CoolShooters {
 
         if(shootersGunnaShoot){
                 //MANUAL CLOSE SHOT
-//            if (m_Operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
-//                shooterPercent = 0.38 + s_Shooter.getShooterConstant();
-//                shooterAngle = Constants.ShooterConstants.closeAngle;
-//                //MANUAL MEDOIUM SHOT
-//            } else if(m_Operator.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
-//                shooterPercent = 0.45 + s_Shooter.getShooterConstant();
-//                shooterAngle = Constants.ShooterConstants.closeAngle-0.5;
-//                //MANUAL FAR SHOT
-//            } else if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) {
-//                shooterPercent = 0.56 + s_Shooter.getShooterConstant();
-//                shooterAngle = Constants.ShooterConstants.farAngle;
-//            } else
+            if (m_Operator.isDown(GamepadKeys.Button.RIGHT_BUMPER)) {
+                shooterPercent = 0.38 + s_Shooter.getShooterConstant();
+                shooterAngle = Constants.ShooterConstants.closeAngle;
+                //MANUAL MEDOIUM SHOT
+            } else if(m_Operator.isDown(GamepadKeys.Button.LEFT_BUMPER)) {
+                shooterPercent = 0.45 + s_Shooter.getShooterConstant();
+                shooterAngle = Constants.ShooterConstants.closeAngle-0.5;
+                //MANUAL FAR SHOT
+            } else if(m_Operator.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.9) {
+                shooterPercent = 0.56 + s_Shooter.getShooterConstant();
+                shooterAngle = Constants.ShooterConstants.farAngle;
+            } else {
                 double distance = Math.hypot(s_Lemon.getCurrentPose().x() - targetPose.x(), s_Lemon.getCurrentPose().y() - targetPose.y());
                 shooterPercent = s_Shooter.getShooterSpeedFromDistance(distance);
                 shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
-
+            }
         } else {
             shooterPercent = 0;
         }
