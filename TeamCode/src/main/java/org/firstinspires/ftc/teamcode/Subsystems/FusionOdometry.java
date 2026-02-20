@@ -115,7 +115,7 @@ public class FusionOdometry {
     }
 
     public Pose omegaToPedro(OmegaPose2D omegasPose) {
-        return new Pose(omegasPose.x(), omegasPose.y(), omegasPose.r());
+//        return new Pose(omegasPose.x(), omegasPose.y(), omegasPose.r());
 //        double heading = Math.toRadians(omegasPose.r());
 //        heading += (Math.PI/2);
 //        if(heading > Math.PI) {
@@ -125,6 +125,15 @@ public class FusionOdometry {
 //            heading += Math.PI*2;
 //        }
 //        return new Pose(omegasPose.x() * 39.3701, omegasPose.y() * 39.3701, heading);
+
+        double headingDeg = omegasPose.r() + 90;
+        headingDeg = (headingDeg + 360) % 360;
+        double headingRad = Math.toRadians(headingDeg);
+
+        double xInches = omegasPose.x() / 0.0254;
+        double yInches = omegasPose.y() / 0.0254;
+
+        return new Pose(xInches, yInches, headingRad);
     }
 
 }

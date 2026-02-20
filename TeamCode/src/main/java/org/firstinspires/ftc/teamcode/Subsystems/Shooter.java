@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.math.MathUtil;
@@ -138,6 +139,14 @@ public class Shooter {
 
     public double getTargetVelocity() {
         return targetVelocity;
+    }
+
+    public double getLowerCurrentDraw() {
+        return lowerShooterMotor.getCurrent(CurrentUnit.AMPS);
+    }
+
+    public double getUpperCurrentDraw() {
+        return upperShooterMotor.getCurrent(CurrentUnit.AMPS);
     }
 
     public void toggleTelemetry() {
