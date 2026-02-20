@@ -95,11 +95,11 @@ public class LemonTurret {
         }
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-            s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() + 0.1));
+            s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() + 0.5));
         }
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
-            s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() - 0.1));
+            s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() - 0.5));
         }
 
         //MANUAL CLOSE SHOT

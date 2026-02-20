@@ -32,6 +32,8 @@ public class AutoCloseShot {
 
     private double timestamp;
 
+    private boolean shootSlow = false;
+
     public AutoCloseShot(Swerve s_Swerve, Shooter s_Shooter, Intake s_Intake, Feeder s_Feeder, FusionOdometry s_Lemon, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
@@ -50,17 +52,19 @@ public class AutoCloseShot {
 
     }
 
-    public void reset(){
+    public void reset(boolean shootSlow){
         isFinished = false;
         phase = 0;
         driveController.reset();
+        this.shootSlow = shootSlow;
+
     }
 
     public void execute(){
 
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
-        double distance = s_Lemon.getDistanceFromTarget(areWeWinners);
-        s_Shooter.setShooterSpeed(s_Shooter.getShooterSpeedFromDistance(distance));
+        double distance = s_Lemon.getDistanceFromTargetAuto(areWeWinners);
+        s_Shooter.setShooterSpeed(s_Shooter.getShooterSpeedFromDistance(distance - 0.03));
         s_Shooter.setShooterAngle(s_Shooter.getShooterAngleFromDistance(distance));
 
         telem.putTelemetry("Phase", phase);
@@ -82,6 +86,16 @@ public class AutoCloseShot {
                 }
                 break;
             case 1:
+                if(areWeWinners && currentPose.x() > 1.2 && shootSlow) {
+                    s_Swerve.drive(-0.8, 0, 0, true);
+                } else if (!areWeWinners && currentPose.x() < -1.2 && shootSlow) {
+                    s_Swerve.drive(0.8, 0, 0, true);
+                } else {
+                    driveController.reset();
+                    phase++;
+                }
+                break;
+            case 2:
 
                 driveController.updateCurrentPose(currentPose);
                 driveController.setTargetPose(targetPosition);
@@ -96,14 +110,17 @@ public class AutoCloseShot {
                 }
 
                 break;
-            case 2:
-
+            case 3:
                 s_Feeder.openGate();
+                if(shootSlow) {
+                    s_Intake.setSpeed(0.8);
+                } else {
+                    s_Intake.setSpeed(1);
+                }
                 s_Feeder.setFeederSpeed(1);
-                s_Intake.setSpeed(1);
                 s_Swerve.drivePrep(0, -1, 0, true);
 
-                if(System.nanoTime() - timestamp > 1.3e9) {
+                if((System.nanoTime() - timestamp > 1.3e9 && !shootSlow) || (System.nanoTime() - timestamp > 2e9 && shootSlow)) {
                     s_Swerve.stop();
                     isFinished = true;
                 }

@@ -30,6 +30,7 @@ public class RedClose12Overflow extends LinearOpMode {
     public void runOpMode() {
 
         boolean areWeWinners = true;
+        int motif = 0;
 
         EZTelemetry telem = new EZTelemetry(telemetry);
 
@@ -45,45 +46,87 @@ public class RedClose12Overflow extends LinearOpMode {
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
         AutoCloseShot autoShootCommand = new AutoCloseShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
-        AutoMediumShot autoMediumShot = new AutoMediumShot(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lime, s_Lemon, telem, areWeWinners);
+        AutoMediumShot autoMediumShot = new AutoMediumShot(s_Swerve, s_Turret, s_Shooter, s_Intake, s_Feeder, s_Lime, s_Lemon, telem, areWeWinners);
         AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners, 1);
         AutoGate gateCommand = new AutoGate(s_Swerve, s_Lemon, telem, areWeWinners);
         AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lemon, s_Lime, areWeWinners, false);
 
         int phase = 0;
 
+        int[][] intakeMap = new int[][]{
+                {1, 2, 3},
+                {2, 1, 3},
+                {3, 1, 2},
+        };
+
         List<AutoManager> autoCommands = Arrays.asList(
-                () -> {autoShootCommand.reset(); return true;},
+                () -> {autoShootCommand.reset(false); return true;},
                 autoShootCommand::runCommand,
-                () -> {intakeCommand.reset(1); return true;},
+                () -> {intakeCommand.reset(intakeMap[1][0]); return true;},
                 intakeCommand::runCommand,
-                () -> {autoShootCommand.reset(); return true;},
+                () -> {autoShootCommand.reset(false); return true;},
                 autoShootCommand::runCommand,
-                () -> {intakeCommand.reset(2); return true;},
+                () -> {intakeCommand.reset(intakeMap[1][1]); return true;},
                 intakeCommand::runCommand,
-                () -> {autoShootCommand.reset(); return true;},
+                () -> {autoShootCommand.reset(false); return true;},
                 autoShootCommand::runCommand,
-                () -> {intakeCommand.reset(3); return true;},
+                () -> {intakeCommand.reset(intakeMap[1][2]); return true;},
                 intakeCommand::runCommand,
                 () -> {autoMediumShot.reset(); return true;},
                 autoMediumShot::runCommand
-//                () -> {autoShootCommand.reset(); return true;},
-//                autoShootCommand::runCommand,
-//                () -> {gateCommand.reset(true); return true;},
-//                gateCommand::runCommand
-
-
         );
 
         telem.putLine("RED CLOSE 12 IS READY");
         telem.updateTelemetry();
+
+        while(opModeInInit()) {
+
+            s_Lime.skadoodle();
+
+            if(s_Lime.isValidReaing()) {
+                motif = s_Lime.getTagID();
+                final int intakeTarget;
+                switch (motif){
+                    case 21:
+                        intakeTarget = 2;
+                        break;
+                    case 22:
+                        intakeTarget = 1;
+                        break;
+                    default:
+                        intakeTarget = 0;
+                        break;
+                }
+
+                autoCommands = Arrays.asList(
+                        () -> {autoShootCommand.reset(false); return true;},
+                        autoShootCommand::runCommand,
+                        () -> {intakeCommand.reset(intakeMap[intakeTarget][0]); return true;},
+                        intakeCommand::runCommand,
+                        () -> {autoShootCommand.reset(true); return true;},
+                        autoShootCommand::runCommand,
+                        () -> {intakeCommand.reset(intakeMap[intakeTarget][1]); return true;},
+                        intakeCommand::runCommand,
+                        () -> {autoShootCommand.reset(false); return true;},
+                        autoShootCommand::runCommand,
+                        () -> {intakeCommand.reset(intakeMap[intakeTarget][2]); return true;},
+                        intakeCommand::runCommand,
+                        () -> {autoMediumShot.reset(); return true;},
+                        autoMediumShot::runCommand
+                );
+            }
+
+            telem.putTelemetry("Motif Target", motif);
+            telem.putTelemetry("Turret Heading", s_Turret.getDegrees());
+            telem.updateTelemetry();
+
+        }
 
         waitForStart();
 
         while (opModeIsActive()) {
 
             s_Lemon.skadoodle();
-            s_Lime.skadoodle();
             turretCommand.execute();
             telem.updateAll();
 

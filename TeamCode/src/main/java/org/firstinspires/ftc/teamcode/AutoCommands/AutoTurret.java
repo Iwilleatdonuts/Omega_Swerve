@@ -23,6 +23,8 @@ public class AutoTurret {
 
     private final OmegaPose2D targetPose;
 
+    private final double skew;
+
     public AutoTurret(Turret s_Turret, FusionOdometry s_Lemon, Limelight s_Lime, boolean areWeWinners, boolean areWeFar){
 
         this.s_Turret = s_Turret;
@@ -39,6 +41,8 @@ public class AutoTurret {
 
         turretOffset = areWeWinners ? 3.5 : -3.5;
         targetPose = areWeWinners ? Constants.TurretConstants.autoRedTarget : Constants.TurretConstants.autoBlueTarget;
+
+        skew = areWeWinners ? -2.5 : 2.5;
     }
 
     public void execute(){
@@ -57,7 +61,7 @@ public class AutoTurret {
             turretHeading -= 360;
         }
 
-        s_Turret.setSetpoint(turretHeading);
+        s_Turret.setSetpoint(turretHeading + skew);
         s_Turret.runToSetpoint();
 
     }

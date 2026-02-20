@@ -52,7 +52,7 @@ public class Limelight {
 
         lime = hardwareMap.get(Limelight3A.class, "lime");
 
-        lime.pipelineSwitch(areWeWinners? 0 : 1);
+        lime.pipelineSwitch(2);
 //        lime.pipelineSwitch(2);
 
         latestResult = lime.getLatestResult();
@@ -97,6 +97,7 @@ public class Limelight {
         return latestResult.isValid();
     }
 
+
     public void toggleTelemetry() {
         enableTelemetry = !enableTelemetry;
     }
@@ -110,6 +111,10 @@ public class Limelight {
         if(cameraHeading > 180) {
             cameraHeading -= 360;
         }
+    }
+
+    public int getTagID() {
+        return isValidReaing()? latestResult.getFiducialResults().get(0).getFiducialId() : 0;
     }
 
     public Pose3D getLimePose() {

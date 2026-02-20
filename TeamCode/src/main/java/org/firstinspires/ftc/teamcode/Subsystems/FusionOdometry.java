@@ -53,6 +53,13 @@ public class FusionOdometry {
         return Math.hypot(getCurrentPose().x() - targetPose.x(), getCurrentPose().y() - targetPose.y());
     }
 
+    public double getDistanceFromTargetAuto(boolean areWeWinners) {
+
+        OmegaPose2D targetPose = areWeWinners ? Constants.TurretConstants.autoRedTarget : Constants.TurretConstants.autoBlueTarget;
+
+        return Math.hypot(getCurrentPose().x() - targetPose.x(), getCurrentPose().y() - targetPose.y());
+    }
+
     public double getHeading() {
         return currentPose.r();
     }

@@ -89,7 +89,7 @@ public class Shooter {
     }
 
     public double getShooterVelocity() {
-        return lowerShooterMotor.getVelocity();
+        return upperShooterMotor.getVelocity();
     }
     public boolean shooterAtSpeed() {
         return Math.abs(getShooterVelocity() - targetVelocity) < 40;

@@ -64,12 +64,9 @@ public class AutoFarShot {
     public void execute(){
 
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
-        double distance = s_Lemon.getDistanceFromTarget(areWeWinners);
-
-        shooterSpeed = s_Shooter.getShooterSpeedFromDistance(distance);
-
-        s_Shooter.setShooterSpeed(shooterSpeed);
-        s_Shooter.setShooterAngle(Constants.ShooterConstants.farAngle);
+        double distance = s_Lemon.getDistanceFromTargetAuto(areWeWinners);
+        s_Shooter.setShooterSpeed(s_Shooter.getShooterSpeedFromDistance(distance));
+        s_Shooter.setShooterAngle(s_Shooter.getShooterAngleFromDistance(distance));
 
         telem.putTelemetry("Phase", phase);
 

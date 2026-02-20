@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
+import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.Utilities.AutoDriveController;
 import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
@@ -16,6 +17,7 @@ public class AutoMediumShot {
     private final EZTelemetry telem;
 
     private final Swerve s_Swerve;
+    private final Turret s_Turret;
     private final Shooter s_Shooter;
     private final Intake s_Intake;
     private final Feeder s_Feeder;
@@ -33,18 +35,19 @@ public class AutoMediumShot {
     private int phase;
 
     private double timestamp;
-    private double shooterSpeed;
-    private double shooterAngle;
+    private final double skew;
 
-    public AutoMediumShot(Swerve s_Swerve, Shooter s_Shooter, Intake s_Intake, Feeder s_Feeder, Limelight s_Lime, FusionOdometry s_Lemon, EZTelemetry telem, boolean areWeWinners){
+    public AutoMediumShot(Swerve s_Swerve, Turret s_Turret, Shooter s_Shooter, Intake s_Intake, Feeder s_Feeder, Limelight s_Lime, FusionOdometry s_Lemon, EZTelemetry telem, boolean areWeWinners){
 
         this.areWeWinners = areWeWinners;
 
         this.telem = telem;
 
         targetPosition = areWeWinners? Constants.NewAutoConstants.RedConstants.finalCloseShot : Constants.NewAutoConstants.BlueConstants.finalCloseShot;
+        skew = areWeWinners ? -2 : 2;
 
         this.s_Swerve = s_Swerve;
+        this.s_Turret = s_Turret;
         this.s_Shooter = s_Shooter;
         this.s_Intake = s_Intake;
         this.s_Feeder = s_Feeder;
@@ -56,8 +59,6 @@ public class AutoMediumShot {
     }
 
     public void reset(){
-        shooterSpeed = 0.42;
-        shooterAngle = 0.7;
         isFinished = false;
         phase = 0;
         driveController.reset();
@@ -66,15 +67,10 @@ public class AutoMediumShot {
     public void execute(){
 
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
-        double distance = s_Lime.getFilteredDistance();
-
-        if(distance != 0) {
-            shooterSpeed = s_Shooter.getShooterSpeedFromDistance(distance);
-            shooterAngle = s_Shooter.getShooterAngleFromDistance(distance);
-        }
-        s_Shooter.setShooterSpeed(shooterSpeed);
-        s_Shooter.setShooterAngle(shooterAngle);
-
+        double distance = s_Lemon.getDistanceFromTargetAuto(areWeWinners);
+        s_Shooter.setShooterSpeed(s_Shooter.getShooterSpeedFromDistance(distance));
+        s_Shooter.setShooterAngle(s_Shooter.getShooterAngleFromDistance(distance));
+//        s_Turret.setSetpoint(s_Turret.getSetpoint() + skew);
         telem.putTelemetry("Phase", phase);
 
         switch(phase) {
