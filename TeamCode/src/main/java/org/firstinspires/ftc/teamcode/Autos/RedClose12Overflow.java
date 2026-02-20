@@ -35,7 +35,7 @@ public class RedClose12Overflow extends LinearOpMode {
 
         Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
         FusionOdometry s_Lemon = new FusionOdometry(hardwareMap, telem);
-        s_Lemon.setPose(Constants.OldAutoConstants.RedConstants.closeStart);
+        s_Lemon.setPose(Constants.NewAutoConstants.RedConstants.closeStart);
         s_Lemon.toggleTelemetry();
 
         Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Lemon);

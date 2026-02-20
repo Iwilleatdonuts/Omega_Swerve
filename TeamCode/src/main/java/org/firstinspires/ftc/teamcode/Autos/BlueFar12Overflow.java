@@ -34,7 +34,7 @@ public class BlueFar12Overflow extends LinearOpMode {
 
         Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
         FusionOdometry s_Lemon = new FusionOdometry(hardwareMap, telem);
-        s_Lemon.setPose(Constants.OldAutoConstants.BlueConstants.farStart);
+        s_Lemon.setPose(Constants.NewAutoConstants.BlueConstants.farStart);
         s_Lemon.toggleTelemetry();
 
         Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Lemon);

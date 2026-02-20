@@ -35,7 +35,7 @@ public class BlueClose12Overflow extends LinearOpMode {
 
         Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
         FusionOdometry s_Lemin = new FusionOdometry(hardwareMap, telem);
-        s_Lemin.setPose(Constants.OldAutoConstants.BlueConstants.closeStart);
+        s_Lemin.setPose(Constants.NewAutoConstants.BlueConstants.closeStart);
         s_Lemin.toggleTelemetry();
 
         Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Lemin);
