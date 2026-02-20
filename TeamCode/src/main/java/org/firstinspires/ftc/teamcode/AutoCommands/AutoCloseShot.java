@@ -125,7 +125,7 @@ public class AutoCloseShot {
         double yError = Math.abs(s_Lemon.getCurrentPose().y() - targetPosition.y());
         double rError = Math.abs(s_Lemon.getHeading() - targetPosition.r());
 
-        return xError < 0.1 && yError < 0.1;
+        return xError < 0.15 && yError < 0.15;
     }
 
     public boolean isFinished() {

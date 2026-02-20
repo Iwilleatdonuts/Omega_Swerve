@@ -52,10 +52,6 @@ public class Constants {
     }
     
     public static final class DriveTrainConstants {
-
-//        public static final double angleKP = PIDTuner.PIDTuner1.kP;//0.009
-//        public static final double angleKI = PIDTuner.PIDTuner1.kI;//0.004
-//        public static final double angleKD = PIDTuner.PIDTuner1.kD;
 //
         public static final double angleKP = 0.004;
         public static final double angleKI = 0.002;
