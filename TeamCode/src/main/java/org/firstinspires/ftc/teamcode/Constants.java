@@ -241,7 +241,7 @@ public class Constants {
             public static final OmegaPose2D finalCloseShot = new OmegaPose2D(-0.39055, 1.00344, 180);
             public static final OmegaPose2D finalCloseShotTeleopPose = new OmegaPose2D(1.00344, 0.39055, 90);
 
-            //Spike Marks
+            //Spike Mark
             public static final OmegaPose2D firstSpikeLineup = new OmegaPose2D(-0.70389, 0.30335, 90);
             public static final OmegaPose2D secondSpikeLineup = new OmegaPose2D(-0.70389, -0.30665, 90);
             public static final OmegaPose2D thirdSpikeLineup = new OmegaPose2D(-0.70389, -0.88965, 90);
