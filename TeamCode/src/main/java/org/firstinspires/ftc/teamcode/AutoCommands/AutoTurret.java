@@ -38,7 +38,7 @@ public class AutoTurret {
         }
 
         turretOffset = areWeWinners ? 3.5 : -3.5;
-        targetPose = areWeWinners ? Constants.TurretConstants.redTarget : Constants.TurretConstants.blueTarget;
+        targetPose = areWeWinners ? Constants.TurretConstants.autoRedTarget : Constants.TurretConstants.autoBlueTarget;
     }
 
     public void execute(){

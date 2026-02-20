@@ -170,6 +170,10 @@ public class Constants {
         //change the x value to be higher absolute if not hitting properly
         public static final OmegaPose2D blueTarget = new OmegaPose2D(1.8288, 1.8288, 0);
 
+        public static final OmegaPose2D autoRedTarget = new OmegaPose2D(1.8288, 1.8288, 0);
+        //change the x value to be higher absolute if not hitting properly
+        public static final OmegaPose2D autoBlueTarget = new OmegaPose2D(-1.8288, 1.8288, 0);
+
         public static final String turretMotor = "turret";
 
         public static final double lowerRotationLimit = -135;
