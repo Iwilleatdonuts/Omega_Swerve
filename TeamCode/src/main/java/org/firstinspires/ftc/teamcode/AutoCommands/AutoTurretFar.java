@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.AutoCommands;
 
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.Subsystems.AprilVisionOnTurret;
 import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Limelight;
-import org.firstinspires.ftc.teamcode.Subsystems.Swerve;
 import org.firstinspires.ftc.teamcode.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.Utilities.OmegaPose2D;
 
-public class AutoTurret {
+public class AutoTurretFar {
 
     private final Turret s_Turret;
     private final FusionOdometry s_Lemon;
@@ -23,9 +19,7 @@ public class AutoTurret {
 
     private final OmegaPose2D targetPose;
 
-    private final double skew;
-
-    public AutoTurret(Turret s_Turret, FusionOdometry s_Lemon, Limelight s_Lime, boolean areWeWinners, boolean areWeFar){
+    public AutoTurretFar(Turret s_Turret, FusionOdometry s_Lemon, Limelight s_Lime, boolean areWeWinners, boolean areWeFar){
 
         this.s_Turret = s_Turret;
         this.s_Lemon = s_Lemon;
@@ -41,8 +35,6 @@ public class AutoTurret {
 
         turretOffset = areWeWinners ? 3.5 : -3.5;
         targetPose = areWeWinners ? Constants.TurretConstants.autoRedTarget : Constants.TurretConstants.autoBlueTarget;
-
-        skew = areWeWinners ? -2.5 : 2.5;
     }
 
     public void execute(){
@@ -61,7 +53,7 @@ public class AutoTurret {
             turretHeading -= 360;
         }
 
-        s_Turret.setSetpoint(turretHeading + skew);
+        s_Turret.setSetpoint(turretHeading);
         s_Turret.runToSetpoint();
 
     }

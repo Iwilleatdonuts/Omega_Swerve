@@ -83,23 +83,31 @@ public class LemonTurret {
             s_Lemon.setLinearPose(new OmegaPose2D(0, 0, 0));
         }
 
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.Y)) {
-            s_Lemon.setLinearPose(new OmegaPose2D(0, 1.25, 0));
-        }
-
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.X) && !areWeWinners) {
-            s_Lemon.setLinearPose(new OmegaPose2D(-1.4, 0, 0));
-        }
-        if(m_Operator.wasJustPressed(GamepadKeys.Button.B) && areWeWinners) {
-            s_Lemon.setLinearPose(new OmegaPose2D(1.4, 0, 0));
-        }
+//        if(m_Operator.wasJustPressed(GamepadKeys.Button.Y)) {
+//            s_Lemon.setLinearPose(new OmegaPose2D(0, 1.25, 0));
+//        }
+//
+//        if(m_Operator.wasJustPressed(GamepadKeys.Button.X) && !areWeWinners) {
+//            s_Lemon.setLinearPose(new OmegaPose2D(-1.4, 0, 0));
+//        }
+//        if(m_Operator.wasJustPressed(GamepadKeys.Button.B) && areWeWinners) {
+//            s_Lemon.setLinearPose(new OmegaPose2D(1.4, 0, 0));
+//        }
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
-            s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() + 0.5));
+            if(m_Operator.isDown(GamepadKeys.Button.X)) {
+                s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() - 0.5));
+            } else {
+                s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() - 1));
+            }
         }
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
-            s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() - 0.5));
+            if(m_Operator.isDown(GamepadKeys.Button.X)) {
+                s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() + 0.5));
+            } else {
+                s_Lemon.setPose(new OmegaPose2D(currentPose.x(), currentPose.y(), currentPose.r() + 1));
+            }
         }
 
         //MANUAL CLOSE SHOT

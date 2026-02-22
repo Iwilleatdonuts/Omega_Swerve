@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCloseShot;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoMediumShot;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurret;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurretClose;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
@@ -49,7 +48,7 @@ public class BlueClose12Overflow extends LinearOpMode {
         AutoMediumShot autoMediumShot = new AutoMediumShot(s_Swerve, s_Turret, s_Shooter, s_Intake, s_Feeder, s_Lime, s_Lemon, telem, areWeWinners);
         AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners, 1);
         AutoGate gateCommand = new AutoGate(s_Swerve, s_Lemon, telem, areWeWinners);
-        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lemon, s_Lime, areWeWinners, false);
+        AutoTurretClose turretCommand = new AutoTurretClose(s_Turret, s_Lemon, s_Lime, areWeWinners, false);
 
         int phase = 0;
 

@@ -90,7 +90,7 @@ public class AutoCornerIntake {
 
                 s_Swerve.drive(areWeWinners ? -1 : 1, 0, 0, true);
 
-                if(System.nanoTime() - timestamp > 0.4e9) {
+                if(System.nanoTime() - timestamp > 0.8e9) {
                     timestamp = System.nanoTime();
                     driveController.reset();
                     driveController.setTargetPose(finalPose);

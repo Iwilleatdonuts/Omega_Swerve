@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoFarShot;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurret;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurretClose;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurretFar;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
@@ -46,7 +46,7 @@ public class BlueFar12Overflow extends LinearOpMode {
         AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Turret, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners, 1);
         AutoGate gateCommand = new AutoGate(s_Swerve, s_Lemon, telem, areWeWinners);
-        AutoTurret turretCommand = new AutoTurret(s_Turret, s_Lemon, s_Lime, areWeWinners, true);
+        AutoTurretFar turretCommand = new AutoTurretFar(s_Turret, s_Lemon, s_Lime, areWeWinners, true);
 
         int phase = 0;
 
@@ -71,8 +71,11 @@ public class BlueFar12Overflow extends LinearOpMode {
 
         );
 
-        telem.putLine("BLUE FAR 12 IS READY");
-        telem.updateTelemetry();
+        while(opModeInInit()) {
+            telem.putLine("BLUE FAR 12 IS READY");
+            telem.putTelemetry("Turret Angle", s_Turret.getDegrees());
+            telem.updateTelemetry();
+        }
 
         waitForStart();
 

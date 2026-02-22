@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoCornerIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoFarShot;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoGate;
-import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurretClose;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoLeaveFarZone;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoSwoopyIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurretFar;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoWaitCommand;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.Subsystems.FusionOdometry;
@@ -22,13 +24,13 @@ import org.firstinspires.ftc.teamcode.Utilities.EZTelemetry;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name = "Red Far 12 Overflow")
-public class RedFar12Overflow extends LinearOpMode {
+@Autonomous(name = "BLUE HAWK")
+public class BlueFarSupportWithHawk extends LinearOpMode {
 
     @Override
     public void runOpMode() {
 
-        boolean areWeWinners = true;
+        boolean areWeWinners = false;
 
         EZTelemetry telem = new EZTelemetry(telemetry);
 
@@ -44,35 +46,26 @@ public class RedFar12Overflow extends LinearOpMode {
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
         AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Turret, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
-        AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners, 1);
-        AutoGate gateCommand = new AutoGate(s_Swerve, s_Lemon, telem, areWeWinners);
+        AutoCornerIntake cornerIntakeCommand = new AutoCornerIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
+        AutoSwoopyIntake swoopyIntakeCommand = new AutoSwoopyIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoTurretFar turretCommand = new AutoTurretFar(s_Turret, s_Lemon, s_Lime, areWeWinners, true);
+        AutoLeaveFarZone leaveCommand = new AutoLeaveFarZone(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
+        AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners, 1);
+        AutoWaitCommand waitCommand = new AutoWaitCommand();
 
         int phase = 0;
 
         List<AutoManager> autoCommands = Arrays.asList(
                 () -> {autoShootCommand.reset(); return true;},
                 autoShootCommand::runCommand,
-                () -> {intakeCommand.reset(3); return true;},
-                intakeCommand::runCommand,
-                () -> {autoShootCommand.reset(); return true;},
-                autoShootCommand::runCommand,
-                () -> {intakeCommand.reset(2); return true;},
-                intakeCommand::runCommand,
-                () -> {autoShootCommand.reset(); return true;},
-                autoShootCommand::runCommand,
-                () -> {intakeCommand.reset(1); return true;},
-                intakeCommand::runCommand,
-                () -> {autoShootCommand.reset(); return true;},
-                autoShootCommand::runCommand,
-                () -> {gateCommand.reset(true); return true;},
-                gateCommand::runCommand
-
-
+                () -> {cornerIntakeCommand.reset(); return true;},
+                cornerIntakeCommand::runCommand,
+                () -> {leaveCommand.reset(); return true;},
+                leaveCommand::runCommand
         );
 
         while(opModeInInit()) {
-            telem.putLine("RED FAR 12 IS READY");
+            telem.putLine("BLUE HAWK IS READY");
             telem.putTelemetry("Turret Angle", s_Turret.getDegrees());
             telem.updateTelemetry();
         }
@@ -86,9 +79,9 @@ public class RedFar12Overflow extends LinearOpMode {
             turretCommand.execute();
             telem.updateAll();
 
-            if(phase < autoCommands.size()) {
+            if (phase < autoCommands.size()) {
                 boolean isFinished = autoCommands.get(phase).run();
-                if(isFinished) {
+                if (isFinished) {
                     phase++;
                 }
             }

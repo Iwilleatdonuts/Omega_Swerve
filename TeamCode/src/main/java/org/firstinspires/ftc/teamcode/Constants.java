@@ -162,18 +162,20 @@ public class Constants {
 
     public static final class TurretConstants {
 
-        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.8288, 1.8288, 0);
+        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.67635, 1.73675, 0);
         //change the x value to be higher absolute if not hitting properly
-        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.8288, 1.8288, 0);
+        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.67635, 1.73675, 0);
 
-        public static final OmegaPose2D autoRedTarget = new OmegaPose2D(1.8288, 1.8288, 0);
+        public static final OmegaPose2D autoRedTarget = new OmegaPose2D(1.73675, 1.67635, 0);
         //change the x value to be higher absolute if not hitting properly
-        public static final OmegaPose2D autoBlueTarget = new OmegaPose2D(-1.8288, 1.8288, 0);
+        public static final OmegaPose2D autoBlueTarget = new OmegaPose2D(-1.73675, 1.67635, 0);
 
         public static final String turretMotor = "turret";
 
         public static final double lowerRotationLimit = -135;
         public static final double upperRotationLimit = 135;
+
+        public static final double distanceOffsetForProvs = 0.17250973499;
 
     }
 
@@ -223,11 +225,14 @@ public class Constants {
 
             //Support balls
             public static final OmegaPose2D cornerLineup = new OmegaPose2D(1.36233, -1.55573, 270);
-            public static final OmegaPose2D cornerPickup = new OmegaPose2D(1.47489, -1.55573, 270);
+            public static final OmegaPose2D cornerPickup = new OmegaPose2D(1.5, -1.55573, 270);
             public static final OmegaPose2D firstSupportLineup = new OmegaPose2D(1.36233, -1, 270);
             public static final OmegaPose2D firstSupportPickup = new OmegaPose2D(1.47489, -1, 270);
             public static final OmegaPose2D secondSupportLineup = new OmegaPose2D(1.36233, -0.55, 270);
             public static final OmegaPose2D secondSupportPickup = new OmegaPose2D(1.47489, -0.55, 270);
+
+            public static final OmegaPose2D farZoneLeave = new OmegaPose2D(1, -1.47, 270);
+            public static final OmegaPose2D farZoneLeaveTeleop = new OmegaPose2D(1.47, 1, 0);
 
         }
 
@@ -251,11 +256,13 @@ public class Constants {
 
             //Support balls
             public static final OmegaPose2D cornerLineup = new OmegaPose2D(-1.36233, -1.55573, 90);
-            public static final OmegaPose2D cornerPickup = new OmegaPose2D(-1.47489, -1.55573, 90);
+            public static final OmegaPose2D cornerPickup = new OmegaPose2D(-1.5, -1.55573, 90);
             public static final OmegaPose2D firstSupportLineup = new OmegaPose2D(-1.36233, -1, 90);
             public static final OmegaPose2D firstSupportPickup = new OmegaPose2D(-1.47489, -1, 90);
             public static final OmegaPose2D secondSupportLineup = new OmegaPose2D(-1.36233, -0.55, 90);
             public static final OmegaPose2D secondSupportPickup = new OmegaPose2D(-1.47489, -0.55, 90);
+            public static final OmegaPose2D farZoneLeave = new OmegaPose2D(-1, -1.47, 90);
+            public static final OmegaPose2D farZoneLeaveTeleop = new OmegaPose2D(-1.47, 1, 0);
         }
 
     }

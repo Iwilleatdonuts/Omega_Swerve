@@ -38,7 +38,7 @@ public class AutoLeaveFarZone {
 
         this.telem = telem;
 
-        targetPosition = areWeWinners? Constants.NewAutoConstants.RedConstants.thirdSpikeLineup : Constants.NewAutoConstants.BlueConstants.thirdSpikeLineup;
+        targetPosition = areWeWinners? Constants.NewAutoConstants.RedConstants.farZoneLeave : Constants.NewAutoConstants.BlueConstants.farZoneLeave;
 
         this.s_Swerve = s_Swerve;
         this.s_Shooter = s_Shooter;

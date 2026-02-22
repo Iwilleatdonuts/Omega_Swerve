@@ -64,7 +64,7 @@ public class AutoCloseShot {
 
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
         double distance = s_Lemon.getDistanceFromTargetAuto(areWeWinners);
-        s_Shooter.setShooterSpeed(s_Shooter.getShooterSpeedFromDistance(distance - 0.03));
+        s_Shooter.setShooterSpeed(s_Shooter.getShooterSpeedFromDistance(distance - 0.07));
         s_Shooter.setShooterAngle(s_Shooter.getShooterAngleFromDistance(distance));
 
         telem.putTelemetry("Phase", phase);

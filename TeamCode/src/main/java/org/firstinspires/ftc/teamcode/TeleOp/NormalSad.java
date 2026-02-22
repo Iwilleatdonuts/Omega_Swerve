@@ -74,7 +74,7 @@ public class NormalSad extends LinearOpMode {
 
         telem.putLine("TS IS READY TO RUMBAH");
         telem.putLine();
-        s_Lemon.setPose(Constants.NewAutoConstants.BlueConstants.finalCloseShotTeleopPose);
+        s_Lemon.setPose(Constants.NewAutoConstants.BlueConstants.farZoneLeaveTeleop);
         telem.updateAll();
 
         waitForStart();

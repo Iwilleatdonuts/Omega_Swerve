@@ -121,20 +121,27 @@ public class Shooter {
     }
 
     public double getShooterSpeedFromDistance(double distance) {
+        double realDistance = distance + Constants.TurretConstants.distanceOffsetForProvs;
         double power = speedConstant;
 //        power += (-0.00552734 * distance * distance * distance+0.040303 * distance * distance-0.014396 * distance+0.339615);
-        power += (-0.00762258 * distance * distance * distance * distance +0.0782472 * distance * distance * distance - 0.273183 * distance * distance +0.440151 * distance +0.104437);
+        power += (-0.00762258 * realDistance * realDistance * realDistance * realDistance
+                + 0.0782472 * realDistance * realDistance * realDistance
+                - 0.273183 * realDistance * realDistance
+                + 0.440151 * realDistance
+                + 0.104437);
         return power;
     }
 
     public double getShooterAngleFromDistance(double distance) {
-        double foo = -0.355366*distance+1.17768;
+        double realDistance = distance + Constants.TurretConstants.distanceOffsetForProvs;
+        double foo = -0.355366*realDistance+1.17768;
         foo = MathUtil.clamp(1, 0, foo);
         return foo;
     }
 
     public double getTimeOfFlightFromDistance(double distance) {
-        return 0.182055 * distance + 0.657087;
+        double realDistance = distance + Constants.TurretConstants.distanceOffsetForProvs;
+        return 0.182055 * realDistance + 0.657087;
     }
 
     public double getTargetVelocity() {
