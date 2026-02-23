@@ -80,6 +80,7 @@ public class RedClose12Overflow extends LinearOpMode {
 
         while(opModeInInit()) {
 
+            s_Lemon.skadoodle();
             s_Lime.skadoodle();
 
             if(s_Lime.isValidReaing()) {
@@ -115,8 +116,14 @@ public class RedClose12Overflow extends LinearOpMode {
                 );
             }
 
+            s_Lemon.setPose(Constants.NewAutoConstants.RedConstants.closeStart);
             telem.putTelemetry("Motif Target", motif);
             telem.putTelemetry("Turret Heading", s_Turret.getDegrees());
+            telem.putLine();
+            telem.putLine("ODOMETRY");
+            telem.putTelemetry("X Pose", s_Lemon.getCurrentPose().x());
+            telem.putTelemetry("Y Pose", s_Lemon.getCurrentPose().y());
+            telem.putTelemetry("R Pose", s_Lemon.getCurrentPose().r());
             telem.updateTelemetry();
 
         }

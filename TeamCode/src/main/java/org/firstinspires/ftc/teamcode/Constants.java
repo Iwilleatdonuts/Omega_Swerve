@@ -162,13 +162,13 @@ public class Constants {
 
     public static final class TurretConstants {
 
-        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.67635, 1.73675, 0);
+        public static final OmegaPose2D redTarget = new OmegaPose2D(-1.73675, 1.73675, 0);
         //change the x value to be higher absolute if not hitting properly
-        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.67635, 1.73675, 0);
+        public static final OmegaPose2D blueTarget = new OmegaPose2D(1.73675, 1.73675, 0);
 
-        public static final OmegaPose2D autoRedTarget = new OmegaPose2D(1.73675, 1.67635, 0);
+        public static final OmegaPose2D autoRedTarget = new OmegaPose2D(1.73675, 1.73675, 0);
         //change the x value to be higher absolute if not hitting properly
-        public static final OmegaPose2D autoBlueTarget = new OmegaPose2D(-1.73675, 1.67635, 0);
+        public static final OmegaPose2D autoBlueTarget = new OmegaPose2D(-1.73675, 1.73675, 0);
 
         public static final String turretMotor = "turret";
 
@@ -210,22 +210,22 @@ public class Constants {
             //Starts and shots
             public static final OmegaPose2D closeStart = new OmegaPose2D(1.23063, 1.20049, 270);
             public static final OmegaPose2D farStart = new OmegaPose2D(0.40491, -1.58721, 270);
-            public static final OmegaPose2D closeShot = new OmegaPose2D(0.5, 0.38, 260);
+            public static final OmegaPose2D closeShot = new OmegaPose2D(0.45, 0.4, 250);
             public static final OmegaPose2D farShot = new OmegaPose2D(0.40491, -1.47621, 270);
             public static final OmegaPose2D finalCloseShot = new OmegaPose2D(0.39055, 1.00344, 180);
             public static final OmegaPose2D finalCloseShotTeleopPose = new OmegaPose2D(-1.00344, 0.39055, 270);
 
             //Spike Marks
-            public static final OmegaPose2D firstSpikeLineup = new OmegaPose2D(0.6, 0.30335, 270);
-            public static final OmegaPose2D secondSpikeLineup = new OmegaPose2D(0.6, -0.30665, 270);
-            public static final OmegaPose2D thirdSpikeLineup = new OmegaPose2D(0.6, -0.88965, 270);
+            public static final OmegaPose2D firstSpikeLineup = new OmegaPose2D(0.4, 0.30335, 270);
+            public static final OmegaPose2D secondSpikeLineup = new OmegaPose2D(0.4, -0.33, 270);
+            public static final OmegaPose2D thirdSpikeLineup = new OmegaPose2D(0.4, -0.88965, 270);
             public static final OmegaPose2D firstSpikePickup = new OmegaPose2D(1.4, 0.30335, 270);
-            public static final OmegaPose2D secondSpikePickup = new OmegaPose2D(1.5, -0.30665, 270);
+            public static final OmegaPose2D secondSpikePickup = new OmegaPose2D(1.4, -0.4, 270);
             public static final OmegaPose2D thirdSpikePickup = new OmegaPose2D(1.6, -0.88965, 270);
 
             //Support balls
-            public static final OmegaPose2D cornerLineup = new OmegaPose2D(1.36233, -1.55573, 270);
-            public static final OmegaPose2D cornerPickup = new OmegaPose2D(1.5, -1.55573, 270);
+            public static final OmegaPose2D cornerLineup = new OmegaPose2D(1.36233, -1.58721, 270);
+            public static final OmegaPose2D cornerPickup = new OmegaPose2D(1.53, -1.58721, 270);
             public static final OmegaPose2D firstSupportLineup = new OmegaPose2D(1.36233, -1, 270);
             public static final OmegaPose2D firstSupportPickup = new OmegaPose2D(1.47489, -1, 270);
             public static final OmegaPose2D secondSupportLineup = new OmegaPose2D(1.36233, -0.55, 270);
@@ -241,22 +241,22 @@ public class Constants {
             //Starts and shots
             public static final OmegaPose2D closeStart = new OmegaPose2D(-1.23063, 1.20049, 90);
             public static final OmegaPose2D farStart = new OmegaPose2D(-0.40491, -1.58721, 90);
-            public static final OmegaPose2D closeShot = new OmegaPose2D(-0.5, 0.38, 100);
+            public static final OmegaPose2D closeShot = new OmegaPose2D(-0.45, 0.4, 110);
             public static final OmegaPose2D farShot = new OmegaPose2D(-0.40491, -1.47621, 90);
             public static final OmegaPose2D finalCloseShot = new OmegaPose2D(-0.39055, 1.00344, 180);
             public static final OmegaPose2D finalCloseShotTeleopPose = new OmegaPose2D(1.00344, 0.39055, 90);
 
             //Spike Mark
-            public static final OmegaPose2D firstSpikeLineup = new OmegaPose2D(-0.6, 0.30335, 90);
-            public static final OmegaPose2D secondSpikeLineup = new OmegaPose2D(-0.6, -0.30665, 90);
-            public static final OmegaPose2D thirdSpikeLineup = new OmegaPose2D(-0.6, -0.88965, 90);
+            public static final OmegaPose2D firstSpikeLineup = new OmegaPose2D(-0.4, 0.30335, 90);
+            public static final OmegaPose2D secondSpikeLineup = new OmegaPose2D(-0.4, -0.33, 90);
+            public static final OmegaPose2D thirdSpikeLineup = new OmegaPose2D(-0.4, -0.88965, 90);
             public static final OmegaPose2D firstSpikePickup = new OmegaPose2D(-1.4, 0.30335, 90);
-            public static final OmegaPose2D secondSpikePickup = new OmegaPose2D(-1.5, -0.30665, 90);
+            public static final OmegaPose2D secondSpikePickup = new OmegaPose2D(-1.4, -0.4, 90);
             public static final OmegaPose2D thirdSpikePickup = new OmegaPose2D(-1.6, -0.88965, 90);
 
             //Support balls
-            public static final OmegaPose2D cornerLineup = new OmegaPose2D(-1.36233, -1.55573, 90);
-            public static final OmegaPose2D cornerPickup = new OmegaPose2D(-1.5, -1.55573, 90);
+            public static final OmegaPose2D cornerLineup = new OmegaPose2D(-1.36233, -1.58721, 90);
+            public static final OmegaPose2D cornerPickup = new OmegaPose2D(-1.53, -1.58721, 90);
             public static final OmegaPose2D firstSupportLineup = new OmegaPose2D(-1.36233, -1, 90);
             public static final OmegaPose2D firstSupportPickup = new OmegaPose2D(-1.47489, -1, 90);
             public static final OmegaPose2D secondSupportLineup = new OmegaPose2D(-1.36233, -0.55, 90);

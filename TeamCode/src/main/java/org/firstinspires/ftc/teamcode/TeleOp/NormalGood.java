@@ -75,7 +75,7 @@ public class NormalGood extends LinearOpMode {
 
         telem.putLine("TS IS READY TO RUMBAH");
         telem.putLine();
-        s_Lemon.setPose(Constants.NewAutoConstants.RedConstants.farZoneLeaveTeleop);
+        s_Lemon.setPose(Constants.NewAutoConstants.RedConstants.finalCloseShotTeleopPose);
         telem.updateAll();
 
         waitForStart();

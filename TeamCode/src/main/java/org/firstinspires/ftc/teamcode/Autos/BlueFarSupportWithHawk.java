@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCornerIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoFarShot;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoFirstFarShot;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoFirstTurretFar;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoLeaveFarZone;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoSwoopyIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurretFar;
@@ -36,7 +38,7 @@ public class BlueFarSupportWithHawk extends LinearOpMode {
 
         Limelight s_Lime = new Limelight(hardwareMap, telem, areWeWinners);
         FusionOdometry s_Lemon = new FusionOdometry(hardwareMap, telem);
-        s_Lemon.setPose(Constants.NewAutoConstants.RedConstants.farStart);
+        s_Lemon.setPose(Constants.NewAutoConstants.BlueConstants.farStart);
         s_Lemon.toggleTelemetry();
 
         Swerve s_Swerve = new Swerve(hardwareMap, telem, s_Lemon);
@@ -46,9 +48,11 @@ public class BlueFarSupportWithHawk extends LinearOpMode {
         Feeder s_Feeder = new Feeder(hardwareMap, telem);
 
         AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Turret, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
+        AutoFirstFarShot firstShootCommand = new AutoFirstFarShot(s_Swerve, s_Shooter, s_Turret, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoCornerIntake cornerIntakeCommand = new AutoCornerIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoSwoopyIntake swoopyIntakeCommand = new AutoSwoopyIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
-        AutoTurretFar turretCommand = new AutoTurretFar(s_Turret, s_Lemon, s_Lime, areWeWinners, true);
+        AutoFirstTurretFar turretCommand = new AutoFirstTurretFar(s_Turret, s_Lemon, s_Lime, areWeWinners, true);
+        AutoTurretFar betterTurretCommand = new AutoTurretFar(s_Turret, s_Lemon, s_Lime, areWeWinners, true);
         AutoLeaveFarZone leaveCommand = new AutoLeaveFarZone(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners, 1);
         AutoWaitCommand waitCommand = new AutoWaitCommand();
@@ -56,8 +60,8 @@ public class BlueFarSupportWithHawk extends LinearOpMode {
         int phase = 0;
 
         List<AutoManager> autoCommands = Arrays.asList(
-                () -> {autoShootCommand.reset(); return true;},
-                autoShootCommand::runCommand,
+                () -> {firstShootCommand.reset(); return true;},
+                firstShootCommand::runCommand,
                 () -> {cornerIntakeCommand.reset(); return true;},
                 cornerIntakeCommand::runCommand,
                 () -> {leaveCommand.reset(); return true;},
@@ -65,8 +69,15 @@ public class BlueFarSupportWithHawk extends LinearOpMode {
         );
 
         while(opModeInInit()) {
+            s_Lemon.skadoodle();
+            s_Lemon.setPose(Constants.NewAutoConstants.BlueConstants.farStart);
             telem.putLine("BLUE HAWK IS READY");
             telem.putTelemetry("Turret Angle", s_Turret.getDegrees());
+            telem.putLine();
+            telem.putLine("ODOMETRY");
+            telem.putTelemetry("X Pose", s_Lemon.getCurrentPose().x());
+            telem.putTelemetry("Y Pose", s_Lemon.getCurrentPose().y());
+            telem.putTelemetry("R Pose", s_Lemon.getCurrentPose().r());
             telem.updateTelemetry();
         }
 
@@ -76,8 +87,13 @@ public class BlueFarSupportWithHawk extends LinearOpMode {
 
             s_Lemon.skadoodle();
             s_Lime.skadoodle();
-            turretCommand.execute();
             telem.updateAll();
+
+            if (phase == 0 || phase == 1) {
+                turretCommand.execute();
+            } else {
+                betterTurretCommand.execute();
+            }
 
             if (phase < autoCommands.size()) {
                 boolean isFinished = autoCommands.get(phase).run();

@@ -75,11 +75,14 @@ public class BlueClose12Overflow extends LinearOpMode {
                 autoMediumShot::runCommand
         );
 
-        telem.putLine("RED CLOSE 12 IS READY");
+        telem.putLine("BLUE CLOSE 12 IS READY");
         telem.updateTelemetry();
 
         while(opModeInInit()) {
 
+            s_Lemon.setPose(Constants.NewAutoConstants.BlueConstants.closeStart);
+
+            s_Lemon.skadoodle();
             s_Lime.skadoodle();
 
             if(s_Lime.isValidReaing()) {
@@ -117,6 +120,11 @@ public class BlueClose12Overflow extends LinearOpMode {
 
             telem.putTelemetry("Motif Target", motif);
             telem.putTelemetry("Turret Heading", s_Turret.getDegrees());
+            telem.putLine();
+            telem.putLine("ODOMETRY");
+            telem.putTelemetry("X Pose", s_Lemon.getCurrentPose().x());
+            telem.putTelemetry("Y Pose", s_Lemon.getCurrentPose().y());
+            telem.putTelemetry("R Pose", s_Lemon.getCurrentPose().r());
             telem.updateTelemetry();
 
         }

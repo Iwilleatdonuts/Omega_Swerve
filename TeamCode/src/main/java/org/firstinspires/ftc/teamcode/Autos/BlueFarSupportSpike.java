@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoCornerIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoDirectIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoFarShot;
+import org.firstinspires.ftc.teamcode.AutoCommands.AutoFirstTurretFar;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoLeaveFarZone;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoSwoopyIntake;
 import org.firstinspires.ftc.teamcode.AutoCommands.AutoTurretClose;
@@ -49,7 +50,8 @@ public class BlueFarSupportSpike extends LinearOpMode {
         AutoFarShot autoShootCommand = new AutoFarShot(s_Swerve, s_Shooter, s_Turret, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoCornerIntake cornerIntakeCommand = new AutoCornerIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoSwoopyIntake swoopyIntakeCommand = new AutoSwoopyIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
-        AutoTurretFar turretCommand = new AutoTurretFar(s_Turret, s_Lemon, s_Lime, areWeWinners, true);
+        AutoTurretFar betterTurretCommand = new AutoTurretFar(s_Turret, s_Lemon, s_Lime, areWeWinners, true);
+        AutoFirstTurretFar turretCommand = new AutoFirstTurretFar(s_Turret, s_Lemon, s_Lime, areWeWinners, true);
         AutoLeaveFarZone leaveCommand = new AutoLeaveFarZone(s_Swerve, s_Shooter, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners);
         AutoDirectIntake intakeCommand = new AutoDirectIntake(s_Swerve, s_Intake, s_Feeder, s_Lemon, telem, areWeWinners, 1);
         AutoWaitCommand waitCommand = new AutoWaitCommand();
@@ -74,9 +76,16 @@ public class BlueFarSupportSpike extends LinearOpMode {
         );
 
         while(opModeInInit()) {
+            s_Lemon.skadoodle();
             telem.putLine("BLUE FAR SPIKE IS READY");
             telem.putTelemetry("Turret Angle", s_Turret.getDegrees());
+            telem.putLine();
+            telem.putLine("ODOMETRY");
+            telem.putTelemetry("X Pose", s_Lemon.getCurrentPose().x());
+            telem.putTelemetry("Y Pose", s_Lemon.getCurrentPose().y());
+            telem.putTelemetry("R Pose", s_Lemon.getCurrentPose().r());
             telem.updateTelemetry();
+            s_Lemon.setPose(Constants.NewAutoConstants.BlueConstants.farStart);
         }
 
         waitForStart();
@@ -85,7 +94,13 @@ public class BlueFarSupportSpike extends LinearOpMode {
 
             s_Lemon.skadoodle();
             s_Lime.skadoodle();
-            turretCommand.execute();
+
+            if (phase == 0 || phase == 1) {
+                turretCommand.execute();
+            } else {
+                betterTurretCommand.execute();
+            }
+
             telem.updateAll();
 
             if (phase < autoCommands.size()) {

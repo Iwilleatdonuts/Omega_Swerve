@@ -80,19 +80,19 @@ public class LemonTurret {
         OmegaPose2D currentPose = s_Lemon.getCurrentPose();
 
         if(m_Driver.wasJustPressed(GamepadKeys.Button.Y)) {
-            s_Lemon.setLinearPose(new OmegaPose2D(0, 0, 0));
+            s_Lemon.setLinearPose(new OmegaPose2D(0, 0, currentPose.r()));
         }
 
 //        if(m_Operator.wasJustPressed(GamepadKeys.Button.Y)) {
 //            s_Lemon.setLinearPose(new OmegaPose2D(0, 1.25, 0));
 //        }
 //
-//        if(m_Operator.wasJustPressed(GamepadKeys.Button.X) && !areWeWinners) {
-//            s_Lemon.setLinearPose(new OmegaPose2D(-1.4, 0, 0));
-//        }
-//        if(m_Operator.wasJustPressed(GamepadKeys.Button.B) && areWeWinners) {
-//            s_Lemon.setLinearPose(new OmegaPose2D(1.4, 0, 0));
-//        }
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.Y) && !areWeWinners) {
+            s_Lemon.setLinearPose(new OmegaPose2D(-1.22, 0, currentPose.r()));
+        }
+        if(m_Operator.wasJustPressed(GamepadKeys.Button.Y) && areWeWinners) {
+            s_Lemon.setLinearPose(new OmegaPose2D(1.22, 0, currentPose.r()));
+        }
 
         if(m_Operator.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
             if(m_Operator.isDown(GamepadKeys.Button.X)) {
